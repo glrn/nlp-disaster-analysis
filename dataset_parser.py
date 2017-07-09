@@ -2,6 +2,8 @@
 import csv
 import random
 import requests
+from ttp import ttp
+from ttp import utils
 
 """
 This module parses CrowdFlower's dataset.
@@ -14,17 +16,6 @@ EXPAND_TINYURL_TIMEOUT = 2.0
 class Relevancy:
     DISASTER = 1
     NOT_DISASTER = 2
-
-def tinyurl_to_url(tco_url, _timeout = EXPAND_TINYURL_TIMEOUT):
-    """
-    Twitter uses https://t.co/ to minify URLs in tweets.
-    Use this function to get the real URL.
-    Default timeout if 0.5s.
-    """
-    try:
-        return requests.get(tco_url, timeout=_timeout).url
-    except requests.exceptions.Timeout:
-        return None
 
 def dataset_as_dict():
     """
@@ -44,9 +35,10 @@ def dataset_as_dict():
         _unit_id                - unique index
     """
     entries = []
-    with open(DATASET_PATH) as csvfile:
+    with open(DATASET_PATH, 'rb') as csvfile:
         for row in csv.DictReader(csvfile):
             # preprocessing on fields
+            row['text'] = row['text'].decode('utf-8').encode('ascii', 'replace')
             row['choose_one'] = Relevancy.DISASTER if row['choose_one'] == 'Relevant' else Relevancy.NOT_DISASTER
             row['choose_one:confidence'] = float(row['choose_one:confidence'])
             row['_unit_id'] = int(row['_unit_id'])
@@ -54,7 +46,23 @@ def dataset_as_dict():
             entries.append(row)
     return entries
 
+def pretty_print_tweet(tweet):
+    print '\t%s' % tweet
+    p = ttp.Parser()
+    ttp_parser = p.parse(tweet)
+    print '\t\t Tags in tweet:' + str(ttp_parser.tags)
+    print '\t\t Users in tweet:' + str(ttp_parser.users)
+    print '\t\t Urls in tweet:' + str(ttp_parser.urls)
+    for url in ttp_parser.urls:
+        try:
+            print '\t\t Following url: ' + ' -> '.join(utils.follow_shortlink(url))
+        except requests.RequestException:
+            print '\t\t Following url: %s - Timeout' % url
+    print
+
 if __name__=='__main__':
+    #print utils.follow_shortlinks(['http://t.co/VpGu8z1Lhb'])
+
     # this is just an example
     all_tweets = dataset_as_dict()
 
@@ -63,17 +71,12 @@ if __name__=='__main__':
     some_irrelevant_tweets = [tweet for tweet in all_tweets if \
                             tweet['choose_one'] == Relevancy.NOT_DISASTER and tweet['choose_one:confidence'] >= 0.9]
 
+
     print '=== Total %d relevant tweets found, for example:' % len(some_relevant_tweets)
     for i in random.sample(range(0, len(some_relevant_tweets)), 5):
-        print '\t%s' % some_relevant_tweets[i]['text']
+        pretty_print_tweet(some_relevant_tweets[i]['text'])
     print
-    print '=== Total %d irrelevant tweets found, for example:' % len(some_irrelevant_tweets)
-    print '=== for example:'
-    for i in random.sample(range(0, len(some_irrelevant_tweets)), 5):
-        print '\t%s' % some_irrelevant_tweets[i]['text']
 
-    print
-    print '=== Another example - expand tiny urls (timeout is %dsec):' % EXPAND_TINYURL_TIMEOUT
-    urls = ['http://t.co/VpGu8z1Lhb', 'http://t.co/3sNyOOhseq', 'http://t.co/Byj5Dfa2rv']
-    for url in urls:
-        print('\t%s --> %s') % (url, tinyurl_to_url(url))
+    print '=== Total %d irrelevant tweets found, for example:' % len(some_irrelevant_tweets)
+    for i in random.sample(range(0, len(some_irrelevant_tweets)), 5):
+        pretty_print_tweet(some_irrelevant_tweets[i]['text'])

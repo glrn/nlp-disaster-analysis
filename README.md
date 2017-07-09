@@ -4,22 +4,64 @@
 Example: output of dataset_parser.py:
 ```
 === Total 2273 relevant tweets found, for example:
-	The Latest: More Homes Razed by Northern California Wildfire - ABC News http://t.co/dOFRh5YB01
-	Cue storm with massive wind and hail!! Now a power outage @WXII in Davidson County.
-	#?? #?? #??? #??? Suicide bomber kills 15 in Saudi security site mosque - Reuters  http://t.co/ebGGmfxoBy
-	Kurd Suicide Attack Kills 2 Turkish Soldiers http://t.co/GHGHQm9e6d
-	The cryptic words that guided pilots on the Hiroshima bombing mission http://t.co/nSS5L64cvR #canada
+	Since the chemical-weapons 'red line' warning on 20 August 2012 LCC have confirmed that at least 96355 people have been killed in #Syria.
+		 Tags in tweet:['Syria']
+		 Users in tweet:[]
+		 Urls in tweet:[]
+
+	#Bestnaijamade: 16yr old PKK suicide bomber who detonated bomb in ... http://t.co/KSAwlYuX02 bestnaijamade bestnaijamade bestnaijamade be??_
+		 Tags in tweet:[u'Bestnaijamade']
+		 Users in tweet:[]
+		 Urls in tweet:['http://t.co/KSAwlYuX02']
+		 Following url: http://t.co/KSAwlYuX02 -> http://bestnaijamade.blogspot.com/2015/08/16yr-old-pkk-suicide-bomber-who.html?spref=tw -> http://bestnaijamade.blogspot.co.il/2015/08/16yr-old-pkk-suicide-bomber-who.html?spref=tw
+
+	3 Former Executives to Be Prosecuted in Fukushima Nuclear Disaster http://t.co/JSsmMLNaQ7
+		 Tags in tweet:[]
+		 Users in tweet:[]
+		 Urls in tweet:['http://t.co/JSsmMLNaQ7']
+		 Following url: http://t.co/JSsmMLNaQ7 -> http://nyti.ms/1Eatv40 -> http://www.nytimes.com/glogin?URI=http://www.nytimes.com/2015/08/01/world/asia/3-former-tepco-executives-to-be-prosecuted-in-fukushima-nuclear-disaster.html%3Futm_content%3Dbuffer7c8c6%26utm_medium%3Dsocial%26utm_source%3Dtwitter.com%26utm_campaign%3Dbuffer%26_r%3D0&utm_content=buffer41e70&utm_medium=social&utm_source=twitter.com&utm_campaign=buffer -> http://www.nytimes.com/2015/08/01/world/asia/3-former-tepco-executives-to-be-prosecuted-in-fukushima-nuclear-disaster.html?utm_content=buffer7c8c6&utm_medium=social&utm_source=twitter.com&utm_campaign=buffer&_r=0 -> https://www.nytimes.com/2015/08/01/world/asia/3-former-tepco-executives-to-be-prosecuted-in-fukushima-nuclear-disaster.html?utm_content=buffer7c8c6&utm_medium=social&utm_source=twitter.com&utm_campaign=buffer&_r=0
+
+	Toddler drowned in bath after mum left room to fetch his pyjamas http://t.co/k9aSKtwXfL
+		 Tags in tweet:[]
+		 Users in tweet:[]
+		 Urls in tweet:['http://t.co/k9aSKtwXfL']
+		 Following url: http://t.co/k9aSKtwXfL - Timeout
+
+	Yesterday's #hailstorm! #boston #cambridge http://t.co/HbgYpruvO7 http://t.co/SwtgHLibs2
+		 Tags in tweet:[u'hailstorm', u'boston', u'cambridge']
+		 Users in tweet:[]
+		 Urls in tweet:['http://t.co/HbgYpruvO7', 'http://t.co/SwtgHLibs2']
+		 Following url: http://t.co/HbgYpruvO7 -> http://ift.tt/1IqdZTx -> https://instagram.com/p/6A9-puHvEO/ -> https://www.instagram.com/p/6A9-puHvEO/
+		 Following url: http://t.co/SwtgHLibs2 -> https://twitter.com/ItsAvanti/status/629026474679517185/photo/1
+
 
 === Total 2793 irrelevant tweets found, for example:
-=== for example:
-	@Babypicturethis SNACKS SNACKS SNACKS. Snacks is how we survived flights with W&amp;P when they were wee.
-	?? ice age: the meltdown
-	One Direction Is my pick for http://t.co/q2eBlOKeVE Fan Army #Directioners http://t.co/eNCmhz6y34 x1431
-	Get access to the most extensive sources of threat information right out of the box. Then easily add your own internal intelligence. #BHUSA
-	Morganite Gemstone White Fire Opal 925 Sterling Silver Ring Size 6 R1354 http://t.co/hHpVSAtQXN http://t.co/D12r8XpShy
+	#3: Car Recorder ZeroEdge?? Dual-lens Car Camera Vehicle Traffic/Driving History/Accident Camcorder  Large Re... http://t.co/kKFaSJv6Cj
+		 Tags in tweet:[]
+		 Users in tweet:[]
+		 Urls in tweet:['http://t.co/kKFaSJv6Cj']
+		 Following url: http://t.co/kKFaSJv6Cj -> http://amzn.to/1T7Omvy -> http://www.amazon.com/Simultaneous-Water-proof-Monitoring-one-button-Multi-Language/dp/B010H0SL9O/ref=pd_zg_rss_ts_e_10980561_3?ie=UTF8&tag=ocarvidplay-xd-20&utm_source=twitterfeed&utm_medium=twitter -> https://www.amazon.com/Simultaneous-Water-proof-Monitoring-one-button-Multi-Language/dp/B010H0SL9O/ref=pd_zg_rss_ts_e_10980561_3?ie=UTF8&tag=ocarvidplay-xd-20&utm_source=twitterfeed&utm_medium=twitter -> https://www.amazon.com/Z-Edge-Camera-Recorder-Vehicles-Included/dp/B010H0SL9O
 
-=== Another example - expand tiny urls (timeout is 2sec):
-	http://t.co/VpGu8z1Lhb --> https://english.kyodonews.jp/login
-	http://t.co/3sNyOOhseq --> http://www.bbc.co.uk/news/uk-scotland-edinburgh-east-fife-33803309#sa-ns_mchannel=rss&ns_source=PublicRSS20-sa?utm_medium=twitter&utm_source=twitterfeed
-	http://t.co/Byj5Dfa2rv --> https://www.youtube.com/watch?v=stK3YPz6WTc&feature=youtu.be
+	Just thought I'd let you all know...
+It's probably not a good idea to plug in your hairdryer when it's wet you will be electrocuted.
+		 Tags in tweet:[]
+		 Users in tweet:[]
+		 Urls in tweet:[]
+
+	The Eden Hazard of Hockey https://t.co/RbbnjkoqUD
+		 Tags in tweet:[]
+		 Users in tweet:[]
+		 Urls in tweet:['https://t.co/RbbnjkoqUD']
+		 Following url: https://t.co/RbbnjkoqUD -> https://vine.co/v/eHzipDIO5x7
+
+	@Luzukokoti it's all  about understanding umntu wakho. If you do and trust your partner then y OK u will know and won't fear to do anything.
+		 Tags in tweet:[]
+		 Users in tweet:['Luzukokoti']
+		 Urls in tweet:[]
+
+	My favorite text http://t.co/5U5GAkX2ch
+		 Tags in tweet:[]
+		 Users in tweet:[]
+		 Urls in tweet:['http://t.co/5U5GAkX2ch']
+		 Following url: http://t.co/5U5GAkX2ch -> https://twitter.com/__hailstorm/status/629117562047959041/photo/1
 ```
