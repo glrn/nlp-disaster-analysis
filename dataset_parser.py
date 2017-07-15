@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import csv
+import numpy
 import random
 import requests
 from ttp import ttp
@@ -13,9 +14,10 @@ This module parses CrowdFlower's dataset.
 DATASET_PATH = 'dataset/socialmedia-disaster-tweets-DFE.csv'
 EXPAND_TINYURL_TIMEOUT = 2.0
 
-class Relevancy:
-    DISASTER = 1
-    NOT_DISASTER = 2
+class Relevancy(object):
+    NOT_DISASTER    = 0
+    DISASTER        = 1
+
 
 def dataset_as_dict():
     """
@@ -45,6 +47,12 @@ def dataset_as_dict():
             ###
             entries.append(row)
     return entries
+
+def get_corpus(dataset):
+    return numpy.array([line['text'] for line in dataset])
+
+def get_labels(dataset):
+    return numpy.array([line['choose_one'] for line in dataset])
 
 def pretty_print_tweet(tweet):
     print '\t%s' % tweet
