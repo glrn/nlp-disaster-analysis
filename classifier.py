@@ -1,5 +1,6 @@
 from sklearn.ensemble                   import RandomForestClassifier
 from sklearn.feature_extraction.text    import CountVectorizer
+from sklearn.naive_bayes                import BernoulliNB
 
 class BagOfWords(object):
 
@@ -17,3 +18,12 @@ class BagOfWords(object):
         vectorize   = CountVectorizer(vocabulary=self.vocabulary)
         bag         = vectorize.fit_transform(test)
         return self.forest.predict(bag)
+
+    def fit_naive_bayes(self):
+        self.nb = BernoulliNB()
+        self.nb.fit(self.bag_of_words, self.labels)
+
+    def predict_naive_bayes(self, test):
+        vectorize   = CountVectorizer(vocabulary=self.vocabulary)
+        bag         = vectorize.fit_transform(test)
+        return self.nb.predict(bag)

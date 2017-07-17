@@ -27,12 +27,19 @@ def main():
 
     print('Fitting...')
     bag.fit_forest(n_estimators=100)
+    bag.fit_naive_bayes()
 
     print('Predicting...')
+    print('FOREST:')
     result = bag.predict_forest(test_corpus)
-
     acc = common.compute_accuracy(result, test_labels)
     print('acc: {}', acc)
+
+    print('NAIVE BAYES:')
+    result = bag.predict_naive_bayes(test_corpus)
+    acc = common.compute_accuracy(result, test_labels)
+    print('acc: {}', acc)
+
 
 if __name__ == '__main__':
     main()
