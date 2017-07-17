@@ -9,7 +9,7 @@ from dataset_parser             import dataset_as_dict, get_corpus, get_labels
 
 TEST_SLICE = 0.1
 
-def main():
+def setup():
     print('Starting...')
     print('Parsing dataset...')
     dataset = dataset_as_dict()
@@ -21,9 +21,11 @@ def main():
     print('Generating corpuses and labels...')
     train_corpus, test_corpus = get_corpus(train), get_corpus(test)
     train_labels, test_labels = get_labels(train), get_labels(test)
+    return train_corpus, test_corpus, train_labels, test_labels
 
+def test_bag_of_words(train_corpus, test_corpus, train_labels, test_labels, **kwds):
     print('Generating bag of words...')
-    bag = BagOfWords(train_corpus, train_labels)
+    bag = BagOfWords(train_corpus, train_labels, **kwds)
 
     print('Fitting...')
     bag.fit_forest(n_estimators=100)
@@ -33,13 +35,20 @@ def main():
     print('FOREST:')
     result = bag.predict_forest(test_corpus)
     acc = common.compute_accuracy(result, test_labels)
-    print('acc: {}', acc)
+    print('acc: {}'.format(acc))
 
     print('NAIVE BAYES:')
     result = bag.predict_naive_bayes(test_corpus)
     acc = common.compute_accuracy(result, test_labels)
-    print('acc: {}', acc)
+    print('acc: {}'.format(acc))
 
+def main():
+
+    train_corpus, test_corpus, train_labels, test_labels = setup()
+    print('Test unigrams:')
+    test_bag_of_words(train_corpus, test_corpus, train_labels, test_labels)
+    print('Test unigrams and bigrams:')
+    test_bag_of_words(train_corpus, test_corpus, train_labels, test_labels, ngram_range=(1, 2))
 
 if __name__ == '__main__':
     main()
