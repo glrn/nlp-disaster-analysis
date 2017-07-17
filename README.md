@@ -3,6 +3,39 @@
 
 Example: output of dataset_parser.py:
 ```
+Starting...
+Parsing dataset...
+Done parsing, dataset length: 10876
+Splitting into train 0.9 and test 0.1
+Generating corpuses and labels...
+Test unigrams:
+Generating bag of words...
+Fitting...
+Measure times for function: fit_forest (2017-07-17 20:49:03)
+Total running time of fit_forest in seconds: 32
+Measure times for function: fit_naive_bayes (2017-07-17 20:49:36)
+Total running time of fit_naive_bayes in seconds: 0
+Predicting...
+FOREST:
+acc: 0.801470588235
+NAIVE BAYES:
+acc: 0.827205882353
+Test unigrams and bigrams:
+Generating bag of words...
+Fitting...
+Measure times for function: fit_forest (2017-07-17 20:49:37)
+Total running time of fit_forest in seconds: 88
+Measure times for function: fit_naive_bayes (2017-07-17 20:51:06)
+Total running time of fit_naive_bayes in seconds: 0
+Predicting...
+FOREST:
+acc: 0.801470588235
+NAIVE BAYES:
+acc: 0.791360294118
+```
+
+Example: output of dataset_parser.py:
+```
 === Total 2273 relevant tweets found, for example:
 	Since the chemical-weapons 'red line' warning on 20 August 2012 LCC have confirmed that at least 96355 people have been killed in #Syria.
 		 Tags in tweet:['Syria']
