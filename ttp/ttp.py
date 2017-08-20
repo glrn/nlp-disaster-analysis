@@ -300,14 +300,15 @@ def escape(text):
 # NEW CODE ADDED TO twitter-text-python LIBRARY
 
 
-USER_REFERENCE_TOKEN = '__USERREF__'
+USER_REFERENCE_TOKEN = ' __USERREF__ '
 
-def process_tweet(tweet):
+def process_tweet(tweet_record):
     # Process the tweet according to the following rules:
     # - replace user references with the token '__USERREF__'
     # - unwind hashtags to meaningful words
     # - unwind tiny-URLs to original URLs + page title
 
+    tweet = tweet_record['text'].strip()
     tweet = tweet.decode('utf-8').encode('ascii', 'replace')
     p = Parser()
     ttp_parser = p.parse(tweet)
@@ -321,7 +322,13 @@ def process_tweet(tweet):
         tweet = tweet.replace('#'+hashtag, parse_hashtag(hashtag))
 
     # Process URLs
-    # TODO (Gal)
+    for i in xrange(min(3,len(ttp_parser.urls))):
+        # we replace the tiny-URL with the real URI + page title
+        tinyURL = ttp_parser.urls[i]
+        if tweet_record['link_uri%d' % (i+1)] != '':
+            URI = tweet_record['link_uri%d' % (i+1)].decode('utf-8').encode('ascii', 'replace')
+            title = tweet_record['link_title%d' % (i+1)].decode('utf-8').encode('ascii', 'replace')
+            tweet = tweet.replace(tinyURL, URI + ' ' + title)
 
     return tweet
 

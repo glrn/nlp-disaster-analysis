@@ -11,7 +11,7 @@ This module parses CrowdFlower's dataset.
 [URL: https://www.crowdflower.com/data-for-everyone (under 'Disasters on social media')]
 """
 
-DATASET_PATH = 'dataset/socialmedia-disaster-tweets-DFE.csv'
+DATASET_PATH = 'dataset/socialmedia-disaster-tweets-DFE-extended.csv'
 EXPAND_TINYURL_TIMEOUT = 2.0
 
 class Relevancy(object):
@@ -35,12 +35,21 @@ def dataset_as_dict():
         _unit_state             - UNIMPORTANT
         _golden                 - UNIMPORTANT
         _unit_id                - unique index
+        link_url1               - Real URL of 1st tiny-URL (if exists)
+        link_uri1               - URI (domain)
+        link_title1             - <title> tag of html
+        link_url2               - Same for 2nd tiny-URL (if exists)
+        link_uri2               - ...
+        link_title2             - ...
+        link_url3               - Same for 3rd tiny-URL (if exists)
+        link_uri3               - ...
+        link_title3             - ...
     """
     entries = []
     with open(DATASET_PATH, 'rb') as csvfile:
         for row in csv.DictReader(csvfile):
             # preprocessing on fields
-            row['text'] = ttp.process_tweet(row['text'])
+            row['text'] = ttp.process_tweet(row)
             row['choose_one'] = Relevancy.DISASTER if row['choose_one'] == 'Relevant' else Relevancy.NOT_DISASTER
             row['choose_one:confidence'] = float(row['choose_one:confidence'])
             row['_unit_id'] = int(row['_unit_id'])
