@@ -24,4 +24,5 @@ def follow_shortlink(shortlink):
 
 if __name__ == "__main__":
     shortlinks = ['http://t.co/8o0z9BbEMu', 'http://bbc.in/16dClPF']
-    print (follow_shortlinks(shortlinks))
+    for s in shortlinks:
+        print(follow_shortlink(s))
