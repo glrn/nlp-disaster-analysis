@@ -133,6 +133,7 @@ class Parser(object):
         reply = reply.groups(0)[0] if reply is not None else None
 
         parsed_html = self._html(text) if html else self._text(text)
+
         return ParseResult(self._urls, self._users, reply,
                            self._lists, self._tags, parsed_html)
 
@@ -294,3 +295,57 @@ def escape(text):
     return ''.join({'&': '&amp;', '"': '&quot;',
                     '\'': '&apos;', '>': '&gt;',
                     '<': '&lt;'}.get(c, c) for c in text)
+
+################################################################################
+# NEW CODE ADDED TO twitter-text-python LIBRARY
+
+
+USER_REFERENCE_TOKEN = '__USERREF__'
+
+def process_tweet(tweet):
+    # Process the tweet according to the following rules:
+    # - replace user references with the token '__USERREF__'
+    # - unwind hashtags to meaningful words
+    # - unwind tiny-URLs to original URLs + page title
+
+    tweet = tweet.decode('utf-8').encode('ascii', 'replace')
+    p = Parser()
+    ttp_parser = p.parse(tweet)
+
+    # Replace user references with token
+    for user in ttp_parser.users:
+        tweet = tweet.replace('@'+user, USER_REFERENCE_TOKEN)
+
+    # Process hashtags
+    for hashtag in ttp_parser.tags:
+        tweet = tweet.replace('#'+hashtag, parse_hashtag(hashtag))
+
+    # Process URLs
+    # TODO (Gal)
+
+    return tweet
+
+def parse_hashtag(hashtag):
+    # We attempt to extract meaningful information from hashtags, using several
+    # heuristics; first, we remove the trailing '#' symbol. Then we split
+    # the hashtag either by breaking CamelCase strings or splitting according to
+    # underline delimiter. Finally, we convert all words to lower-case.
+    # Examples: #PantherAttack --> 'panther attack' (success)
+    #           #nepal_earthquake --> 'nepal earthquake' (success)
+    #           #HELPMEPLZ --> 'helpmeplz' (failure)
+
+    # try CamelCase
+    matches = re.finditer('.+?(?:(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])|$)', hashtag)
+    words = [m.group(0) for m in matches]
+    words = [w.lower() for w in words]
+    if len(words) > 1:
+        return ' '.join(words)
+
+    # try underline_separation
+    words = hashtag.split('_')
+    words = [w.lower() for w in words]
+    if len(words) > 1:
+        return ' '.join(words)
+
+    # fail splitting to words
+    return hashtag

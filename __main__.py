@@ -45,8 +45,10 @@ def test_bag_of_words(train_corpus, test_corpus, train_labels, test_labels, **kw
 def main():
 
     train_corpus, test_corpus, train_labels, test_labels = setup()
+    print('===============================')
     print('Test unigrams:')
     test_bag_of_words(train_corpus, test_corpus, train_labels, test_labels)
+    print('===============================')
     print('Test unigrams and bigrams:')
     test_bag_of_words(train_corpus, test_corpus, train_labels, test_labels, ngram_range=(1, 2))
 
