@@ -36,5 +36,6 @@ class Progressbar(object):
         block = int(round(barLength * progress))
         text = "\r{3}: [{0}] {1}% {2}".format(
             "#" * block + "-" * (barLength - block), progress * 100, status, self.message)
+        text += ' (%s/%s) ' % (done, total)
         sys.stdout.write(text)
         sys.stdout.flush()

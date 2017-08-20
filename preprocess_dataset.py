@@ -54,7 +54,9 @@ with open(PROCESSED_DATASET_PATH, 'wb') as csvfile:
             for j in range(1,4):
                 # Step 2 - Follow URL redirection until final URL is revealed
                 if len(tweet_parser.urls) >= j:
-                    redirected_url = utils.follow_shortlink(tweet_parser.urls[j-1])[-1]
+                    shortened_url = tweet_parser.urls[j-1]
+                    logger.info('Following URL %s' % shortened_url)
+                    redirected_url = utils.follow_shortlink(shortened_url)[-1]
                     orig_dataset[i]['link_url%d' % j] = unicode(redirected_url).encode("utf-8")
 
                     parsed_uri = urlparse(redirected_url)
@@ -66,6 +68,7 @@ with open(PROCESSED_DATASET_PATH, 'wb') as csvfile:
                     orig_dataset[i]['link_title%d' % j] = unicode(soup.title.string).encode("utf-8")
 
         except:
+            logger.error('catch')
             pass
 
         # Step 4 - Write new record to the new dataset
