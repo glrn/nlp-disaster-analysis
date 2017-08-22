@@ -34,12 +34,12 @@ def test_bag_of_words(train_corpus, test_corpus, train_labels, test_labels, **kw
     print('Predicting...')
     print('FOREST:')
     result = bag.predict_forest(test_corpus)
-    acc = common.compute_accuracy(result, test_labels)
+    acc = common.compute_accuracy(result, test_labels, test_corpus)
     print('acc: {}'.format(acc))
 
     print('NAIVE BAYES:')
     result = bag.predict_naive_bayes(test_corpus)
-    acc = common.compute_accuracy(result, test_labels)
+    acc = common.compute_accuracy(result, test_labels, test_corpus)
     print('acc: {}'.format(acc))
 
 def main():

@@ -13,11 +13,18 @@ def timeit(func):
         return ret
     return wrapper
 
-def compute_accuracy(prediction, real):
+def compute_accuracy(prediction, real, corpus = None):
     if len(prediction) != len(real):
         raise ValueError('prediction {} and real {} length should by equal'.format(len(prediction), len(real)))
     correct = 0
-    for p, r in zip(prediction, real):
+    for i in xrange(len(prediction)):
+        p = prediction[i]
+        r = real[i]
         if p == r:
             correct += 1
+        if corpus is not None and p != r:
+            # print false-positives and false-negatives
+            print "Real: %s, Prediction: %s" % (p, r)
+            print "Tweet is: %s" % corpus[i]
+            print
     return float(correct) / len(prediction)
