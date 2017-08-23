@@ -3,6 +3,7 @@ import common
 from sklearn.ensemble                   import RandomForestClassifier
 from sklearn.feature_extraction.text    import CountVectorizer
 from sklearn.naive_bayes                import BernoulliNB
+from feature                            import feature, fitter
 
 class BagOfWords(object):
 
@@ -32,3 +33,25 @@ class BagOfWords(object):
         vectorize   = CountVectorizer(vocabulary=self.vocabulary, **self.kwds)
         bag         = vectorize.fit_transform(test)
         return self.nb.predict(bag)
+
+vocabulary = None
+
+@feature('svm') # 22277
+def unigram(corpus):
+    vectorizer = CountVectorizer(vocabulary=vocabulary)
+    return vectorizer.fit_transform(corpus)
+
+#@feature('svm') # 22422
+def unigram_and_bigram(corpus):
+    vectorizer = CountVectorizer(vocabulary=vocabulary, ngram_range=(1, 2))
+    return vectorizer.fit_transform(corpus)
+
+'''
+    let's say you want to add another feature extraction for svm, do as following:
+    @feature('svm')
+    def foo(corpus):
+        return {build_matrix some how} # this matrix should be of (len(corpus) X #num_of_features) dimension.
+'''
+
+def svm_fitter(inputs):
+    return fitter('svm', inputs)
