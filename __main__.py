@@ -1,10 +1,12 @@
 import numpy as np
 
+import classifier
 import common
 
+from sklearn                    import svm
 from sklearn.cross_validation   import train_test_split
 
-from classifier                 import BagOfWords
+from classifier                 import BagOfWords, svm_fitter
 from dataset_parser             import dataset_as_dict, get_corpus, get_labels
 
 TEST_SLICE = 0.1
@@ -42,15 +44,38 @@ def test_bag_of_words(train_corpus, test_corpus, train_labels, test_labels, **kw
     acc = common.compute_accuracy(result, test_labels, test_corpus)
     print('acc: {}'.format(acc))
 
+def test_svm(train_corpus, test_courpus, train_labels, test_labels):
+    print('SVM:')
+    print('Generating bag of words...')
+    bag = BagOfWords(train_corpus, train_labels, ngram_range=(1, 2))
+    classifier.vocabulary = bag.vocabulary
+
+    print('Fitting...')
+    trained = svm_fitter(train_corpus)
+    tested  = svm_fitter(test_courpus)
+    # You need to play with this C value to get better accuracy (for example if C=1, all predictions are 0).
+    svm_classifier = svm.SVC(C=1000)
+    svm_classifier.fit(trained, train_labels)
+
+    print('Predicting...')
+    result = svm_classifier.predict(tested)
+    acc = common.compute_accuracy(result, test_labels, test_courpus)
+    print('acc: {}'.format(acc))
+
 def main():
 
     train_corpus, test_corpus, train_labels, test_labels = setup()
+    '''
     print('===============================')
     print('Test unigrams:')
     test_bag_of_words(train_corpus, test_corpus, train_labels, test_labels)
     print('===============================')
     print('Test unigrams and bigrams:')
     test_bag_of_words(train_corpus, test_corpus, train_labels, test_labels, ngram_range=(1, 2))
+    '''
+    print('===============================')
+    print('Test SVM unigrams and bigrams:')
+    test_svm(train_corpus, test_corpus, train_labels, test_labels)
 
 if __name__ == '__main__':
     main()
