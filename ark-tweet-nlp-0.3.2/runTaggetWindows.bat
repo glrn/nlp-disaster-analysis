@@ -1,0 +1,1 @@
+runTagger.sh --output-format conll ../dataset/socialmedia-disaster-tweets-DFE-only-tweets.txt > ../dataset/socialmedia-disaster-tweets-DFE-POS-Tagging.txt
