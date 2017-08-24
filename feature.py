@@ -1,5 +1,6 @@
 import collections
 import numpy as np
+import scipy.sparse
 
 named_features = collections.defaultdict(list)
 
@@ -21,9 +22,13 @@ def fitter(name, inputs):
     '''
     matrices = []
     for f in named_features[name]:
+        #matrices.append(f(inputs))
         matrices.append(f(inputs))
     a = matrices[0]
     for b in matrices[1:]:
-        a = np.concatenate((a, b), axis=1)
+        #a = np.concatenate((a, b), axis=1)
+        a = scipy.sparse.hstack([a,b])
+
+    print(a.shape)
     return a
 
