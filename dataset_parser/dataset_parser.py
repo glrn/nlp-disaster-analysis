@@ -1,11 +1,5 @@
 import csv
-import numpy
-import random
-import requests
-import twokenizer
 from tweet_parser import Tweet
-from ttp import ttp
-from ttp import utils
 
 """
 This module parses CrowdFlower's dataset.
@@ -22,8 +16,30 @@ class Dataset(object):
     def __init__(self, dataset_path=DATASET_PATH):
         self.entries = []
 
-        # TODO: parse POS tags
+        pos_of_tweets = read_conll_pos_file(POS_TAGGING_PATH)
 
+        t = 0
         with open(DATASET_PATH, 'rb') as csvfile:
             for row in csv.DictReader(csvfile):
-                self.entries.append(Tweet(row))
+                POS_tags = ' '.join([tup[1] for tup in pos_of_tweets[t]])
+                self.entries.append(Tweet(row, POS_tags))
+                t += 1
+
+
+def read_conll_pos_file(path):
+    """
+    Takes a path to a file and returns a list of word/tag pairs
+    (This code is adopted from the exercises)
+    """
+    sents = []
+    with open(path, "r") as f:
+        curr = []
+        for line in f:
+            line = line.strip()
+            if line == "":
+                sents.append(curr)
+                curr = []
+            else:
+                word, tag, acc = line.strip().split("\t")
+                curr.append((word,tag))
+    return sents

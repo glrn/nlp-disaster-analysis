@@ -4,6 +4,7 @@ class Relevancy(object):
     NOT_DISASTER    = 0
     DISASTER        = 1
 
+
 class Tweet(object):
     """
     This object contains a tweet and the corresponding metadata (e.g. tweet
@@ -11,7 +12,7 @@ class Tweet(object):
     (e.g. tweet's text,
     """
 
-    def __init__(self, rec, POS_tagging=None):
+    def __init__(self, rec, POS_tagging):
         """
 
         :param rec:         record from csv

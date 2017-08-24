@@ -1,6 +1,7 @@
 import common
 import numpy
 from ttp import ttp
+from dataset_parser import pos_tags
 
 from sklearn.ensemble                   import RandomForestClassifier
 from sklearn.feature_extraction.text    import CountVectorizer
@@ -55,7 +56,7 @@ def unigram_and_bigram(inputs):
 @feature('svm')
 def tweet_meta_features(inputs):
     corpus = numpy.array([tweet.text for tweet in inputs])
-    
+
     p = ttp.Parser()
 
     l = []
@@ -87,6 +88,11 @@ def tweet_meta_features(inputs):
 
     return l
 
+@feature('svm')
+def trigram_of_POS_tags(inputs):
+    POS_tags_corpus = numpy.array([tweet.POS for tweet in inputs])
+    vectorizer = CountVectorizer(vocabulary=pos_tags.ALL_POS_TAGS, ngram_range=(1, 3))
+    return vectorizer.fit_transform(POS_tags_corpus)
 
 '''
     let's say you want to add another feature extraction for svm, do as following:
