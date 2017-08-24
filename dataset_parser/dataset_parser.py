@@ -21,7 +21,9 @@ class Dataset(object):
         t = 0
         with open(DATASET_PATH, 'rb') as csvfile:
             for row in csv.DictReader(csvfile):
-                
+                # Handle only tweets with confidence > 0.9
+                if float(row['choose_one:confidence']) < 0.9:
+                    continue
                 POS_tags = ' '.join([tup[1] for tup in pos_of_tweets[t]])
                 self.entries.append(Tweet(row, POS_tags))
                 t += 1
