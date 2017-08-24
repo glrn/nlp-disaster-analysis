@@ -1,13 +1,11 @@
-import numpy as np
+from sklearn import svm
+from sklearn.cross_validation import train_test_split
 
 import classifier
 import common
-
-from sklearn                    import svm
-from sklearn.cross_validation   import train_test_split
-
-from classifier                 import BagOfWords, svm_fitter
-from dataset_parser             import dataset_as_dict, get_corpus, get_labels
+from classifier import BagOfWords, svm_fitter
+from dataset_parser.dataset_parser import dataset_as_dict, get_corpus, \
+    get_labels
 
 TEST_SLICE = 0.1
 

@@ -24,18 +24,3 @@ def follow_shortlink(shortlink):
     # append the final URL that we finish with
     all_urls.append(request_result.url)
     return all_urls
-
-
-def pretty_print_tweet(tweet):
-    print('\t%s' % tweet)
-    p = ttp.Parser()
-    ttp_parser = p.parse(tweet)
-    print('\t\t Tags in tweet:' + str(ttp_parser.tags))
-    print('\t\t Users in tweet:' + str(ttp_parser.users))
-    print('\t\t Urls in tweet:' + str(ttp_parser.urls))
-    for url in ttp_parser.urls:
-        try:
-            print('\t\t Following url: ' + ' -> '.join(follow_shortlink(url)))
-        except requests.RequestException:
-            print('\t\t Following url: %s - Timeout' % url)
-    print()
