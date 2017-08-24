@@ -5,10 +5,12 @@ from sklearn.feature_extraction.text    import CountVectorizer
 from sklearn.naive_bayes                import BernoulliNB
 from feature                            import feature, fitter
 
+from twokenizer import tokenizeRawTweetText
+
 class BagOfWords(object):
 
     def __init__(self, corpus, labels, **kwds):
-        self.vectorizer     = CountVectorizer(**kwds)
+        self.vectorizer     = CountVectorizer(analyzer='word', tokenizer=tokenizeRawTweetText, **kwds)
         self.bag_of_words   = self.vectorizer.fit_transform(corpus)
         self.labels         = labels
         self.vocabulary     = self.vectorizer.get_feature_names()
