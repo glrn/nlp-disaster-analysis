@@ -42,6 +42,8 @@ class Tweet(object):
         #     link_uri3               - ...
         #     link_title3             - ...
         self.text = rec['text']
+        self.text = self.text.decode('utf-8').encode('ascii', 'replace') # convert to ASCII
+        self.processed_text = ttp.process_tweet(rec)
         self.label = Relevancy.DISASTER if rec['choose_one'] == 'Relevant' \
                          else Relevancy.NOT_DISASTER
         self.confidence = float(rec['choose_one:confidence'])
@@ -58,16 +60,8 @@ class Tweet(object):
         self.POS = POS_tagging
 
     def pretty_print(self):
-        print('\t%s' % tweet)
-        p = ttp.Parser()
-        ttp_parser = p.parse(tweet)
-        print('\t\t Tags in tweet:' + str(ttp_parser.tags))
-        print('\t\t Users in tweet:' + str(ttp_parser.users))
-        print('\t\t Urls in tweet:' + str(ttp_parser.urls))
-        for url in ttp_parser.urls:
-            try:
-                print(
-                '\t\t Following url: ' + ' -> '.join(follow_shortlink(url)))
-            except requests.RequestException:
-                print('\t\t Following url: %s - Timeout' % url)
-        print()
+        print('Original tweet:\t%s' % self.text)
+        print('Processed tweet: %s' % self.processed_text)
+        print('\t Tags in tweet:' + str(self.hashtags))
+        print('\t Users in tweet:' + str(self.users))
+        print('\t Urls in tweet:' + str(self.urls))

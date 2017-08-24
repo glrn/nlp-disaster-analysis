@@ -16,9 +16,11 @@ if __name__=='__main__':
 
     print '=== Total %d relevant tweets found, for example:' % len(some_relevant_tweets)
     for i in random.sample(range(0, len(some_relevant_tweets)), 5):
-        utils.pretty_print_tweet(some_relevant_tweets[i]['text'])
+        some_relevant_tweets[i].pretty_print()
+        print
     print
 
     print '=== Total %d irrelevant tweets found, for example:' % len(some_irrelevant_tweets)
     for i in random.sample(range(0, len(some_irrelevant_tweets)), 5):
-        utils.pretty_print_tweet(some_irrelevant_tweets[i]['text'])
+        some_irrelevant_tweets[i].pretty_print()
+        print

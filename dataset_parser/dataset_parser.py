@@ -27,9 +27,3 @@ class Dataset(object):
         with open(DATASET_PATH, 'rb') as csvfile:
             for row in csv.DictReader(csvfile):
                 self.entries.append(Tweet(row))
-
-    def get_corpus(self):
-        return numpy.array([tweet.text for tweet in self.entries])
-
-    def get_labels(self):
-        return numpy.array([tweet.label for tweet in self.entries])

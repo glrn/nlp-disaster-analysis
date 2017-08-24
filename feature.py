@@ -29,6 +29,5 @@ def fitter(name, inputs):
         #a = np.concatenate((a, b), axis=1)
         a = scipy.sparse.hstack([a,b])
 
-    print(a.shape)
     return a
 
