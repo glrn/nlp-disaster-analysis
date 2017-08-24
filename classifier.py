@@ -43,19 +43,19 @@ vocabulary = None
 
 #@feature('svm') # 22277
 def unigram(inputs):
-    corpus = numpy.array([tweet.text for tweet in inputs])
+    corpus = numpy.array([tweet.processed_text for tweet in inputs])
     vectorizer = CountVectorizer(vocabulary=vocabulary, analyzer='word', tokenizer=tokenizeRawTweetText)
     return vectorizer.fit_transform(corpus)
 
 @feature('svm') # 22422
 def unigram_and_bigram(inputs):
-    corpus = numpy.array([tweet.text for tweet in inputs])
+    corpus = numpy.array([tweet.processed_text for tweet in inputs])
     vectorizer = CountVectorizer(vocabulary=vocabulary, analyzer='word', tokenizer=tokenizeRawTweetText, ngram_range=(1, 2))
     return vectorizer.fit_transform(corpus)
 
 @feature('svm')
 def tweet_meta_features(inputs):
-    corpus = numpy.array([tweet.text for tweet in inputs])
+    corpus = numpy.array([tweet.processed_text for tweet in inputs])
 
     p = ttp.Parser()
 

@@ -41,8 +41,8 @@ def test_bag_of_words(train_corpus, test_corpus, train_labels, test_labels, **kw
     print('acc: {}'.format(acc))
 
 def test_svm(train, test):
-    train_corpus = numpy.array([tweet.text for tweet in train])
-    test_corpus = numpy.array([tweet.text for tweet in test])
+    train_corpus = numpy.array([tweet.processed_text for tweet in train])
+    test_corpus = numpy.array([tweet.processed_text for tweet in test])
     train_labels = numpy.array([tweet.label for tweet in train])
     test_labels = numpy.array([tweet.label for tweet in test])
 
