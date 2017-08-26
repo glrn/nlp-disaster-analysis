@@ -12,11 +12,12 @@ class Tweet(object):
     (e.g. tweet's text,
     """
 
-    def __init__(self, rec, POS_tagging):
+    def __init__(self, rec, POS_tagging, named_entities=[]):
         """
 
         :param rec:         record from csv
         :param POS_tagging: list containing part-of-speech tags
+        :param named_entities:  list of named-entities in the tweet (default: empty list)
         """
 
         # Pasrse record from dataset. Keys in the dataset csv are:
@@ -59,6 +60,9 @@ class Tweet(object):
 
         # Handle POS tagging
         self.POS = POS_tagging
+
+        # Handle NEs (convert all to lower-case)
+        self.named_entities = [entity.lower() for entity in named_entities]
 
     def pretty_print(self):
         print('Original tweet:\t%s' % self.text)
