@@ -61,8 +61,8 @@ class Tweet(object):
         # Handle POS tagging
         self.POS = POS_tagging
 
-        # Handle NEs (convert all to lower-case)
-        self.named_entities = [entity.lower() for entity in named_entities]
+        # Handle NEs
+        self.named_entities = named_entities
 
     def pretty_print(self):
         print('Original tweet:\t%s' % self.text)
