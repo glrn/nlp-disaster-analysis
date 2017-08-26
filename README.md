@@ -1,6 +1,49 @@
 # Analysis of Panic and Alert on Social Media
 ### Final Project // Advanced Methods in Natural Language Processing @TAU // Spring 2017
 
+Some examples for Named Entity Recognition:
+```
+Forest fire near La Ronge Sask. Canada
+Forest fire near La Ronge Sask. Canada
+Named Entities: ['Forest', 'La Ronge Sask']
+
+All residents asked to 'shelter in place' are being notified by officers. No other evacuation or shelter in place orders are expected
+All residents asked to 'shelter in place' are being notified by officers. No other evacuation or shelter in place orders are expected
+Named Entities: ['shelter', 'shelter']
+
+13,000 people receive #wildfires evacuation orders in California
+13,000 people receive wildfires evacuation orders in California
+Named Entities: ['California']
+
+Just got sent this photo from Ruby #Alaska as smoke from #wildfires pours into a school
+Just got sent this photo from Ruby Alaska as smoke from wildfires pours into a school
+Named Entities: ['Ruby Alaska']
+
+#RockyFire Update => California Hwy. 20 closed in both directions due to Lake County fire - #CAfire #wildfires
+Rocky Fire Update => California Hwy. 20 closed in both directions due to Lake County fire - C Afire wildfires
+Named Entities: ['Rocky Fire Update', 'California', 'Lake County']
+
+Apocalypse lighting. #Spokane #wildfires
+Apocalypse lighting. Spokane wildfires
+Named Entities: ['Spokane']
+
+#flood #disaster Heavy rain causes flash flooding of streets in Manitou, Colorado Springs areas
+flood disaster Heavy rain causes flash flooding of streets in Manitou, Colorado Springs areas
+Named Entities: ['Manitou', 'Colorado Springs']
+
+Typhoon Soudelor kills 28 in China and Taiwan
+Typhoon Soudelor kills 28 in China and Taiwan
+Named Entities: ['China', 'Taiwan']
+
+Haha South Tampa is getting flooded hah- WAIT A SECOND I LIVE IN SOUTH TAMPA WHAT AM I GONNA DO WHAT AM I GONNA DO FVCK #flooding
+Haha South Tampa is getting flooded hah- WAIT A SECOND I LIVE IN SOUTH TAMPA WHAT AM I GONNA DO WHAT AM I GONNA DO FVCK flooding
+Named Entities: ['South Tampa', 'SOUTH TAMPA']
+
+#raining #flooding #Florida #TampaBay #Tampa 18 or 19 days. I've lost count
+raining flooding Florida Tampa Bay Tampa 18 or 19 days. I've lost count
+Named Entities: ['Florida Tampa Bay']
+```
+
 Example: output of dataset_parser.py:
 ```
 Starting...
