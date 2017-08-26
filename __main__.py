@@ -1,14 +1,19 @@
+import cPickle
+import os
 from sklearn import svm
 from sklearn.cross_validation import train_test_split
 
 import classifier
 import common
-import dataset_parser.tweet_parser
 import numpy
+
+from annotated_dataset_parser.annotated_dataset_parser import AnnotatedDataset
 from classifier import BagOfWords, svm_fitter
 from dataset_parser import Dataset
 
 TEST_SLICE = 0.1
+
+ANNOTATED_DB_FILE = 'annotated_db.pkl'
 
 def setup():
     print('Starting...')
@@ -16,10 +21,22 @@ def setup():
     dataset = Dataset()
     print('Done parsing, dataset length: {}'.format(len(dataset.entries)))
 
+    print('Parsing annotated dataset...')
+    if not os.path.exists(ANNOTATED_DB_FILE):
+        annotated_dataset = AnnotatedDataset()
+        with open(ANNOTATED_DB_FILE, 'wb') as f:
+            cPickle.dump(annotated_dataset, f)
+    else:
+        with open(ANNOTATED_DB_FILE, 'rb') as f:
+            annotated_dataset = cPickle.load(f)
+    print('Done parsing, annotated dataset length: {}'.format(len(annotated_dataset.entries)))
+
     print('Splitting into train {} and test {}'.format(1 - TEST_SLICE, TEST_SLICE))
     train, test = train_test_split(dataset.entries, test_size=TEST_SLICE)
+    annotated_train, annotated_test = train_test_split(annotated_dataset.entries, test_size=TEST_SLICE)
 
-    return train, test
+    return train, test, annotated_train, annotated_test
+
 
 def test_bag_of_words(train_corpus, test_corpus, train_labels, test_labels, **kwds):
     print('Generating bag of words...')
@@ -53,7 +70,30 @@ def test_svm(train, test):
 
     print('Fitting...')
     trained = svm_fitter(train)
-    tested  = svm_fitter(test)
+    tested = svm_fitter(test)
+    # You need to play with this C value to get better accuracy (for example if C=1, all predictions are 0).
+    svm_classifier = svm.SVC(C=1000)
+    svm_classifier.fit(trained, train_labels)
+
+    print('Predicting...')
+    result = svm_classifier.predict(tested)
+    acc = common.compute_accuracy(result, test_labels, test_corpus)
+    print('acc: {}'.format(acc))
+
+def test_svm_annotated(train, test):
+    train_corpus = numpy.array([tweet.processed_text for tweet in train])
+    test_corpus = numpy.array([tweet.processed_text for tweet in test])
+    train_labels = numpy.array([tweet.relevance for tweet in train])
+    test_labels = numpy.array([tweet.relevance for tweet in test])
+
+    print('SVM:')
+    print('Generating bag of words...')
+    bag = BagOfWords(train_corpus, train_labels, ngram_range=(1, 2))
+    classifier.vocabulary = bag.vocabulary
+
+    print('Fitting...')
+    trained = svm_fitter(train)
+    tested = svm_fitter(test)
     # You need to play with this C value to get better accuracy (for example if C=1, all predictions are 0).
     svm_classifier = svm.SVC(C=1000)
     svm_classifier.fit(trained, train_labels)
@@ -65,12 +105,13 @@ def test_svm(train, test):
 
 def main():
 
-    train, test = setup()
+    train, test, annotated_train, annotated_test = setup()
+
+    """
     train_corpus = numpy.array([tweet.text for tweet in train])
     test_corpus = numpy.array([tweet.text for tweet in test])
     train_labels = numpy.array([tweet.label for tweet in train])
     test_labels = numpy.array([tweet.label for tweet in test])
-    """
     print('===============================')
     print('Test unigrams:')
     test_bag_of_words(train_corpus, test_corpus, train_labels, test_labels)
@@ -78,9 +119,17 @@ def main():
     print('Test unigrams and bigrams:')
     test_bag_of_words(train_corpus, test_corpus, train_labels, test_labels, ngram_range=(1, 2))
     """
+    # print('===============================')
+    # print('Test SVM unigrams and bigrams:')
+    # test_svm(train, test)
+    #
+
     print('===============================')
     print('Test SVM unigrams and bigrams:')
-    test_svm(train, test)
+    test_svm_annotated(annotated_train, annotated_test)
+
+
+
 
 if __name__ == '__main__':
     main()

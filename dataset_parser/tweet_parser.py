@@ -5,6 +5,18 @@ class Relevancy(object):
     DISASTER        = 1
 
 
+class Annotations(object):
+    none            = 0
+    Information     = 1
+    Sentiment       = 2
+    Reporting       = 3
+    Miscellaneous   = 4
+    Actions         = 5
+    Preparation     = 6
+    Other           = 7
+    Movement        = 8
+
+
 class Tweet(object):
     """
     This object contains a tweet and the corresponding metadata (e.g. tweet
@@ -12,7 +24,7 @@ class Tweet(object):
     (e.g. tweet's text,
     """
 
-    def __init__(self, rec, POS_tagging):
+    def __init__(self, rec, POS_tagging, relevance=list(), relevance_metadata=list()):
         """
 
         :param rec:         record from csv
@@ -59,6 +71,10 @@ class Tweet(object):
 
         # Handle POS tagging
         self.POS = POS_tagging
+
+        # Handle relevance
+        self.relevance = relevance
+        self.relevance_metadata = relevance_metadata
 
     def pretty_print(self):
         print('Original tweet:\t%s' % self.text)
