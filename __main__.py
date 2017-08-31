@@ -7,7 +7,7 @@ import dataset_parser.tweet_parser
 import numpy
 from classifier import BagOfWords, svm_fitter
 from dataset_parser import Dataset
-
+from sentiment_analysis import sentiment_analysis_classifier
 TEST_SLICE = 0.1
 
 def setup():
@@ -63,6 +63,11 @@ def test_svm(train, test):
     acc = common.compute_accuracy(result, test_labels, test_corpus)
     print('acc: {}'.format(acc))
 
+@common.timeit
+def test_sentiment_analysis(train, test):
+    print('meanwhile just measuring time...')
+    sentiment_analysis_classifier(train)
+
 def main():
     #Print some named-entities for relevant tweets
     # ds = Dataset()
@@ -87,10 +92,14 @@ def main():
     print('===============================')
     print('Test unigrams and bigrams:')
     test_bag_of_words(train_corpus, test_corpus, train_labels, test_labels, ngram_range=(1, 2))
-    """
     print('===============================')
     print('Test SVM unigrams and bigrams:')
     test_svm(train, test)
+    """
+    print('===============================')
+    print('Test sentiment analysis:')
+    test_sentiment_analysis(train_corpus, test_corpus)
+
 
 if __name__ == '__main__':
     main()
