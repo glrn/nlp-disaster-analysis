@@ -65,6 +65,11 @@ def test_svm(train, test):
 
 @common.timeit
 def test_sentiment_analysis(train, test):
+    train_corpus = numpy.array([tweet.processed_text for tweet in train])
+    test_corpus = numpy.array([tweet.processed_text for tweet in test])
+    train_labels = numpy.array([tweet.label for tweet in train])
+    test_labels = numpy.array([tweet.label for tweet in test])
+
     print('meanwhile just measuring time...')
     sentiment_analysis_classifier(train)
 
@@ -96,9 +101,10 @@ def main():
     print('Test SVM unigrams and bigrams:')
     test_svm(train, test)
     """
+
     print('===============================')
     print('Test sentiment analysis:')
-    test_sentiment_analysis(train_corpus, test_corpus)
+    test_sentiment_analysis(train, test)
 
 
 if __name__ == '__main__':
