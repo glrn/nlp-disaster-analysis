@@ -13,23 +13,13 @@ CAP_LETTER  = re.compile('[A-Z]')
 PUNCTUATION = re.compile(r'[{}]'.format(string.punctuation))
 
 INTERESTING_POS_TAGS = [
-    'JJ',
-    'JJR',
-    'JJS',
-    'VB',
-    'VBD',
-    'VBG',
-    'VBN',
-    'VBZ',
-    'VBP',
-    'RB',
-    'PRP',
-    'PRP$',
-    'NNP',
-    'NNPS',
-    'CD',
-    'POS',
-    'WP',
+    'A',
+    'V',
+    'R',
+    'O',
+    '^',
+    '$',
+    'G',
 ]
 
 def count_tokens(inputs, tokens):
@@ -96,73 +86,33 @@ def punctuation_marks_and_symbols_count(inputs):
 def length(inputs):
     return numpy.array([[len(tweet.text)] for tweet in inputs])
 
-@feature(classifier)
+@feature(classifier) # 'JJ', 'JJR', 'JJS'
 def adjective_count(inputs):
-    return count_pos(inputs, ['JJ'])
+    return count_pos(inputs, ['A'])
 
-@feature(classifier)
-def comparative_adjective_count(inputs):
-    return count_pos(inputs, ['JJR'])
+@feature(classifier) # 'VB', 'VBD', 'VBG', 'VBN', 'VBZ', 'VBP'
+def verb_count(inputs):
+    return count_pos(inputs, ['V'])
 
-@feature(classifier)
-def superlative_adjective_count(inputs):
-    return count_pos(inputs, ['JJS'])
-
-@feature(classifier)
-def base_form_verb_count(inputs):
-    return count_pos(inputs, ['VB'])
-
-@feature(classifier)
-def past_tense_verb_count(inputs):
-    return count_pos(inputs, ['VBD'])
-
-@feature(classifier)
-def present_participle_verb_count(inputs):
-    return count_pos(inputs, ['VBG'])
-
-@feature(classifier)
-def past_participle_verb_count(inputs):
-    return count_pos(inputs, ['VBN'])
-
-@feature(classifier)
-def third_person_singular_present_verb_count(inputs):
-    return count_pos(inputs, ['VBZ'])
-
-@feature(classifier)
-def non_third_person_singular_present_verb_count(inputs):
-    return count_pos(inputs, ['VBP'])
-
-@feature(classifier)
+@feature(classifier) # 'RB'
 def adverb_count(inputs):
-    return count_pos(inputs, ['RB'])
+    return count_pos(inputs, ['R'])
 
-@feature(classifier)
-def personal_pronoun_count(inputs):
-    return count_pos(inputs, ['PRP'])
+@feature(classifier) # 'PRP', 'WP'
+def wh_and_personal_pronoun_count(inputs):
+    return count_pos(inputs, ['O'])
 
-@feature(classifier)
-def possessive_pronoun_count(inputs):
-    return count_pos(inputs, ['PRP$'])
+@feature(classifier) # 'NNP', 'NNPS'
+def proper_noun_count(inputs):
+    return count_pos(inputs, ['^'])
 
-@feature(classifier)
-def singular_proper_noun_count(inputs):
-    return count_pos(inputs, ['NNP'])
-
-@feature(classifier)
-def plural_proper_noun_count(inputs):
-    return count_pos(inputs, ['NNPS'])
-
-@feature(classifier)
+@feature(classifier) # 'CD'
 def cardinal_number_count(inputs):
-    return count_pos(inputs, ['CD'])
+    return count_pos(inputs, ['$'])
 
-@feature(classifier)
+@feature(classifier) # 'POS'
 def possessive_ending_count(inputs):
-    return count_pos(inputs, ['POS'])
-
-@feature(classifier)
-def wh_pronoun_count(inputs):
-    return count_pos(inputs, ['WP'])
+    return count_pos(inputs, ['G'])
 
 feature(classifier)
 def all_pos_count(inputs):
