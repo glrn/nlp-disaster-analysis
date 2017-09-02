@@ -6,11 +6,11 @@ import common
 import dataset_parser.tweet_parser
 import numpy
 from classifier import BagOfWords, svm_fitter
-from dataset_parser import Dataset
+from dataset_parser import Dataset, DATASET_PATH, OBJ_SUB_PATH
 from sentiment_analysis import sentiment_analysis_classifier
 TEST_SLICE = 0.1
 
-def setup():
+def setup(path=DATASET_PATH):
     print('Starting...')
     print('Parsing dataset...')
     dataset = Dataset()
@@ -70,8 +70,17 @@ def test_sentiment_analysis(train, test):
     train_labels = numpy.array([tweet.label for tweet in train])
     test_labels = numpy.array([tweet.label for tweet in test])
 
-    print('meanwhile just measuring time...')
-    sentiment_analysis_classifier(train)
+    print('Fitting...')
+    trained = sentiment_analysis_classifier(train)
+    tested  = sentiment_analysis_classifier(test)
+
+    svm_classifier = svm.SVC(C=1000)
+    svm_classifier.fit(trained, train_labels)
+
+    print('Predicting...')
+    result = svm_classifier.predict(tested)
+    acc = common.compute_accuracy(result, test_labels, test_corpus)
+    print('acc: {}'.format(acc))
 
 def main():
     #Print some named-entities for relevant tweets
@@ -85,7 +94,7 @@ def main():
     #         print
 
 
-    train, test = setup()
+    train, test = setup(OBJ_SUB_PATH)
     train_corpus = numpy.array([tweet.text for tweet in train])
     test_corpus = numpy.array([tweet.text for tweet in test])
     train_labels = numpy.array([tweet.label for tweet in train])
