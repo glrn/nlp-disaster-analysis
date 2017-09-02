@@ -344,7 +344,6 @@ def parse_hashtag(hashtag):
     # try CamelCase
     matches = re.finditer('.+?(?:(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])|$)', hashtag)
     words = [m.group(0) for m in matches]
-    words = [w.lower() for w in words]
     if len(words) > 1:
         return ' '.join(words)
 

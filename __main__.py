@@ -104,6 +104,16 @@ def test_svm_annotated(train, test):
     print('acc: {}'.format(acc))
 
 def main():
+    #Print some named-entities for relevant tweets
+    # ds = Dataset()
+    # for tweet in ds.entries[:30]:
+    #     if tweet.confidence >= 0.9 and tweet.label == dataset_parser.tweet_parser.Relevancy.DISASTER\
+    #             and len(tweet.named_entities) > 0:
+    #         print tweet.text
+    #         print tweet.processed_text
+    #         print "Named Entities: " + str(tweet.named_entities)
+    #         print
+
 
     train, test, annotated_train, annotated_test = setup()
 

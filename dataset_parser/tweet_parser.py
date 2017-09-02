@@ -24,11 +24,12 @@ class Tweet(object):
     (e.g. tweet's text,
     """
 
-    def __init__(self, rec, POS_tagging, relevance=list(), relevance_metadata=list()):
+    def __init__(self, rec, POS_tagging, named_entities=[], relevance=list(), relevance_metadata=list()):
         """
 
         :param rec:         record from csv
         :param POS_tagging: list containing part-of-speech tags
+        :param named_entities:  list of named-entities in the tweet (default: empty list)
         """
 
         # Pasrse record from dataset. Keys in the dataset csv are:
@@ -75,6 +76,9 @@ class Tweet(object):
         # Handle relevance
         self.relevance = relevance
         self.relevance_metadata = relevance_metadata
+
+        # Handle NEs
+        self.named_entities = named_entities
 
     def pretty_print(self):
         print('Original tweet:\t%s' % self.text)
