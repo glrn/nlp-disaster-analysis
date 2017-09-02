@@ -1,53 +1,93 @@
+# NOTE: This script creates the pre-processed dataset, hence should be run just once!
+
+# The script extends the dataset by adding information on links (URLs) in tweets.
+# For every tweet that includes a link (e.g. http://t.co/3ImaomknnA) we reveal
+# the original URL (e.g. https://www.facebook.com/walkercotoday/posts/9894095),
+# and fetch the HTML title tag from that web page.
+# We handle the first 3 links in every tweet (4th+ link is ignored).
+
+# The processed dataset is an extension of the original dataset, with 9 new
+# fields: link_url1, link_uri1, link_title1,
+#         link_url2, link_uri2, link_title2,
+#         link_url3, link_uri3, link_title3,
+
 import csv
-import random
+import urllib2
 
-import twython
-# from tweet_parser import Tweet
-from dataset_parser.dataset_parser import Tweet
-from dataset_parser.tweet_parser import Annotations
+import os
 
-"""
-This module parses CHIME project dataset.
-[URL: https://github.com/kevincstowe/chime-annotation]
-"""
+import cPickle
 
-DATASET_PATH = 'dataset/chime-annotation.csv'
-CONSUMER_KEY = 't3rlfX7OWEwmobYOVlFKTEQtC'
-CONSUMER_SECRET = 'ICqLi4k8zWOevNGZgPLxS4ZKCU0lVLptiDBFLhRw83wHS8lQvt'
-OAUTH_TOKEN = '276094047-VDz8eqtbQ38GE23U2wAAhdMmWrtwjbp75eKbbLOm'
-OAUTH_TOKEN_SECRET = 'ETj5aWOYTmzRMKw4tYlvghuyRfZq3IxULEFMd5SmkNXPU'
+from annotated_dataset_fetcher import AnnotatedDataset
+from dataset_parser import Tweet
+from progressbar import Progressbar
+from ttp import utils
+from ttp import ttp
+from bs4 import BeautifulSoup
+from urlparse import urlparse
+
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
-class AnnotatedDataset(object):
-    """
-    This object contains all the data on our tweets.
-    """
-    def __init__(self, dataset_path=DATASET_PATH):
-        self.entries = []
+PROCESSED_DATASET_PATH = 'dataset/chime-annotation-tweets-DFE-extended.csv'
+ANNOTATED_DB_FILE = 'annotated_db.pkl'
 
-        twitter = twython.Twython(CONSUMER_KEY, CONSUMER_SECRET, OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
-        with open(DATASET_PATH, 'rb') as csvfile:
-            for row in csv.reader(csvfile):
-                tweet_id = row[0]
-                annotation = row[1]
-                annotations_split = annotation.split('/')
-                relevance = []
-                relevance_metadata = []
-                for split in annotations_split:
-                    if split != 'None':
-                        rel, rel_meta = split.split('-')
-                        relevance.append(Annotations.__dict__[rel])
-                        relevance_metadata.append(rel_meta)
-                    else:
-                        relevance.append(Annotations.none)
-                try:
-                    raw_tweet = twitter.show_status(id=tweet_id)
-                    raw_tweet['_unit_id'] = tweet_id
-                    raw_tweet['choose_one'] = 'Relevant' if annotation != 'None' else 'NotRelevant'
-                    raw_tweet['choose_one:confidence'] = 1 if annotation != 'None' else 0
-                    index = random.choice(range(len(relevance)))
-                    metadata = relevance_metadata[index] if len(relevance_metadata) > 0 else ''
-                    tweet = Tweet(raw_tweet, [], relevance[index], metadata)
-                    self.entries.append(tweet)
-                except Exception:
-                    pass
+# Read original dataset
+if not os.path.exists(ANNOTATED_DB_FILE):
+    annotated_dataset = AnnotatedDataset()
+    with open(ANNOTATED_DB_FILE, 'wb') as f:
+        cPickle.dump(annotated_dataset, f)
+else:
+    with open(ANNOTATED_DB_FILE, 'rb') as f:
+        annotated_dataset = cPickle.load(f)
+
+orig_dataset = annotated_dataset.entries
+total_tweets = len(orig_dataset)
+logger.info('%d rows fetched' % total_tweets)
+
+# Write new dataset
+logger.info('Writing to %s' % PROCESSED_DATASET_PATH)
+pb = Progressbar('Building extended dataset')
+
+with open(PROCESSED_DATASET_PATH, 'wb') as csvfile:
+    dataset_keys = orig_dataset[0].__dict__.keys() + ['link_url1', 'link_uri1', 'link_title1',\
+                                             'link_url2', 'link_uri2', 'link_title2',\
+                                             'link_url3', 'link_uri3', 'link_title3']
+    csvwriter = csv.DictWriter(csvfile, fieldnames=dataset_keys)
+    csvwriter.writeheader()
+
+    for i in xrange(len(orig_dataset)):
+        pb.update_progress(i, total_tweets)
+
+        orig_dataset[i] = orig_dataset[i].__dict__
+
+        tweet = orig_dataset[i]['text']
+
+        try:
+            # Step 1 - Check if there are any links in tweet
+            tweet_parser = ttp.Parser().parse(tweet)
+
+            for j in range(1,4):
+                # Step 2 - Follow URL redirection until final URL is revealed
+                if len(tweet_parser.urls) >= j:
+                    shortened_url = tweet_parser.urls[j-1]
+                    logger.info('Following URL %s' % shortened_url)
+                    redirected_url = utils.follow_shortlink(shortened_url)[-1]
+                    orig_dataset[i]['link_url%d' % j] = unicode(redirected_url).encode("utf-8")
+
+                    parsed_uri = urlparse(redirected_url)
+                    domain = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_uri)
+                    orig_dataset[i]['link_uri%d' % j] = unicode(domain).encode("utf-8")
+
+                    # Step 3 - Get HTML title from the URL
+                    soup = BeautifulSoup(urllib2.urlopen(redirected_url), features='lxml')
+                    orig_dataset[i]['link_title%d' % j] = unicode(soup.title.string).encode("utf-8")
+
+        except:
+            logger.error('catch')
+            pass
+
+        # Step 4 - Write new record to the new dataset
+        csvwriter.writerow(orig_dataset[i])

@@ -13,13 +13,13 @@ class Dataset(object):
     """
     This object contains all the data on our tweets.
     """
-    def __init__(self, dataset_path=DATASET_PATH):
+    def __init__(self, dataset_path=DATASET_PATH, pos_tagging_path=POS_TAGGING_PATH):
         self.entries = []
 
-        pos_of_tweets = read_conll_pos_file(POS_TAGGING_PATH)
+        pos_of_tweets = read_conll_pos_file(pos_tagging_path)
 
         t = 0
-        with open(DATASET_PATH, 'rb') as csvfile:
+        with open(dataset_path, 'rb') as csvfile:
             for row in csv.DictReader(csvfile):
                 # Handle only tweets with confidence > 0.9
                 if float(row['choose_one:confidence']) < 0.9:
