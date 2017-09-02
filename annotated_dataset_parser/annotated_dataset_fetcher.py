@@ -30,7 +30,6 @@ class AnnotatedDataset(object):
         with open(DATASET_PATH, 'rb') as csvfile:
             all_rows = [row for row in csv.reader(csvfile)]
             total_tweets = len(all_rows)
-            print total_tweets
             for i in xrange(total_tweets):
                 row = all_rows[i]
                 pb.update_progress(i, total_tweets)
