@@ -1,5 +1,5 @@
 import random
-from dataset_parser import Dataset
+from dataset_parser import Dataset, DATASET_PATH, OBJ_SUB_PATH
 from tweet_parser import Tweet
 from tweet_parser import Relevancy
 

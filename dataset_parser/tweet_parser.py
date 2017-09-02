@@ -45,6 +45,7 @@ class Tweet(object):
         #     link_title3             - ...
         self.text = rec['text']
         self.text = self.text.decode('utf-8').encode('ascii', 'replace') # convert to ASCII
+        self.objective = int(rec['objective']) if 'objective' in rec else None
         self.processed_text = ttp.process_tweet(rec)
         self.label = Relevancy.DISASTER if rec['choose_one'] == 'Relevant' \
                          else Relevancy.NOT_DISASTER

@@ -6,9 +6,10 @@ This module parses CrowdFlower's dataset.
 [URL: https://www.crowdflower.com/data-for-everyone (under 'Disasters on social media')]
 """
 
-DATASET_PATH =      'dataset/socialmedia-disaster-tweets-DFE-extended.csv'
-POS_TAGGING_PATH =  'dataset/socialmedia-disaster-tweets-DFE-POS-Tagging.txt'
-NER_TAGGING_PATH =  'dataset/socialmedia-disaster-tweets-DFE-NER-tags.txt'
+DATASET_PATH        = 'dataset/socialmedia-disaster-tweets-DFE-extended.csv'
+OBJ_SUB_PATH        = 'dataset/socialmedia-disaster-tweets-DFE-extended-obj-sub.csv'
+POS_TAGGING_PATH    = 'dataset/socialmedia-disaster-tweets-DFE-POS-Tagging.txt'
+NER_TAGGING_PATH    = 'dataset/socialmedia-disaster-tweets-DFE-NER-tags.txt'
 
 
 class Dataset(object):
