@@ -22,12 +22,12 @@ def fitter(name, inputs):
     '''
     matrices = []
     for f in named_features[name]:
-        #matrices.append(f(inputs))
         matrices.append(f(inputs))
     a = matrices[0]
     for b in matrices[1:]:
-        #a = np.concatenate((a, b), axis=1)
-        a = scipy.sparse.hstack([a,b])
-
+        try:
+            a = np.concatenate((a, b), axis=1)
+        except:
+            a = scipy.sparse.hstack([a,b])
     return a
 
