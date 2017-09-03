@@ -31,7 +31,7 @@ def compute_accuracy(prediction, real, corpus = None):
 
         if corpus is not None and p != r:
             # print false-positives and false-negatives
-            print "Real: %s, Prediction: %s" % (p, r)
+            print "Real: %s, Prediction: %s" % (r, p)
             print "Tweet is: %s" % corpus[i]
             print
     return float(correct) / len(prediction), false_positive, false_negative
