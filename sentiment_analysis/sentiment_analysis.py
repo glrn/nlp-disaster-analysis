@@ -86,6 +86,7 @@ def punctuation_marks_and_symbols_count(inputs):
 def length(inputs):
     return numpy.array([[len(tweet.text)] for tweet in inputs])
 
+'''
 @feature(classifier) # 'JJ', 'JJR', 'JJS'
 def adjective_count(inputs):
     return count_pos(inputs, ['A'])
@@ -113,8 +114,9 @@ def cardinal_number_count(inputs):
 @feature(classifier) # 'POS'
 def possessive_ending_count(inputs):
     return count_pos(inputs, ['G'])
+'''
 
-feature(classifier)
+@feature(classifier)
 def all_pos_count(inputs):
     return count_pos(inputs, INTERESTING_POS_TAGS)
 
