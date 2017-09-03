@@ -50,7 +50,8 @@ class Tweet(object):
         self.label = Relevancy.DISASTER if rec['choose_one'] == 'Relevant' \
                          else Relevancy.NOT_DISASTER
         self.confidence = float(rec['choose_one:confidence'])
-        self.id = int(rec['_unit_id'])
+        if '_unit_id' in rec.keys():
+            self.id = int(rec['_unit_id'])
 
         # Extract information from tweet with ttp
         p = ttp.Parser()

@@ -53,7 +53,7 @@ def unigram_and_bigram(inputs):
     vectorizer = CountVectorizer(vocabulary=vocabulary, analyzer='word', tokenizer=tokenizeRawTweetText, ngram_range=(1, 2))
     return vectorizer.fit_transform(corpus)
 
-@feature('svm')
+#@feature('svm')
 def tweet_meta_features(inputs):
     corpus = numpy.array([tweet.processed_text for tweet in inputs])
 
@@ -86,9 +86,29 @@ def tweet_meta_features(inputs):
 
         l.append(features)
 
-    return l
+    return numpy.array(l)
+
+INTERESTING_POS_TAGS = [
+    'A',
+    'V',
+    'R',
+    'O',
+    '^',
+    '$',
+    'G',
+]
+
+def count_pos(inputs, poses):
+    def counter(tweet, poses):
+        return numpy.array([tweet.count(pos) for pos in poses])
+    return numpy.array([counter(tweet, poses) for tweet in inputs])
 
 @feature('svm')
+def all_pos_count(inputs):
+    POS_tags_corpus = numpy.array([tweet.POS for tweet in inputs])
+    return count_pos(POS_tags_corpus, INTERESTING_POS_TAGS)
+
+#@feature('svm')
 def trigram_of_POS_tags(inputs):
     POS_tags_corpus = numpy.array([tweet.POS for tweet in inputs])
     vectorizer = CountVectorizer(vocabulary=pos_tags.ALL_POS_TAGS, ngram_range=(1, 3))
