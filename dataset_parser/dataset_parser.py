@@ -15,11 +15,11 @@ class Dataset(object):
     """
     This object contains all the data on our tweets.
     """
-    def __init__(self, dataset_path=DATASET_PATH, pos_tagging_path=POS_TAGGING_PATH):
+    def __init__(self, dataset_path=DATASET_PATH, pos_tagging_path=POS_TAGGING_PATH, ner_tagging_path=NER_TAGGING_PATH):
         self.entries = []
 
         pos_of_tweets = read_conll_pos_file(pos_tagging_path)
-        ne_of_tweets = read_ner_tags_file(NER_TAGGING_PATH)
+        ne_of_tweets = read_ner_tags_file(ner_tagging_path)
 
         t = 0
         with open(dataset_path, 'rb') as csvfile:
