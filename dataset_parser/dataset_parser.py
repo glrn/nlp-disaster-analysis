@@ -30,7 +30,14 @@ class Dataset(object):
 
                 # Handle only tweets with confidence > 0.9
                 if float(row['choose_one:confidence']) > 0.9:
-                    self.entries.append(Tweet(row, POS_tags, NEs))
+                    if 'relevance' in row:
+                        relevance = row['relevance']
+                        relevance_metadata = row['relevance_metadata']
+                    else:
+                        relevance = 0
+                        relevance_metadata = ''
+                    self.entries.append(Tweet(row, POS_tags, NEs, relevance=relevance,
+                                              relevance_metadata=relevance_metadata))
 
                 t += 1
 

@@ -24,7 +24,7 @@ class Tweet(object):
     (e.g. tweet's text,
     """
 
-    def __init__(self, rec, POS_tagging, named_entities=[], relevance=list(), relevance_metadata=list()):
+    def __init__(self, rec, POS_tagging, named_entities=list(), relevance=0, relevance_metadata=''):
         """
 
         :param rec:         record from csv
@@ -61,7 +61,7 @@ class Tweet(object):
         self.label = Relevancy.DISASTER if rec['choose_one'] == 'Relevant' \
                          else Relevancy.NOT_DISASTER
         self.confidence = float(rec['choose_one:confidence'])
-        self.id = int(rec['_unit_id'])
+        self.id = int(float(rec['_unit_id']))
 
         # Extract information from tweet with ttp
         p = ttp.Parser()
