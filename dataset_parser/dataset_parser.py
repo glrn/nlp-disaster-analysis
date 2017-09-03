@@ -6,30 +6,33 @@ This module parses CrowdFlower's dataset.
 [URL: https://www.crowdflower.com/data-for-everyone (under 'Disasters on social media')]
 """
 
-DATASET_PATH =      'dataset/socialmedia-disaster-tweets-DFE-extended.csv'
-POS_TAGGING_PATH =  'dataset/socialmedia-disaster-tweets-DFE-POS-Tagging.txt'
-NER_TAGGING_PATH =  'dataset/socialmedia-disaster-tweets-DFE-NER-tags.txt'
+MAIN_DATASET_PATH =      'dataset/socialmedia-disaster-tweets-DFE-extended.csv'
+MAIN_POS_TAGGING_PATH =  'dataset/socialmedia-disaster-tweets-DFE-POS-Tagging.txt'
+MAIN_NER_TAGGING_PATH =  'dataset/socialmedia-disaster-tweets-DFE-NER-tags.txt'
 
 
 class Dataset(object):
     """
     This object contains all the data on our tweets.
     """
-    def __init__(self, dataset_path=DATASET_PATH):
+    def __init__(self, dataset_path=MAIN_DATASET_PATH,
+                 pos_tag_path=MAIN_POS_TAGGING_PATH,
+                 ner_tag_path=MAIN_NER_TAGGING_PATH,
+                 min_confidence=0.9):
         self.entries = []
 
-        pos_of_tweets = read_conll_pos_file(POS_TAGGING_PATH)
-        ne_of_tweets = read_ner_tags_file(NER_TAGGING_PATH)
+        pos_of_tweets = read_conll_pos_file(pos_tag_path)
+        ne_of_tweets = read_ner_tags_file(ner_tag_path)
 
         t = 0
-        with open(DATASET_PATH, 'rb') as csvfile:
+        with open(dataset_path, 'rb') as csvfile:
             for row in csv.DictReader(csvfile):
 
                 POS_tags = ' '.join([tup[1] for tup in pos_of_tweets[t]])
                 NEs = ne_of_tweets[t] # list of named-entities in tweet
 
                 # Handle only tweets with confidence > 0.9
-                if float(row['choose_one:confidence']) > 0.9:
+                if float(row['choose_one:confidence']) >= min_confidence:
                     self.entries.append(Tweet(row, POS_tags, NEs))
 
                 t += 1

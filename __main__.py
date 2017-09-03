@@ -54,7 +54,7 @@ def test_svm(train, test):
     print('Fitting...')
     trained = svm_fitter(train)
     tested  = svm_fitter(test)
-    # You need to play with this C value to get better accuracy (for example if C=1, all predictions are 0).
+    # Play with this C value to get better accuracy (for example if C=1, all predictions are 0).
     svm_classifier = svm.SVC(C=1000)
     svm_classifier.fit(trained, train_labels)
 
@@ -91,6 +91,7 @@ def main():
     print('===============================')
     print('Test SVM unigrams and bigrams:')
     test_svm(train, test)
+
 
 if __name__ == '__main__':
     main()

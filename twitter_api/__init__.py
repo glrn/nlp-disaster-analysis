@@ -11,7 +11,7 @@ HOUSTON_TEXAS_GEOCODE = "29.789054,-95.387083,10km"
 if __name__ == '__main__':
     keywords = ['car','plane','fire','dead']
     with open("chicago_tweets.csv", 'wb') as csvfile:
-        fieldnames = ['timestamp', 'location', 'text']
+        fieldnames = ['timestamp', 'location', 'text', 'choose_one', 'choose_one:confidence']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
 

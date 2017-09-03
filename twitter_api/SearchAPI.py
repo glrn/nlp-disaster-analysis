@@ -1,4 +1,5 @@
 import credentials
+import time
 
 # Import the necessary package to process data in JSON format
 try:
@@ -25,19 +26,29 @@ def fetch(query, geocode = None, count = 100, filter_out_retweets = True):
         query += ' -filter:retweets'
 
     while len(tweets) < count:
-        results = twitter.search.tweets(q=query, lang='en', count=API_MAX,
-                                      max_id = next_max_id, geocode = geocode)
+        try:
+            results = twitter.search.tweets(q=query, lang='en', count=API_MAX,
+                                          max_id = next_max_id, geocode = geocode)
+        except Exception as e:
+            # Rate limit exceeded
+            print e
+            time.sleep(60)
+            continue
+
         for result in results["statuses"]:
             text = result["text"].encode('utf-8').strip()
             location = result["user"]["location"].encode('utf-8').strip()
             tweet = {"timestamp" : result["created_at"],
                      "text" : text,
-                     "location" : location}
+                     "location" : location,
+                     "choose_one" : 'Unknown',
+                     "choose_one:confidence" : 0}
             tweets.append(tweet)
             if not next_max_id:
                 next_max_id = result["id"]
             else:
                 next_max_id = min(result["id"], next_max_id)
         next_max_id -= 1
+
 
     return tweets
