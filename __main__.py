@@ -6,14 +6,14 @@ import common
 import dataset_parser.tweet_parser
 import numpy
 from classifier import BagOfWords, svm_fitter
-from dataset_parser import Dataset, DATASET_PATH, OBJ_SUB_PATH
+from dataset_parser import Dataset, MAIN_DATASET_PATH, OBJ_SUB_PATH, OBJ_SUB_POS_TAGGING_PATH, MAIN_POS_TAGGING_PATH
 from sentiment_analysis import sentiment_analysis_classifier
 TEST_SLICE = 0.1
 
-def setup(path=DATASET_PATH):
+def setup(dataset_path=MAIN_DATASET_PATH, pos_tag_path=MAIN_POS_TAGGING_PATH):
     print('Starting...')
     print('Parsing dataset...')
-    dataset = Dataset()
+    dataset = Dataset(dataset_path=dataset_path, pos_tag_path=pos_tag_path)
     print('Done parsing, dataset length: {}'.format(len(dataset.entries)))
 
     print('Splitting into train {} and test {}'.format(1 - TEST_SLICE, TEST_SLICE))
@@ -67,20 +67,20 @@ def test_svm(train, test):
 def test_sentiment_analysis(train, test):
     train_corpus = numpy.array([tweet.processed_text for tweet in train])
     test_corpus = numpy.array([tweet.processed_text for tweet in test])
-    train_labels = numpy.array([tweet.label for tweet in train])
-    test_labels = numpy.array([tweet.label for tweet in test])
+    train_labels = numpy.array([tweet.objective for tweet in train])
+    test_labels = numpy.array([tweet.objective for tweet in test])
 
     print('Fitting...')
     trained = sentiment_analysis_classifier(train)
     tested  = sentiment_analysis_classifier(test)
 
-    svm_classifier = svm.SVC(C=1000)
+    svm_classifier = svm.SVC(C=10000)
     svm_classifier.fit(trained, train_labels)
 
     print('Predicting...')
     result = svm_classifier.predict(tested)
-    acc = common.compute_accuracy(result, test_labels, test_corpus)
-    print('acc: {}'.format(acc))
+    acc, false_positive, false_negative = common.compute_accuracy(result, test_labels, test_corpus)
+    print('acc: {}, #false positive: {}, #false_negative: {}'.format(acc, false_positive, false_negative))
 
 def main():
     #Print some named-entities for relevant tweets
@@ -94,7 +94,7 @@ def main():
     #         print
 
 
-    train, test = setup(OBJ_SUB_PATH)
+    train, test = setup(dataset_path=OBJ_SUB_PATH, pos_tag_path=OBJ_SUB_POS_TAGGING_PATH)
     train_corpus = numpy.array([tweet.text for tweet in train])
     test_corpus = numpy.array([tweet.text for tweet in test])
     train_labels = numpy.array([tweet.label for tweet in train])
