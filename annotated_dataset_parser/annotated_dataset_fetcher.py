@@ -52,7 +52,7 @@ class AnnotatedDataset(object):
                     raw_tweet['choose_one:confidence'] = 1 if annotation != 'None' else 0
                     index = random.choice(range(len(relevance)))
                     metadata = relevance_metadata[index] if len(relevance_metadata) > 0 else ''
-                    tweet = Tweet(raw_tweet, [], relevance[index], metadata)
+                    tweet = Tweet(raw_tweet, [], relevance=relevance[index], relevance_metadata=metadata)
                     self.entries.append(tweet)
                 except Exception:
                     pass

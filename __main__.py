@@ -1,5 +1,3 @@
-import cPickle
-import os
 from sklearn import svm
 from sklearn.cross_validation import train_test_split
 
@@ -7,13 +5,14 @@ import classifier
 import common
 import numpy
 
-from annotated_dataset_parser.annotated_dataset_parser import AnnotatedDataset
 from classifier import BagOfWords, svm_fitter
 from dataset_parser import Dataset
 
 TEST_SLICE = 0.1
 
-ANNOTATED_DB_FILE = 'annotated_db.pkl'
+DATASET_PATH =      'dataset/chime-annotation-tweets-DFE-extended.csv'
+POS_TAGGING_PATH =  'dataset/chime-annotation-tweets-DFE-POS-Tagging.txt'
+NER_TAGGING_PATH =  'dataset/chime-annotation-tweets-DFE-NER-tags.txt'
 
 def setup():
     print('Starting...')
@@ -22,13 +21,7 @@ def setup():
     print('Done parsing, dataset length: {}'.format(len(dataset.entries)))
 
     print('Parsing annotated dataset...')
-    if not os.path.exists(ANNOTATED_DB_FILE):
-        annotated_dataset = AnnotatedDataset()
-        with open(ANNOTATED_DB_FILE, 'wb') as f:
-            cPickle.dump(annotated_dataset, f)
-    else:
-        with open(ANNOTATED_DB_FILE, 'rb') as f:
-            annotated_dataset = cPickle.load(f)
+    annotated_dataset = Dataset(DATASET_PATH, POS_TAGGING_PATH, NER_TAGGING_PATH)
     print('Done parsing, annotated dataset length: {}'.format(len(annotated_dataset.entries)))
 
     print('Splitting into train {} and test {}'.format(1 - TEST_SLICE, TEST_SLICE))
