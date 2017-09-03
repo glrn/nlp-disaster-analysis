@@ -1,0 +1,21 @@
+=== 20 most frequent disaster-related named-entities found ===
+Twitter : 81
+Chicago Fire : 36
+Tuna Fire : 27
+Chicago Fire MLS Soccer : 26
+Buzcast : 26
+Chicago : 25
+LA : 20
+South Side : 19
+Hammond : 18
+Montreal : 17
+Los Angeles : 16
+Montreal Impact : 9
+Inland Empire : 8
+Chicago Tribune : 8
+Burbank : 8
+St . Charles : 8
+Chicago News Search Businesses : 8
+Houston : 8
+YouTube : 7
+The Washington Post : 7
