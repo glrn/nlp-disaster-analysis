@@ -17,7 +17,7 @@ def setup(dataset_path=MAIN_DATASET_PATH, pos_tag_path=MAIN_POS_TAGGING_PATH):
     print('Done parsing, dataset length: {}'.format(len(dataset.entries)))
 
     print('Splitting into train {} and test {}'.format(1 - TEST_SLICE, TEST_SLICE))
-    train, test = train_test_split(dataset.entries, test_size=TEST_SLICE)
+    train, test = train_test_split(dataset.entries, test_size=TEST_SLICE, random_state=0)
 
     return train, test
 
@@ -74,7 +74,7 @@ def test_sentiment_analysis(train, test):
     trained = sentiment_analysis_classifier(train)
     tested  = sentiment_analysis_classifier(test)
 
-    svm_classifier = svm.SVC(C=10000)
+    svm_classifier = svm.SVC(C=1000)
     svm_classifier.fit(trained, train_labels)
 
     print('Predicting...')
