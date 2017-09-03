@@ -32,13 +32,13 @@ def test_bag_of_words(train_corpus, test_corpus, train_labels, test_labels, **kw
     print('Predicting...')
     print('FOREST:')
     result = bag.predict_forest(test_corpus)
-    acc = common.compute_accuracy(result, test_labels, test_corpus)
-    print('acc: {}'.format(acc))
+    acc, false_positive, false_negative = common.compute_accuracy(result, test_labels, test_corpus)
+    print('acc: {}, #false positive: {}, #false_negative: {}'.format(acc, false_positive, false_negative))
 
     print('NAIVE BAYES:')
     result = bag.predict_naive_bayes(test_corpus)
-    acc = common.compute_accuracy(result, test_labels, test_corpus)
-    print('acc: {}'.format(acc))
+    acc, false_positive, false_negative = common.compute_accuracy(result, test_labels, test_corpus)
+    print('acc: {}, #false positive: {}, #false_negative: {}'.format(acc, false_positive, false_negative))
 
 def test_svm(train, test):
     train_corpus = numpy.array([tweet.processed_text for tweet in train])
@@ -60,8 +60,8 @@ def test_svm(train, test):
 
     print('Predicting...')
     result = svm_classifier.predict(tested)
-    acc = common.compute_accuracy(result, test_labels, test_corpus)
-    print('acc: {}'.format(acc))
+    acc, false_positive, false_negative = common.compute_accuracy(result, test_labels, test_corpus)
+    print('acc: {}, #false positive: {}, #false_negative: {}'.format(acc, false_positive, false_negative))
 
 def main():
     #Print some named-entities for relevant tweets
