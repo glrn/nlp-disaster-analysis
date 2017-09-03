@@ -30,9 +30,9 @@ def fetch(query, geocode = None, count = 100, filter_out_retweets = True):
             results = twitter.search.tweets(q=query, lang='en', count=API_MAX,
                                           max_id = next_max_id, geocode = geocode)
         except Exception as e:
-            # Rate limit exceeded
             print e
-            time.sleep(60)
+            print '[%s] Sleeping 5 minutes...' % time.ctime()
+            time.sleep(60 * 5)
             continue
 
         for result in results["statuses"]:
@@ -43,6 +43,7 @@ def fetch(query, geocode = None, count = 100, filter_out_retweets = True):
                      "location" : location,
                      "choose_one" : 'Unknown',
                      "choose_one:confidence" : 0}
+            print '[%d] %s' % (len(tweets),tweet)
             tweets.append(tweet)
             if not next_max_id:
                 next_max_id = result["id"]

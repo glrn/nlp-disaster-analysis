@@ -16,20 +16,18 @@ if __name__ == '__main__':
         writer.writeheader()
 
         for kw in keywords:
-            tweets = SearchAPI.fetch(kw, geocode=CHICAGO_GEOCODE, count=100)
+            tweets = SearchAPI.fetch(kw, geocode=CHICAGO_GEOCODE, count=500)
             for t in tweets:
-                print t
                 writer.writerow(t)
             csvfile.flush()
 
     keywords = ['water','drown','']
     with open("houston_tweets.csv", 'wb') as csvfile:
-        fieldnames = ['timestamp', 'location', 'text']
+        fieldnames = ['timestamp', 'location', 'text', 'choose_one', 'choose_one:confidence']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
 
         for kw in keywords:
-            tweets = SearchAPI.fetch(kw, geocode=HOUSTON_TEXAS_GEOCODE, count=100)
+            tweets = SearchAPI.fetch(kw, geocode=HOUSTON_TEXAS_GEOCODE, count=500)
             for t in tweets:
-                print t
                 writer.writerow(t)
