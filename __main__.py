@@ -122,10 +122,10 @@ def main():
     print('Test unigrams and bigrams:')
     test_bag_of_words(train_corpus, test_corpus, train_labels, test_labels, ngram_range=(1, 2))
     """
-    # print('===============================')
-    # print('Test SVM unigrams and bigrams:')
-    # test_svm(train, test)
-    #
+    print('===============================')
+    print('Test SVM unigrams and bigrams:')
+    test_svm(train, test)
+
 
     print('===============================')
     print('Test SVM unigrams and bigrams:')
