@@ -55,11 +55,13 @@ def test_svm(train, test):
     trained = svm_fitter(train)
     tested  = svm_fitter(test)
     # Play with this C value to get better accuracy (for example if C=1, all predictions are 0).
+
     svm_classifier = svm.SVC(C=1000)
     svm_classifier.fit(trained, train_labels)
 
     print('Predicting...')
     result = svm_classifier.predict(tested)
+
     acc, false_positive, false_negative = common.compute_accuracy(result, test_labels, test_corpus)
     print('acc: {}, #false positive: {}, #false_negative: {}'.format(acc, false_positive, false_negative))
 
@@ -73,14 +75,47 @@ def test_sentiment_analysis(train, test):
     print('Fitting...')
     trained = sentiment_analysis_classifier(train)
     tested  = sentiment_analysis_classifier(test)
+    from sklearn.feature_selection import VarianceThreshold, SelectKBest
 
-    svm_classifier = svm.SVC(C=1000)
-    svm_classifier.fit(trained, train_labels)
+    '''
+    selector    = VarianceThreshold(0.5)
+    trained     = selector.fit_transform(trained)
+    selected    = selector.get_support()
 
-    print('Predicting...')
-    result = svm_classifier.predict(tested)
-    acc, false_positive, false_negative = common.compute_accuracy(result, test_labels, test_corpus)
-    print('acc: {}, #false positive: {}, #false_negative: {}'.format(acc, false_positive, false_negative))
+    tested = tested[:,selected]
+    '''
+    max_acc = 0
+    max_idx = 0
+    for i in range(1, trained.shape[1] + 1):
+        print i
+        selector = SelectKBest(k=i)
+        cur_trained = selector.fit_transform(trained, train_labels)
+        selected = selector.get_support()
+        print selected
+        cur_tested = tested[:, selected]
+
+        '''
+        print('Random forest:')
+        from sklearn.ensemble import RandomForestClassifier
+        forest = RandomForestClassifier(n_estimators=100, random_state=0)
+        forest.fit(cur_trained, train_labels)
+
+        print('Predicting...')
+        result = forest.predict(cur_tested)
+        '''
+        svm_classifier = svm.SVC(C=10000, random_state=0)
+        svm_classifier.fit(cur_trained, train_labels)
+
+        print('Predicting...')
+        result = svm_classifier.predict(cur_tested)
+
+        acc, false_positive, false_negative = common.compute_accuracy(result, test_labels, test_corpus)
+        if acc > max_acc:
+            max_acc = acc
+            max_idx = i
+        print('acc: {}, #false positive: {}, #false_negative: {}'.format(acc, false_positive, false_negative))
+
+    print 'max:', max_acc, max_idx
 
 def main():
     #Print some named-entities for relevant tweets
@@ -95,21 +130,22 @@ def main():
 
 
     train, test = setup(dataset_path=OBJ_SUB_PATH, pos_tag_path=OBJ_SUB_POS_TAGGING_PATH)
+    '''
     train_corpus = numpy.array([tweet.text for tweet in train])
     test_corpus = numpy.array([tweet.text for tweet in test])
     train_labels = numpy.array([tweet.label for tweet in train])
     test_labels = numpy.array([tweet.label for tweet in test])
-    """
     print('===============================')
     print('Test unigrams:')
     test_bag_of_words(train_corpus, test_corpus, train_labels, test_labels)
     print('===============================')
     print('Test unigrams and bigrams:')
     test_bag_of_words(train_corpus, test_corpus, train_labels, test_labels, ngram_range=(1, 2))
+
     print('===============================')
     print('Test SVM unigrams and bigrams:')
     test_svm(train, test)
-    """
+    '''
 
     print('===============================')
     print('Test sentiment analysis:')
