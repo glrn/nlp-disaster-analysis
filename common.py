@@ -18,13 +18,13 @@ def compute_accuracy(prediction, real, corpus = None):
         raise ValueError('prediction {} and real {} length should by equal'.format(len(prediction), len(real)))
     correct = 0
     for i in xrange(len(prediction)):
-        p = prediction[i]
-        r = real[i]
+        p = int(prediction[i])
+        r = int(real[i])
         if p == r:
             correct += 1
         if corpus is not None and p != r:
             # print false-positives and false-negatives
-            print "Real: %s, Prediction: %s" % (p, r)
+            print "Real: %s, Prediction: %s" % (r, p)
             print "Tweet is: %s" % corpus[i]
             print
     return float(correct) / len(prediction)
