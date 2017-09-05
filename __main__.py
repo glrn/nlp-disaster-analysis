@@ -4,6 +4,7 @@ from sklearn.cross_validation import train_test_split
 import classifier
 import common
 import numpy
+import os
 
 from classifier                 import BagOfWords, svm_fitter
 from dataset_parser             import Dataset, MAIN_DATASET_PATH, OBJ_SUB_PATH, OBJ_SUB_POS_TAGGING_PATH, MAIN_POS_TAGGING_PATH
@@ -12,6 +13,7 @@ from sklearn.feature_selection  import SelectKBest
 from sklearn.ensemble           import RandomForestClassifier
 
 TEST_SLICE = 0.1
+GRAPHS_DIR = 'graphs'
 
 def setup(dataset_path=MAIN_DATASET_PATH, pos_tag_path=MAIN_POS_TAGGING_PATH):
     print('Starting...')
@@ -31,7 +33,7 @@ def test_bag_of_words(train_corpus, test_corpus, train_labels, test_labels, n_es
     random_forest_accuracies = []
     print('FOREST:')
     for n_estimator in n_estimators:
-        print('Fitting...')
+        print('Fitting {}...'.format(n_estimator))
         bag.fit_forest(n_estimators=n_estimator)
         print('Predicting...')
         result = bag.predict_forest(test_corpus)
@@ -131,14 +133,47 @@ def test_disaster_classification(n_estimators, Cs):
     test_labels = numpy.array([tweet.label for tweet in test])
     print('===============================')
     print('Test unigrams:')
-    #test_bag_of_words(train_corpus, test_corpus, train_labels, test_labels, n_estimators)
+    uni_random_forest_accuracies, uni_naive_bayes_accuracy = test_bag_of_words(train_corpus, test_corpus, train_labels, test_labels, n_estimators)
     print('===============================')
     print('Test unigrams and bigrams:')
-    #test_bag_of_words(train_corpus, test_corpus, train_labels, test_labels, n_estimators, ngram_range=(1, 2))
+    bi_random_forest_accuracies, bi_naive_bayes_accuracy = test_bag_of_words(train_corpus, test_corpus, train_labels, test_labels, n_estimators, ngram_range=(1, 2))
 
+    log_n_estimators = numpy.log2(n_estimators)
+    common.plot(
+        xs          = [log_n_estimators for _ in range(6)],
+        ys          = [
+            [acc.acc for acc in uni_random_forest_accuracies],
+            [acc.ppv for acc in uni_random_forest_accuracies],
+            [acc.npv for acc in uni_random_forest_accuracies],
+            [acc.acc for acc in bi_random_forest_accuracies],
+            [acc.ppv for acc in bi_random_forest_accuracies],
+            [acc.npv for acc in bi_random_forest_accuracies],
+        ],
+        colors      = [
+            'bs-',
+            'gs-',
+            'rs-',
+            'bo-',
+            'go-',
+            'ro-',
+        ],
+        x_label     = '#estimators (log2)',
+        y_label     = 'accuracy',
+        func_labels = [
+            'unigram accuracy',
+            'unigram ppv',
+            'unigram npv',
+            'bigram accuracy',
+            'bigram ppv',
+            'bigram npv',
+        ],
+        title       = 'Random Forest',
+        save        = os.path.join(GRAPHS_DIR, 'random_forest_unigram_vs_bigram_features.png')
+    )
+    return
     print('===============================')
     print('Test SVM unigrams and bigrams:')
-    test_svm(train, test, Cs)
+    #test_svm(train, test, Cs)
 
 def test_sentiment_analysis_classification():
     train, test = setup(dataset_path=OBJ_SUB_PATH, pos_tag_path=OBJ_SUB_POS_TAGGING_PATH)
@@ -150,7 +185,7 @@ def main():
     n_estimators = [2**i for i in range(11)]
     Cs           = [10**i for i in range(1, 8)]
     test_disaster_classification(n_estimators, Cs)
-    test_sentiment_analysis_classification()
+    #test_sentiment_analysis_classification()
 
 if __name__ == '__main__':
     main()
