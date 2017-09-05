@@ -54,25 +54,33 @@ TODO
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
-With hundreds of millions of tweets every day, the popular microblogging service Twitter has become a probe to real human behavior an opinions around the globe. The Twitter 'corpus' reflects political and social trends, popular culture, global and local happenings, and much more. In addition, Twitter 'tweets' are easy to access and aggregate. Therefore, we experience an increased interest in natural language processing research of Twitter data.
+The popular microblogging service Twitter is a fruitful source of user-created content. With hundreds of millions of new tweets every day, Twitter has become a probe to human behavior and opinions from around the globe. The Twitter 'corpus' reflects political and social trends, popular culture, global and local happenings, and much more. In addition, tweets are easy to access and aggregate in real-time. Therefore, we experience an increased interest in natural language processing research of Twitter data.
 
-However, Twitter 'tweets' have some unique features that differ from traditional corpura (such as WSJ) and that should be taken into consideration when implementing natural language processing techniques.
+As one of the world's most widely used social networks, Twitter is an effective channel of communication and plays an important role during a crisis or emergency. The live stream of tweets can be used to identify reports and calls for help in emergency situations, such as accidents, violent crimes, natural disasters and terror attacks (which we all refer to as 'disasters' in this paper).
 
-
-
-Here's a tweet: \tweet{This is an example for a tweet}
+In this work we present a model trained to identify disaster-related tweets from other messages, using a natural language processing pipeline adjusted to the special features of Twitter tweets. In addition, we present two experiments conducted on disaster-related tweets. First, we separate \textit{subjective} tweets (example: \red{\tweet{TWEET}}) from \textit{objective} reports on disasters (example: \red{\tweet{TWEET}}). We also recognize named-entities in disaster-related tweets to enrich our knowledge on the disaster (mostly location).
 
 
-\paragraph{keywords}
+\subsection{Tweets vs. Traditional Corpora}
+Tweets have some unique features that differ from traditional corpora (such as WSJ corpus). These features should be taken into consideration when implementing natural language processing techniques.
 
-\subsection{Motivation}
+Here's a tweet:
 
-TODO
+\tweet{RT This is an \#awsome tweet lmao :O}
+
+\red{TODO}
+	
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Analysis Wokrflow}
 
 \paragraph{keywords} TODO
+
+\begin{itemize}[noitemsep,nolistsep]
+	\item A
+	\item B
+	\item C
+\end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Tweet Classification}
