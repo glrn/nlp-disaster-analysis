@@ -41,7 +41,7 @@ class BagOfWords(object):
 
 vocabulary = None
 
-#@feature('svm') # 22277
+# @feature('svm') # 22277
 def unigram(inputs):
     corpus = numpy.array([tweet.processed_text for tweet in inputs])
     vectorizer = CountVectorizer(vocabulary=vocabulary, analyzer='word', tokenizer=tokenizeRawTweetText)
@@ -93,6 +93,21 @@ def trigram_of_POS_tags(inputs):
     POS_tags_corpus = numpy.array([tweet.POS for tweet in inputs])
     vectorizer = CountVectorizer(vocabulary=pos_tags.ALL_POS_TAGS, ngram_range=(1, 3))
     return vectorizer.fit_transform(POS_tags_corpus)
+
+
+@feature('svm')
+def named_entities(inputs):
+    named_entities = numpy.array([' '.join(tweet.named_entities) for tweet in inputs])
+    vectorizer = CountVectorizer(vocabulary=vocabulary, ngram_range=(1, 3))
+    return vectorizer.fit_transform(named_entities)
+
+
+@feature('svm')
+def hash_tags(inputs):
+    hash_tags = numpy.array([' '.join(tweet.hashtags) for tweet in inputs])
+    vectorizer = CountVectorizer(vocabulary=vocabulary, ngram_range=(1, 3))
+    return vectorizer.fit_transform(hash_tags)
+
 
 '''
     let's say you want to add another feature extraction for svm, do as following:
