@@ -123,30 +123,34 @@ def test_sentiment_analysis(train, test, n_estimators, C):
 
     return random_forest_accuracies, svm_accuracies
 
-def main():
-    train, test = setup(dataset_path=OBJ_SUB_PATH, pos_tag_path=OBJ_SUB_POS_TAGGING_PATH)
-    '''
+def test_disaster_classification(n_estimators, Cs):
+    train, test = setup()
     train_corpus = numpy.array([tweet.text for tweet in train])
     test_corpus = numpy.array([tweet.text for tweet in test])
     train_labels = numpy.array([tweet.label for tweet in train])
     test_labels = numpy.array([tweet.label for tweet in test])
     print('===============================')
     print('Test unigrams:')
-    test_bag_of_words(train_corpus, test_corpus, train_labels, test_labels)
+    #test_bag_of_words(train_corpus, test_corpus, train_labels, test_labels, n_estimators)
     print('===============================')
     print('Test unigrams and bigrams:')
-    test_bag_of_words(train_corpus, test_corpus, train_labels, test_labels, ngram_range=(1, 2))
+    #test_bag_of_words(train_corpus, test_corpus, train_labels, test_labels, n_estimators, ngram_range=(1, 2))
 
     print('===============================')
     print('Test SVM unigrams and bigrams:')
-    test_svm(train, test)
-    '''
+    test_svm(train, test, Cs)
 
+def test_sentiment_analysis_classification():
+    train, test = setup(dataset_path=OBJ_SUB_PATH, pos_tag_path=OBJ_SUB_POS_TAGGING_PATH)
     print('===============================')
     print('Test sentiment analysis:')
     random_forest_accs, svm_accs = test_sentiment_analysis(train, test, n_estimators=10, C=1000)
 
-
+def main():
+    n_estimators = [2**i for i in range(11)]
+    Cs           = [10**i for i in range(1, 8)]
+    test_disaster_classification(n_estimators, Cs)
+    test_sentiment_analysis_classification()
 
 if __name__ == '__main__':
     main()

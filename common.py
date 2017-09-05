@@ -1,9 +1,11 @@
 import collections
 import datetime
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot
 import time
 
 Accuracy = collections.namedtuple('Accuracy', 'acc ppv npv')
-
 DATE_FORMAT_STRING = '%Y-%m-%d %H:%M:%S'
 
 def timeit(func):
@@ -43,8 +45,32 @@ def compute_accuracy(prediction, real, corpus=None, debug=False):
             print "Tweet is: %s" % corpus[i]
             print
 
-    npv   = float(true_negative) / num_of_pred_neg
-    ppv   = float(true_positive) / num_of_pred_pos
+    npv   = float(true_negative) / num_of_pred_neg if num_of_pred_neg else None
+    ppv   = float(true_positive) / num_of_pred_pos if num_of_pred_pos else None
 
     #specificity = float(true_negative) / num_of_real_neg
     return Accuracy(float(correct) / len(prediction), ppv, npv)
+
+def plot(xs, ys, colors, x_label, y_label, title, func_labels=None, x_scale=None, legend_location=None, save=None):
+    f, ax = matplotlib.pyplot.subplots(1)
+    plots = []
+    for i, params in enumerate(zip(xs, ys, colors)):
+        x, y, color = params
+        if func_labels is not None:
+            plots.append(ax.plot(x, y, color, label=func_labels[i]))
+        else:
+            ax.plot(x, y, color)
+    ax.set_ylim(ymin=max(0, min([x for y in ys for x in y]) * 0.9), ymax=min(1, max([x for y in ys for x in y]) * 1.1))
+    ax.set_xlabel(x_label)
+    ax.set_ylabel(y_label)
+    if x_scale is not None:
+        ax.set_xscale(x_scale)
+    if plots:
+        legend_location = legend_location if legend_location is not None else 'best'
+        ax.legend([plot for plot, in plots], [plot.get_label() for plot, in plots], loc=legend_location)
+    f.suptitle(title, fontsize=14, fontweight='bold')
+    if save is not None:
+        matplotlib.pyplot.savefig(save)
+    else:
+        matplotlib.pyplot.show()
+    matplotlib.pyplot.close(f)
