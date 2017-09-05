@@ -25,7 +25,7 @@ class BagOfWords(object):
 
     @common.timeit
     def fit_forest(self, n_estimators=10):
-        self.forest = RandomForestClassifier(n_estimators=n_estimators)
+        self.forest = RandomForestClassifier(n_estimators=n_estimators, random_state=0)
         self.forest.fit(self.bag_of_words[:, self.selected], self.labels)
 
     def predict_forest(self, test):
