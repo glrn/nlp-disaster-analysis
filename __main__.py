@@ -78,6 +78,7 @@ def test_svm(train, test, Cs):
 
         accuracy = common.compute_accuracy(result, test_labels, test_corpus)
         print('acc: {}, ppv: {}, npv: {}'.format(accuracy.acc, accuracy.ppv, accuracy.npv))
+        accs.append(accuracy)
 
     return accs
 
@@ -131,6 +132,7 @@ def test_disaster_classification(n_estimators, Cs):
     test_corpus = numpy.array([tweet.text for tweet in test])
     train_labels = numpy.array([tweet.label for tweet in train])
     test_labels = numpy.array([tweet.label for tweet in test])
+    '''
     print('===============================')
     print('Test unigrams:')
     uni_random_forest_accuracies, uni_naive_bayes_accuracy = test_bag_of_words(train_corpus, test_corpus, train_labels, test_labels, n_estimators)
@@ -170,10 +172,34 @@ def test_disaster_classification(n_estimators, Cs):
         title       = 'Random Forest',
         save        = os.path.join(GRAPHS_DIR, 'random_forest_unigram_vs_bigram_features.png')
     )
-    return
+    '''
     print('===============================')
     print('Test SVM unigrams and bigrams:')
-    #test_svm(train, test, Cs)
+    svm_accs = test_svm(train, test, Cs)
+
+    log_Cs = numpy.log10(Cs)
+    common.plot(
+        xs=[log_Cs for _ in range(3)],
+        ys=[
+            [acc.acc for acc in svm_accs],
+            [acc.ppv for acc in svm_accs],
+            [acc.npv for acc in svm_accs],
+        ],
+        colors=[
+            'bs-',
+            'gs-',
+            'rs-',
+        ],
+        x_label='#C (log10)',
+        y_label='accuracy',
+        func_labels=[
+            'accuracy',
+            'ppv',
+            'npv',
+        ],
+        title='SVM',
+        save=os.path.join(GRAPHS_DIR, 'svm_features.png')
+    )
 
 def test_sentiment_analysis_classification():
     train, test = setup(dataset_path=OBJ_SUB_PATH, pos_tag_path=OBJ_SUB_POS_TAGGING_PATH)
