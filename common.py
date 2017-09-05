@@ -1,5 +1,8 @@
+import collections
 import datetime
 import time
+
+Accuracy = collections.namedtuple('Accuracy', 'acc ppv npv')
 
 DATE_FORMAT_STRING = '%Y-%m-%d %H:%M:%S'
 
@@ -13,7 +16,7 @@ def timeit(func):
         return ret
     return wrapper
 
-def compute_accuracy(prediction, real, corpus = None):
+def compute_accuracy(prediction, real, corpus=None, debug=False):
     if len(prediction) != len(real):
         raise ValueError('prediction {} and real {} length should by equal'.format(len(prediction), len(real)))
     correct = 0
@@ -34,12 +37,14 @@ def compute_accuracy(prediction, real, corpus = None):
             else:
                 true_positive += 1
 
-        if corpus is not None and p != r:
+        if debug and corpus is not None and p != r:
             # print false-positives and false-negatives
-            #print "Real: %s, Prediction: %s" % (r, p)
-            #print "Tweet is: %s" % corpus[i]
-            #print
-            pass
-    sensitivity = float(true_positive) / num_of_real_pos
-    specificity = float(true_negative) / num_of_real_neg
-    return float(correct) / len(prediction), sensitivity, specificity
+            print "Real: %s, Prediction: %s" % (r, p)
+            print "Tweet is: %s" % corpus[i]
+            print
+
+    npv   = float(true_negative) / num_of_pred_neg
+    ppv   = float(true_positive) / num_of_pred_pos
+
+    #specificity = float(true_negative) / num_of_real_neg
+    return Accuracy(float(correct) / len(prediction), ppv, npv)
