@@ -3,11 +3,14 @@ from sklearn.cross_validation import train_test_split
 
 import classifier
 import common
-import dataset_parser.tweet_parser
 import numpy
-from classifier import BagOfWords, svm_fitter
-from dataset_parser import Dataset, MAIN_DATASET_PATH, OBJ_SUB_PATH, OBJ_SUB_POS_TAGGING_PATH, MAIN_POS_TAGGING_PATH
-from sentiment_analysis import sentiment_analysis_classifier
+
+from classifier                 import BagOfWords, svm_fitter
+from dataset_parser             import Dataset, MAIN_DATASET_PATH, OBJ_SUB_PATH, OBJ_SUB_POS_TAGGING_PATH, MAIN_POS_TAGGING_PATH
+from sentiment_analysis         import sentiment_analysis_classifier
+from sklearn.feature_selection  import SelectKBest
+from sklearn.ensemble           import RandomForestClassifier
+
 TEST_SLICE = 0.1
 
 def setup(dataset_path=MAIN_DATASET_PATH, pos_tag_path=MAIN_POS_TAGGING_PATH):
@@ -21,26 +24,32 @@ def setup(dataset_path=MAIN_DATASET_PATH, pos_tag_path=MAIN_POS_TAGGING_PATH):
 
     return train, test
 
-def test_bag_of_words(train_corpus, test_corpus, train_labels, test_labels, **kwds):
+def test_bag_of_words(train_corpus, test_corpus, train_labels, test_labels, n_estimators, **kwds):
     print('Generating bag of words...')
     bag = BagOfWords(train_corpus, train_labels, **kwds)
 
-    print('Fitting...')
-    bag.fit_forest(n_estimators=100)
-    bag.fit_naive_bayes()
-
-    print('Predicting...')
+    random_forest_accuracies = []
     print('FOREST:')
-    result = bag.predict_forest(test_corpus)
-    acc, false_positive, false_negative = common.compute_accuracy(result, test_labels, test_corpus)
-    print('acc: {}, #false positive: {}, #false_negative: {}'.format(acc, false_positive, false_negative))
+    for n_estimator in n_estimators:
+        print('Fitting...')
+        bag.fit_forest(n_estimators=n_estimator)
+        print('Predicting...')
+        result = bag.predict_forest(test_corpus)
+        accuracy = common.compute_accuracy(result, test_labels, test_corpus)
+        print('acc: {}, ppv: {}, npv: {}'.format(accuracy.acc, accuracy.ppv, accuracy.npv))
+        random_forest_accuracies.append(accuracy)
 
     print('NAIVE BAYES:')
+    print('Fitting...')
+    bag.fit_naive_bayes()
+    print('Predicting...')
     result = bag.predict_naive_bayes(test_corpus)
-    acc, false_positive, false_negative = common.compute_accuracy(result, test_labels, test_corpus)
-    print('acc: {}, #false positive: {}, #false_negative: {}'.format(acc, false_positive, false_negative))
+    naive_bayes_accuracy = common.compute_accuracy(result, test_labels, test_corpus)
+    print('acc: {}, ppv: {}, npv: {}'.format(naive_bayes_accuracy.acc, naive_bayes_accuracy.ppv, naive_bayes_accuracy.npv))
 
-def test_svm(train, test):
+    return random_forest_accuracies, naive_bayes_accuracy
+
+def test_svm(train, test, Cs):
     train_corpus = numpy.array([tweet.processed_text for tweet in train])
     test_corpus = numpy.array([tweet.processed_text for tweet in test])
     train_labels = numpy.array([tweet.label for tweet in train])
@@ -54,19 +63,24 @@ def test_svm(train, test):
     print('Fitting...')
     trained = svm_fitter(train)
     tested  = svm_fitter(test)
+
     # Play with this C value to get better accuracy (for example if C=1, all predictions are 0).
+    accs = []
+    for C in Cs:
+        print('C={}'.format(C))
+        svm_classifier = svm.SVC(C=C)
+        svm_classifier.fit(trained, train_labels)
 
-    svm_classifier = svm.SVC(C=1000)
-    svm_classifier.fit(trained, train_labels)
+        print('Predicting...')
+        result = svm_classifier.predict(tested)
 
-    print('Predicting...')
-    result = svm_classifier.predict(tested)
+        accuracy = common.compute_accuracy(result, test_labels, test_corpus)
+        print('acc: {}, ppv: {}, npv: {}'.format(accuracy.acc, accuracy.ppv, accuracy.npv))
 
-    acc, false_positive, false_negative = common.compute_accuracy(result, test_labels, test_corpus)
-    print('acc: {}, #false positive: {}, #false_negative: {}'.format(acc, false_positive, false_negative))
+    return accs
 
 @common.timeit
-def test_sentiment_analysis(train, test):
+def test_sentiment_analysis(train, test, n_estimators, C):
     train_corpus = numpy.array([tweet.processed_text for tweet in train])
     test_corpus = numpy.array([tweet.processed_text for tweet in test])
     train_labels = numpy.array([tweet.objective for tweet in train])
@@ -75,60 +89,41 @@ def test_sentiment_analysis(train, test):
     print('Fitting...')
     trained = sentiment_analysis_classifier(train)
     tested  = sentiment_analysis_classifier(test)
-    from sklearn.feature_selection import VarianceThreshold, SelectKBest
 
-    '''
-    selector    = VarianceThreshold(0.5)
-    trained     = selector.fit_transform(trained)
-    selected    = selector.get_support()
-
-    tested = tested[:,selected]
-    '''
-    max_acc = 0
-    max_idx = 0
+    random_forest_accuracies    = []
+    svm_accuracies              = []
     for i in range(1, trained.shape[1] + 1):
-        print i
+        print('#features: {}'.format(i))
         selector = SelectKBest(k=i)
         cur_trained = selector.fit_transform(trained, train_labels)
         selected = selector.get_support()
-        print selected
         cur_tested = tested[:, selected]
 
-        '''
         print('Random forest:')
-        from sklearn.ensemble import RandomForestClassifier
-        forest = RandomForestClassifier(n_estimators=100, random_state=0)
+        print('Fitting...')
+        forest = RandomForestClassifier(n_estimators=n_estimators, random_state=0)
         forest.fit(cur_trained, train_labels)
 
         print('Predicting...')
         result = forest.predict(cur_tested)
-        '''
-        svm_classifier = svm.SVC(C=10000, random_state=0)
+        accuracy = common.compute_accuracy(result, test_labels, test_corpus)
+        print('acc: {}, ppv: {}, npv: {}'.format(accuracy.acc, accuracy.ppv, accuracy.npv))
+        random_forest_accuracies.append(accuracy)
+
+        print('SVM:')
+        print('Fitting...')
+        svm_classifier = svm.SVC(C=C, random_state=0)
         svm_classifier.fit(cur_trained, train_labels)
 
         print('Predicting...')
         result = svm_classifier.predict(cur_tested)
+        accuracy = common.compute_accuracy(result, test_labels, test_corpus)
+        print('acc: {}, ppv: {}, npv: {}'.format(accuracy.acc, accuracy.ppv, accuracy.npv))
+        svm_accuracies.append(accuracy)
 
-        acc, false_positive, false_negative = common.compute_accuracy(result, test_labels, test_corpus)
-        if acc > max_acc:
-            max_acc = acc
-            max_idx = i
-        print('acc: {}, #false positive: {}, #false_negative: {}'.format(acc, false_positive, false_negative))
-
-    print 'max:', max_acc, max_idx
+    return random_forest_accuracies, svm_accuracies
 
 def main():
-    #Print some named-entities for relevant tweets
-    # ds = Dataset()
-    # for tweet in ds.entries[:30]:
-    #     if tweet.confidence >= 0.9 and tweet.label == dataset_parser.tweet_parser.Relevancy.DISASTER\
-    #             and len(tweet.named_entities) > 0:
-    #         print tweet.text
-    #         print tweet.processed_text
-    #         print "Named Entities: " + str(tweet.named_entities)
-    #         print
-
-
     train, test = setup(dataset_path=OBJ_SUB_PATH, pos_tag_path=OBJ_SUB_POS_TAGGING_PATH)
     '''
     train_corpus = numpy.array([tweet.text for tweet in train])
@@ -149,7 +144,7 @@ def main():
 
     print('===============================')
     print('Test sentiment analysis:')
-    test_sentiment_analysis(train, test)
+    random_forest_accs, svm_accs = test_sentiment_analysis(train, test, n_estimators=10, C=1000)
 
 
 
