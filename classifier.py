@@ -1,15 +1,13 @@
 import common
 import numpy
-from ttp import ttp
-from dataset_parser import pos_tags
 
+from ttp                                import ttp
 from sklearn.ensemble                   import RandomForestClassifier
 from sklearn.feature_extraction.text    import CountVectorizer
 from sklearn.feature_selection          import SelectKBest
 from sklearn.naive_bayes                import BernoulliNB
 from feature                            import feature, fitter
-
-from twokenizer import tokenizeRawTweetText
+from twokenizer                         import tokenizeRawTweetText
 
 class BagOfWords(object):
 
@@ -45,19 +43,24 @@ class BagOfWords(object):
 
 vocabulary = None
 
-#@feature('svm') # 22277
+@feature('svm_uni_pos')
+@feature('svm_uni') # 22277
 def unigram(inputs):
     corpus = numpy.array([tweet.processed_text for tweet in inputs])
     vectorizer = CountVectorizer(vocabulary=vocabulary, analyzer='word', tokenizer=tokenizeRawTweetText)
     return vectorizer.fit_transform(corpus)
 
-@feature('svm') # 22422
+@feature('svm_bi_pos')
+@feature('svm_bi') # 22422
 def unigram_and_bigram(inputs):
     corpus = numpy.array([tweet.processed_text for tweet in inputs])
     vectorizer = CountVectorizer(vocabulary=vocabulary, analyzer='word', tokenizer=tokenizeRawTweetText, ngram_range=(1, 2))
     return vectorizer.fit_transform(corpus)
 
-#@feature('svm')
+@feature('svm_uni')
+@feature('svm_uni_pos')
+@feature('svm_bi')
+@feature('svm_bi_pos')
 def tweet_meta_features(inputs):
     corpus = numpy.array([tweet.processed_text for tweet in inputs])
 
@@ -107,23 +110,20 @@ def count_pos(inputs, poses):
         return numpy.array([tweet.count(pos) for pos in poses])
     return numpy.array([counter(tweet, poses) for tweet in inputs])
 
-@feature('svm')
+@feature('svm_uni_pos')
+@feature('svm_bi_pos')
 def all_pos_count(inputs):
     POS_tags_corpus = numpy.array([tweet.POS for tweet in inputs])
     return count_pos(POS_tags_corpus, INTERESTING_POS_TAGS)
 
-#@feature('svm')
-def trigram_of_POS_tags(inputs):
-    POS_tags_corpus = numpy.array([tweet.POS for tweet in inputs])
-    vectorizer = CountVectorizer(vocabulary=pos_tags.ALL_POS_TAGS, ngram_range=(1, 3))
-    return vectorizer.fit_transform(POS_tags_corpus)
+def svm_uni_fitter(inputs):
+    return fitter('svm_uni', inputs)
 
-'''
-    let's say you want to add another feature extraction for svm, do as following:
-    @feature('svm')
-    def foo(corpus):
-        return {build_matrix some how} # this matrix should be of (len(corpus) X #num_of_features) dimension.
-'''
+def svm_bi_fitter(inputs):
+    return fitter('svm_bi', inputs)
 
-def svm_fitter(inputs):
-    return fitter('svm', inputs)
+def svm_uni_pos_fitter(inputs):
+    return fitter('svm_uni_pos', inputs)
+
+def svm_bi_pos_fitter(inputs):
+    return fitter('svm_bi_pos', inputs)

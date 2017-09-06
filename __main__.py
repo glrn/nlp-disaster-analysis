@@ -6,7 +6,7 @@ import common
 import numpy
 import os
 
-from classifier                 import BagOfWords, svm_fitter
+from classifier                 import BagOfWords, svm_uni_fitter, svm_bi_fitter, svm_uni_pos_fitter, svm_bi_pos_fitter
 from dataset_parser             import Dataset, MAIN_DATASET_PATH, OBJ_SUB_PATH, OBJ_SUB_POS_TAGGING_PATH, MAIN_POS_TAGGING_PATH
 from sentiment_analysis         import sentiment_analysis_classifier
 from sklearn.feature_selection  import SelectKBest
@@ -63,24 +63,38 @@ def test_svm(train, test, Cs):
     classifier.vocabulary = bag.vocabulary
 
     print('Fitting...')
-    trained = svm_fitter(train)
-    tested  = svm_fitter(test)
+    uni_trained     = svm_uni_fitter(train)
+    uni_tested      = svm_uni_fitter(test)
+    bi_trained      = svm_bi_fitter(train)
+    bi_tested       = svm_bi_fitter(test)
+    uni_pos_trained = svm_uni_pos_fitter(train)
+    uni_pos_tested  = svm_uni_pos_fitter(test)
+    bi_pos_trained  = svm_bi_pos_fitter(train)
+    bi_pos_tested   = svm_bi_pos_fitter(test)
 
     # Play with this C value to get better accuracy (for example if C=1, all predictions are 0).
-    accs = []
-    for C in Cs:
-        print('C={}'.format(C))
-        svm_classifier = svm.SVC(C=C)
-        svm_classifier.fit(trained, train_labels)
 
-        print('Predicting...')
-        result = svm_classifier.predict(tested)
+    def benchmark_svm(Cs, train, train_labels, test, test_labels, test_corpus):
+        accs = []
+        for C in Cs:
+            print('C={}'.format(C))
+            svm_classifier = svm.SVC(C=C)
+            svm_classifier.fit(train, train_labels)
 
-        accuracy = common.compute_accuracy(result, test_labels, test_corpus)
-        print('acc: {}, ppv: {}, npv: {}'.format(accuracy.acc, accuracy.ppv, accuracy.npv))
-        accs.append(accuracy)
+            print('Predicting...')
+            result = svm_classifier.predict(test)
 
-    return accs
+            accuracy = common.compute_accuracy(result, test_labels, test_corpus)
+            print('acc: {}, ppv: {}, npv: {}'.format(accuracy.acc, accuracy.ppv, accuracy.npv))
+            accs.append(accuracy)
+        return accs
+
+    uni_accs        = benchmark_svm(Cs, uni_trained, train_labels, uni_tested, test_labels, test_corpus)
+    bi_accs         = benchmark_svm(Cs, bi_trained, train_labels, bi_tested, test_labels, test_corpus)
+    uni_pos_accs    = benchmark_svm(Cs, uni_pos_trained, train_labels, uni_pos_tested, test_labels, test_corpus)
+    bi_pos_accs     = benchmark_svm(Cs, bi_pos_trained, train_labels, bi_pos_tested, test_labels, test_corpus)
+
+    return uni_accs, bi_accs, uni_pos_accs, bi_pos_accs
 
 @common.timeit
 def test_sentiment_analysis(train, test, n_estimators, C):
@@ -140,6 +154,25 @@ def test_disaster_classification(n_estimators, Cs):
     print('Test unigrams and bigrams:')
     bi_random_forest_accuracies, bi_naive_bayes_accuracy = test_bag_of_words(train_corpus, test_corpus, train_labels, test_labels, n_estimators, ngram_range=(1, 2))
 
+    forest_uni_max_acc_idx, forest_uni_max_ppv_idx, forest_uni_max_npv_idx = common.max_accuracy(uni_random_forest_accuracies)
+    print('Forest uni: Max acc: {}: {}, Max ppv: {}: {}, Max npv: {}: {}'.format(
+        forest_uni_max_acc_idx,
+        uni_random_forest_accuracies[forest_uni_max_acc_idx].acc,
+        forest_uni_max_ppv_idx,
+        uni_random_forest_accuracies[forest_uni_max_ppv_idx].ppv,
+        forest_uni_max_npv_idx,
+        uni_random_forest_accuracies[forest_uni_max_npv_idx].npv,
+    ))
+    forest_bi_max_acc_idx, forest_bi_max_ppv_idx, forest_bi_max_npv_idx = common.max_accuracy(bi_random_forest_accuracies)
+    print('Forest bi: Max acc: {}: {}, Max ppv: {}: {}, Max npv: {}: {}'.format(
+        forest_bi_max_acc_idx,
+        uni_random_forest_accuracies[forest_bi_max_acc_idx].acc,
+        forest_bi_max_ppv_idx,
+        uni_random_forest_accuracies[forest_bi_max_ppv_idx].ppv,
+        forest_bi_max_npv_idx,
+        uni_random_forest_accuracies[forest_bi_max_npv_idx].npv,
+    ))
+
     log_n_estimators = numpy.log2(n_estimators)
     common.plot(
         xs          = [log_n_estimators for _ in range(6)],
@@ -175,30 +208,106 @@ def test_disaster_classification(n_estimators, Cs):
     '''
     print('===============================')
     print('Test SVM unigrams and bigrams:')
-    svm_accs = test_svm(train, test, Cs)
+    svm_uni_accs, svm_bi_accs, svm_uni_pos_accs, svm_bi_pos_accs = test_svm(train, test, Cs)
+    svm_uni_max_acc_idx, svm_uni_max_ppv_idx, svm_uni_max_npv_idx = common.max_accuracy(svm_uni_accs)
+    print('SVM uni: Max acc: {}: {}, Max ppv: {}: {}, Max npv: {}: {}'.format(
+        svm_uni_max_acc_idx,
+        svm_uni_accs[svm_uni_max_acc_idx].acc,
+        svm_uni_max_ppv_idx,
+        svm_uni_accs[svm_uni_max_ppv_idx].ppv,
+        svm_uni_max_npv_idx,
+        svm_uni_accs[svm_uni_max_npv_idx].npv,
+    ))
+    svm_uni_pos_max_acc_idx, svm_uni_pos_max_ppv_idx, svm_uni_pos_max_npv_idx = common.max_accuracy(svm_uni_pos_accs)
+    print('SVM uni pos: Max acc: {}: {}, Max ppv: {}: {}, Max npv: {}: {}'.format(
+        svm_uni_pos_max_acc_idx,
+        svm_uni_pos_accs[svm_uni_pos_max_acc_idx].acc,
+        svm_uni_pos_max_ppv_idx,
+        svm_uni_pos_accs[svm_uni_pos_max_ppv_idx].ppv,
+        svm_uni_pos_max_npv_idx,
+        svm_uni_pos_accs[svm_uni_pos_max_npv_idx].npv,
+    ))
+    svm_bi_max_acc_idx, svm_bi_max_ppv_idx, svm_bi_max_npv_idx = common.max_accuracy(svm_bi_accs)
+    print('SVM bi: Max acc: {}: {}, Max ppv: {}: {}, Max npv: {}: {}'.format(
+        svm_bi_max_acc_idx,
+        svm_bi_accs[svm_bi_max_acc_idx].acc,
+        svm_bi_max_ppv_idx,
+        svm_bi_accs[svm_bi_max_ppv_idx].ppv,
+        svm_bi_max_npv_idx,
+        svm_bi_accs[svm_bi_max_npv_idx].npv,
+    ))
+    svm_bi_pos_max_acc_idx, svm_bi_pos_max_ppv_idx, svm_bi_pos_max_npv_idx = common.max_accuracy(svm_bi_pos_accs)
+    print('SVM bi pos: Max acc: {}: {}, Max ppv: {}: {}, Max npv: {}: {}'.format(
+        svm_bi_pos_max_acc_idx,
+        svm_bi_pos_accs[svm_bi_pos_max_acc_idx].acc,
+        svm_bi_pos_max_ppv_idx,
+        svm_bi_pos_accs[svm_bi_pos_max_ppv_idx].ppv,
+        svm_bi_pos_max_npv_idx,
+        svm_bi_pos_accs[svm_bi_pos_max_npv_idx].npv,
+    ))
 
     log_Cs = numpy.log10(Cs)
     common.plot(
-        xs=[log_Cs for _ in range(3)],
+        xs=[log_Cs for _ in range(6)],
         ys=[
-            [acc.acc for acc in svm_accs],
-            [acc.ppv for acc in svm_accs],
-            [acc.npv for acc in svm_accs],
+            [acc.acc for acc in svm_uni_accs],
+            [acc.ppv for acc in svm_uni_accs],
+            [acc.npv for acc in svm_uni_accs],
+            [acc.acc for acc in svm_uni_pos_accs],
+            [acc.ppv for acc in svm_uni_pos_accs],
+            [acc.npv for acc in svm_uni_pos_accs],
         ],
         colors=[
             'bs-',
             'gs-',
             'rs-',
+            'bo-',
+            'go-',
+            'ro-',
         ],
         x_label='#C (log10)',
         y_label='accuracy',
         func_labels=[
-            'accuracy',
-            'ppv',
-            'npv',
+            'uni_accuracy',
+            'uni_ppv',
+            'uni_npv',
+            'uni_pos_accuracy',
+            'uni_pos_ppv',
+            'uni_pos_npv',
         ],
         title='SVM',
-        save=os.path.join(GRAPHS_DIR, 'svm_features.png')
+        save=os.path.join(GRAPHS_DIR, 'svm_uni_features.png')
+    )
+    common.plot(
+        xs=[log_Cs for _ in range(6)],
+        ys=[
+            [acc.acc for acc in svm_bi_accs],
+            [acc.ppv for acc in svm_bi_accs],
+            [acc.npv for acc in svm_bi_accs],
+            [acc.acc for acc in svm_bi_pos_accs],
+            [acc.ppv for acc in svm_bi_pos_accs],
+            [acc.npv for acc in svm_bi_pos_accs],
+        ],
+        colors=[
+            'bs-',
+            'gs-',
+            'rs-',
+            'bo-',
+            'go-',
+            'ro-',
+        ],
+        x_label='#C (log10)',
+        y_label='accuracy',
+        func_labels=[
+            'bi_accuracy',
+            'bi_ppv',
+            'bi_npv',
+            'bi_pos_accuracy',
+            'bi_pos_ppv',
+            'bi_pos_npv',
+        ],
+        title='SVM',
+        save=os.path.join(GRAPHS_DIR, 'svm_bi_features.png')
     )
 
 def test_sentiment_analysis_classification():
