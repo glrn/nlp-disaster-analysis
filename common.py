@@ -4,6 +4,8 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot
 import time
+import pandas
+from pandas.tools.plotting import table
 
 Accuracy = collections.namedtuple('Accuracy', 'acc ppv npv')
 DATE_FORMAT_STRING = '%Y-%m-%d %H:%M:%S'
@@ -74,6 +76,36 @@ def plot(xs, ys, colors, x_label, y_label, title, func_labels=None, x_scale=None
     else:
         matplotlib.pyplot.show()
     matplotlib.pyplot.close(f)
+
+def plot_table(title, cells, column_names, row_names, save=None):
+    f, ax = matplotlib.pyplot.subplots(1)
+    ax.xaxis.set_visible(False)
+    ax.yaxis.set_visible(False)
+    ax.set_frame_on(False)
+    f.suptitle(title, fontsize=14, fontweight='bold')
+
+    df = pandas.DataFrame(cells)
+    df.columns  = column_names
+    df.index    = row_names
+    tab = table(
+        ax          = ax,
+        data        = df,
+        colLabels   = column_names,
+        rowLabels   = row_names,
+        loc         = 'upper right',
+    )
+
+    tab.auto_set_font_size(False)
+    tab.set_fontsize(12)
+
+    print(df)
+
+    if save is not None:
+        matplotlib.pyplot.savefig(save)
+    else:
+        matplotlib.pyplot.show()
+    matplotlib.pyplot.close(f)
+
 
 def max_specific_accuracy(accuracies):
     max_acc = 0
