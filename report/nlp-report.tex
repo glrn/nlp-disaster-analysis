@@ -50,52 +50,61 @@
 
 
 \abstract{}
-\red{TODO}
+\todo{}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
-The popular microblogging service Twitter is a fruitful source of user-created content. With hundreds of millions of new tweets every day, Twitter has become a probe to human behavior and opinions from around the globe. The Twitter 'corpus' reflects political and social trends, popular culture, global and local happenings, and much more. In addition, tweets are easy to access and aggregate in real-time. Therefore, we experience an increased interest in natural language processing research of Twitter data.
+The popular microblogging service Twitter is a fruitful source of user-created content. With hundreds of millions of new tweets every day, Twitter has become a probe to human behavior and opinions from around the globe. The Twitter 'corpus' reflects political and social trends, popular culture, global and local happenings, and more. In addition, tweets are easy to access and aggregate in real-time. Therefore, we experience an increased interest in natural language processing research of Twitter data.
 
 As one of the world's most widely used social networks, Twitter is an effective channel of communication and plays an important role during a crisis or emergency. The live stream of tweets can be used to identify reports and calls for help in emergency situations, such as accidents, violent crimes, natural disasters and terror attacks (which we all refer to as 'disasters' in this paper).
 
+In this work we utilize techniques from the natural language processing pipeline (tokenization, part-of-speech tagging and named-entity recognition) to work on Twitter data, as opposed to traditional corpora, in order to detect and analyze disaster-related tweets.
+
 \paragraph{The Dataset}
-In this work we present our experiments on a \href{https://www.crowdflower.com/data-for-everyone/}{dataset} of 10,877 tweets\endnote{\textbf{"Disasters on social media" Dataset by CrowdFlower}: Contributors looked at over 10,000 tweets culled with a variety of searches like "ablaze", "quarantine", and "pandemonium", then noted whether the tweet referred to a disaster. https://www.crowdflower.com/wp-content/uploads/2016/03/socialmedia-disaster-tweets-DFE.csv}, labeled to \textit{'disaster-related'} and \textit{'not disaster-related'} with confidence in the scale $[0,1]$. For example, the following tweet is \textit{'disaster-related'} with confidence 1,
+We present our experiments on a \href{https://www.crowdflower.com/data-for-everyone/}{dataset} of 10,877 tweets\endnote{\textbf{"Disasters on social media" Dataset by CrowdFlower}: Contributors looked at over 10,000 tweets culled with a variety of searches like "ablaze", "quarantine", and "pandemonium", then noted whether the tweet referred to a disaster. https://www.crowdflower.com/wp-content/uploads/2016/03/socialmedia-disaster-tweets-DFE.csv}, labeled to \textit{'disaster-related'} and \textit{'not disaster-related'} with confidence in the range $[0,1]$. For example, the following tweet is \textit{'disaster-related'} with confidence 1,
 
 \begin{center}
 	\parbox{190pt}{\tweet{Thunderstorms with little rain expected in Central California. High fire danger. \#weather \#cawx http://t.co/A5GNzbuSqq}}
 \end{center}
 
 
-and the following tweet (containing a Bon Jovi lyrics) is \textit{'not disaster-related'} with confidence 0.59,
+while the following tweet is \textit{'not disaster-related'} with confidence 0.59,
 
 \begin{center}
 	\parbox{190pt}{\tweet{It's been raining since you left me // Now I'm drowning in the flood // You see I've always been a fighter // But without you I give up}}
 \end{center}
 
-\red{TODO (Gal): explain here that the 2nd tweet contains more 'disasterous' words (drowning, fighter, give up, raining, flood), which explains why the task is challenging; we'd have to look at more than unigrams to succeed.}
+Even for one who is not familiar with the Bon Jovi lyrics in the latter tweet, it is clear that the tweet does not refer to a real natural disaster. However, this observation is hard to make examining only the vocabulary used; the latter tweet contains a variety of 'disastrous' words  (e.g. \tweet{raining, drowning, flood, fighter}). This example hints that in order to reach meaningful results we may want to examine additional linguistic features of colloquial writing,  as well as Twitter-specific features such as hashtags (\tweet{\textbf{\#}}), user at-mentions (\tweet{\textbf{@}}), internet links and emojis.
+
 
 \paragraph{Our Contribution}
 
-\red{TODO (Gal): organize and expand this section a bit}
+In this paper we present our work tackling three missions involving disaster-related tweets.
 
-In this work we present a model trained to identify disaster-related tweets from other messages, using a natural language processing pipeline adjusted to the special features of Twitter tweets. In addition, we present two experiments conducted on disaster-related tweets.
+The first mission is \textit{identification} of disaster-related tweets in a varied corpus. We implemented several classifiers, the best of which achieved \todo{\%} accuracy on the dataset.
 
- First, we learn to separate \textit{subjective} tweets (example: \red{\tweet{TWEET}}) from \textit{objective} reports on disasters (example: \red{\tweet{TWEET}}). This involved manual tagging of 2100 tweets. We also recognize named-entities in disaster-related tweets to enrich our knowledge on the disaster (mostly location).
+The second missions is binary classification of disaster-related tweets to one of two categories, \textit{subjective} tweets vs. \textit{objective} reports on disasters. To achieve this we manually tagged 2,410 disaster-related tweets. The rationale behind this task is that objective tweets (for example, informative news reports) are likely to be published after the event had already become clear to emergency services, while subjective tweets may contain invaluable first-person testimonies.
+
+Finally, we extracted named entities to enrich our knowledge on the disaster (mostly location)... \todo{Omri - short description of method and achievements}.
+
+Wh
+
+When we ran...
 
 
+\todo{this is a framework that could work on other problems (political tweets)...}
 
 \subsection{Twitter vs. Traditional Corpora}
 
 Tweet datasets have some unique features that differ from traditional corpora (such as WSJ corpus). These features should be taken into consideration when implementing natural language processing techniques.
 
-\tweet{Heard about \#earthquake is different cities, stay safe everyone.}
+
+\begin{center}
+	\parbox{190pt}{\tweet{Heard about \#earthquake is different cities, stay safe everyone.}}
+\end{center}
 
 
-Here's a tweet:
-
-\tweet{RT This is an \#awsome tweet lmao :O}
-
-\red{TODO (Gal): Complete this section}
+\todo{(Gal) Complete this section}
 	
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -109,7 +118,7 @@ Here's a tweet:
 	\item C
 \end{itemize}
 
-\red{TODO (Gal): Complete this section}
+\todo{(Gal) Complete this section}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Tweet Classification}
