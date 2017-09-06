@@ -1,0 +1,4 @@
+          Uni NB  Bi NB  Uni RF  Bi RF  Uni SVM  Uni POS SVM  Bi SVM  Bi POS SVM
+accuracy   0.921  0.864   0.911  0.890    0.935        0.937   0.933       0.945
+ppv        0.977  1.000   0.945  0.969    0.961        0.946   0.952       0.955
+npv        0.891  0.813   0.892  0.856    0.935        0.938   0.926       0.939
