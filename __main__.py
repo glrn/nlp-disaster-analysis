@@ -5,6 +5,7 @@ import classifier
 import common
 import numpy
 import os
+import pandas
 
 from classifier                 import BagOfWords, svm_uni_fitter, svm_bi_fitter, svm_uni_pos_fitter, svm_bi_pos_fitter
 from dataset_parser             import Dataset, MAIN_DATASET_PATH, OBJ_SUB_PATH, OBJ_SUB_POS_TAGGING_PATH, MAIN_POS_TAGGING_PATH
@@ -146,7 +147,7 @@ def test_disaster_classification(n_estimators, Cs):
     test_corpus = numpy.array([tweet.text for tweet in test])
     train_labels = numpy.array([tweet.label for tweet in train])
     test_labels = numpy.array([tweet.label for tweet in test])
-    '''
+
     print('===============================')
     print('Test unigrams:')
     uni_random_forest_accuracies, uni_naive_bayes_accuracy = test_bag_of_words(train_corpus, test_corpus, train_labels, test_labels, n_estimators)
@@ -205,7 +206,7 @@ def test_disaster_classification(n_estimators, Cs):
         title       = 'Random Forest',
         save        = os.path.join(GRAPHS_DIR, 'random_forest_unigram_vs_bigram_features.png')
     )
-    '''
+
     print('===============================')
     print('Test SVM unigrams and bigrams:')
     svm_uni_accs, svm_bi_accs, svm_uni_pos_accs, svm_bi_pos_accs = test_svm(train, test, Cs)
@@ -308,6 +309,60 @@ def test_disaster_classification(n_estimators, Cs):
         ],
         title='SVM',
         save=os.path.join(GRAPHS_DIR, 'svm_bi_features.png')
+    )
+
+    best_results = [
+        [
+            round(uni_naive_bayes_accuracy.acc, 3),
+            round(bi_naive_bayes_accuracy.acc, 3),
+            round(uni_random_forest_accuracies[forest_uni_max_acc_idx].acc, 3),
+            round(bi_random_forest_accuracies[forest_bi_max_acc_idx].acc, 3),
+            round(svm_uni_accs[svm_uni_max_acc_idx].acc, 3),
+            round(svm_uni_pos_accs[svm_uni_pos_max_acc_idx].acc, 3),
+            round(svm_bi_accs[svm_bi_max_acc_idx].acc, 3),
+            round(svm_bi_pos_accs[svm_bi_max_acc_idx].acc, 3),
+        ],
+        [
+            round(uni_naive_bayes_accuracy.ppv, 3),
+            round(bi_naive_bayes_accuracy.ppv, 3),
+            round(uni_random_forest_accuracies[forest_uni_max_ppv_idx].ppv, 3),
+            round(bi_random_forest_accuracies[forest_bi_max_ppv_idx].ppv, 3),
+            round(svm_uni_accs[svm_uni_max_ppv_idx].ppv, 3),
+            round(svm_uni_pos_accs[svm_uni_pos_max_ppv_idx].ppv, 3),
+            round(svm_bi_accs[svm_bi_max_ppv_idx].ppv, 3),
+            round(svm_bi_pos_accs[svm_bi_max_npv_idx].ppv, 3),
+        ],
+        [
+            round(uni_naive_bayes_accuracy.npv, 3),
+            round(bi_naive_bayes_accuracy.npv, 3),
+            round(uni_random_forest_accuracies[forest_uni_max_npv_idx].npv, 3),
+            round(bi_random_forest_accuracies[forest_bi_max_npv_idx].npv, 3),
+            round(svm_uni_accs[svm_uni_max_npv_idx].npv, 3),
+            round(svm_uni_pos_accs[svm_uni_pos_max_npv_idx].npv, 3),
+            round(svm_bi_accs[svm_bi_max_npv_idx].npv, 3),
+            round(svm_bi_pos_accs[svm_bi_max_npv_idx].npv, 3),
+        ],
+    ]
+
+    common.plot_table(
+        title           = 'Best Results',
+        cells           = best_results,
+        column_names    = [
+            'Uni NB',
+            'Bi NB',
+            'Uni RF',
+            'Bi RF',
+            'Uni SVM',
+            'Uni POS SVM',
+            'Bi SVM',
+            'Bi POS SVM',
+        ],
+        row_names       = [
+            'accuracy',
+            'ppv',
+            'npv',
+        ],
+        save            = os.path.join(GRAPHS_DIR, 'best_result_table.png'),
     )
 
 def test_sentiment_analysis_classification():
