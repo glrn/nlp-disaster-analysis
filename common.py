@@ -74,3 +74,18 @@ def plot(xs, ys, colors, x_label, y_label, title, func_labels=None, x_scale=None
     else:
         matplotlib.pyplot.show()
     matplotlib.pyplot.close(f)
+
+def max_specific_accuracy(accuracies):
+    max_acc = 0
+    max_idx = 0
+    for i, acc in enumerate(accuracies):
+        if acc > max_acc:
+            max_acc = acc
+            max_idx = i
+    return max_idx, max_acc
+
+def max_accuracy(accuracies):
+    max_acc_idx, max_acc = max_specific_accuracy([acc.acc for acc in accuracies])
+    max_ppv_idx, max_ppv = max_specific_accuracy([acc.ppv for acc in accuracies])
+    max_npv_idx, max_npv = max_specific_accuracy([acc.npv for acc in accuracies])
+    return max_acc_idx, max_ppv_idx, max_npv_idx
