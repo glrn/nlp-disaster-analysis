@@ -5,6 +5,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot
 import time
 import pandas
+import os
 from pandas.tools.plotting import table
 
 Accuracy = collections.namedtuple('Accuracy', 'acc ppv npv')
@@ -72,6 +73,10 @@ def plot(xs, ys, colors, x_label, y_label, title, func_labels=None, x_scale=None
         ax.legend([plot for plot, in plots], [plot.get_label() for plot, in plots], loc=legend_location)
     f.suptitle(title, fontsize=14, fontweight='bold')
     if save is not None:
+        try:
+            os.makedirs(os.path.dirname(save))
+        except (IOError, WindowsError):
+            pass
         matplotlib.pyplot.savefig(save)
     else:
         matplotlib.pyplot.show()
@@ -101,6 +106,10 @@ def plot_table(title, cells, column_names, row_names, save=None):
     print(df)
 
     if save is not None:
+        try:
+            os.makedirs(os.path.dirname(save))
+        except (IOError, WindowsError):
+            pass
         matplotlib.pyplot.savefig(save)
     else:
         matplotlib.pyplot.show()
@@ -121,3 +130,6 @@ def max_accuracy(accuracies):
     max_ppv_idx, max_ppv = max_specific_accuracy([acc.ppv for acc in accuracies])
     max_npv_idx, max_npv = max_specific_accuracy([acc.npv for acc in accuracies])
     return max_acc_idx, max_ppv_idx, max_npv_idx
+
+def best_feature_names(named_features, name, bools):
+    return [f.__name__ for f, b in zip(named_features[name], bools) if b]
