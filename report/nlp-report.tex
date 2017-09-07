@@ -104,7 +104,7 @@ First, the grammar of tweets is quite different from edited news text. It is com
 
 Tweets are also characterized by extensive use of abbreviations and slang specific to social-media (e.g. \tweet{ily} for 'I love you', \tweet{iono} for 'I don't know). Such abbreviations may squash several parts-of-speech into one token, which poses a challenge to POS tagging. 
 
-In addition, due to the colloquial nature of user-created content, it is common that proper words are replaced by phonetically or morphologically similar ones (e.g. 'wtchng' instead of 'watching', 'gr8' instead of 'great'). Users may also use capitalization irregularities, deliberate spelling and errors and punctuation irregularities as a means to express their sentiment, as in the following tweet:
+In addition, due to the colloquial nature of user-created content, it is common that proper words are replaced by phonetically or morphologically similar ones (e.g. 'wtchng' instead of 'watching', 'gr8' instead of 'great'). Users may also use capitalization irregularities, deliberate spelling errors, punctuation irregularities and interjections as a means to express their sentiment, as in the following tweet:
 
 \begin{center}
 	\parbox{190pt}{\tweet{Haha South Tampa is getting flooded hah- WAIT A SECOND I LIVE IN SOUTH TAMPA WHAT AM I GONNA DO WHAT AM I GONNA DO FVCK \#flooding}}
@@ -136,10 +136,27 @@ Regarding URLs, all links posted in tweets are shortened using Twitter's link se
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Classification of Disaster-Related Tweets}
 
-\todo{(Gal) Write here about the preprocessing \& POS tagging}
+In the first part of our work we developed a classifier that identifies \textit{disaster-related} tweets from \textit{not disaster-related} tweets, trained on a dataset of 10,877 labeled tweets (\todo{note: maybe better to say that the dataset was ~2400 tweets, since we looked only at tweets with confident $>0.9$}). We experimented with a Naive Bayes classifier as well as a support vector machine (SVM) classifier, which led to better results on the dataset.
 
-\todo{}
+We eventually used the SVM classifier, with several features extracted for each tweet:
 
+\begin{itemize}[noitemsep]
+	\item \textbf{Unigrams and bigrams} of tokens in tweet; we used a python version of \texttt{Twokenizer}, Twitter tokenizer (Gimpel et al., 2011 \cite{POS-Tagging}, Myle Ott, 2013 \cite{ark-twokenize-py}).
+	\item \textbf{Tweet metadata}; hashtags, at-mentions and URLs; we parsed the tweet, crawled URLs and used the webpage title as supplementary information.
+	\item \textbf{Part-of-speech (POS) tags}; we used a twitter-specific tagset and tagger presented by Gimpel et al. \cite{POS-Tagging}.
+\end{itemize}
+
+\paragraph{Tokenization}
+\todo{Gal}
+
+\paragraph{Metadata Extraction}
+\todo{Gal}
+
+\paragraph{Twitter POS Tagging}
+\todo{Gal}
+
+\subsection{Results}
+\todo{Daniel?}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Sentiment Analysis of Tweets}
