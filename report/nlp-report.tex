@@ -152,19 +152,21 @@ In the first part of our work we developed a classifier that identifies \textit{
 To train the classifiers we extracted several features for each tweet:
 
 \begin{itemize}[noitemsep]
-	\item \textbf{Unigrams and bigrams} of tokens in tweet; we used a python version of \texttt{Twokenizer}, Twitter tokenizer (Gimpel et al., 2011 \cite{POS-Tagging}, Myle Ott, 2013 \cite{ark-twokenize-py}).
-	\item \textbf{Tweet metadata}; hashtags, at-mentions and URLs; we parsed the tweet, crawled URLs and used the webpage title as supplementary information.
-	\item \textbf{Part-of-speech (POS) tags}; we used a twitter-specific tagset and tagger presented by Gimpel et al. \cite{POS-Tagging}.
+	\item \textbf{Unigrams and bigrams} of tokens in tweet; we used a Python version of \texttt{Twokenizer}, tokenizer for Twitter data (Gimpel et al. \cite{POS-Tagging}, Myle Ott, 2013 \cite{ark-twokenize-py}).
+	\item \textbf{Tweet metadata}; hashtags, at-mentions and URLs; we parsed the tweet, crawled URLs and used the referred webpage title as supplementary information.
+	\item \textbf{Part-of-speech (POS) tags} (bigram and unigram); we used a twitter-specific tagset and tagger presented by Gimpel et al. \cite{POS-Tagging}.
 \end{itemize}
 
 \paragraph{Tokenization}
-\todo{Gal}
+Splitting a tweet to tokens (separated ordered words) is hard due to irregular punctuation patterns and use of punctuation marks for emoticons. For example, the correct tokenization of '\tweet{hello (\#hashtag)}' is to the four tokens [\tweet{ hello , ( , \#hashtag , ) }], but '\tweet{hello (:}' should be split only to the tuple [ \tweet{hello , (:} ].
+
+\texttt{Twokenizer} is a tokenizer designed for Twitter text in English that addresses these issues. It was originally developed in Python by O'Connor et al., 2010 \cite{TweetMotif}, then improved and ported to Java by Gimpel et al., 2011 \cite{POS-Tagging} and later ported back to Python \cite{ark-twokenize-py}. We use the last version by Myle Ott.
 
 \paragraph{Metadata Extraction}
 \todo{Gal}
 
 \paragraph{Twitter POS Tagging}
-\todo{Gal}
+\todo{Gal \cite{POS-Tagging}}
 
 \subsection{Results}
 \todo{Daniel?}
