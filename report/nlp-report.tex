@@ -81,17 +81,15 @@ Even for one who is not familiar with the Bon Jovi lyrics in the latter tweet, i
 
 In this paper we present our work tackling three missions involving disaster-related tweets.
 
-The first mission is \textit{identification} of disaster-related tweets in a varied corpus. We implemented several classifiers, the best of which achieved \todo{\%} accuracy on the dataset.
+The first mission is \textit{identification} of disaster-related tweets among a variety of tweets. We implemented several classifiers, the best of which achieved \todo{\%} accuracy on the dataset. We note that this method could have easily been adjusted to identify tweets related to themes other than disasters (e.g. politics-related, sports-related, etc.), given the appropriate dataset.
 
-The second missions is binary classification of disaster-related tweets to one of two categories, \textit{subjective} tweets vs. \textit{objective} reports on disasters. To achieve this we manually tagged 2,410 disaster-related tweets. The rationale behind this task is that objective tweets (for example, informative news reports) are likely to be published after the event had already become clear to emergency services, while subjective tweets may contain invaluable first-person testimonies.
+The second missions is binary classification of disaster-related tweets to one of two categories, \textit{subjective tweets} (i.e. tweets that express an emotion) vs. \textit{objective tweets} (such as news reports on disasters). To achieve this we manually tagged 2,410 disaster-related tweets. The rationale behind this task is that objective tweets like informative news reports are likely to be published after the event had already become clear to emergency services, while subjective tweets may contain invaluable first-person testimonies.
 
 Finally, we extracted named entities to enrich our knowledge on the disaster (mostly location)... \todo{Omri - short description of method and achievements}.
 
+To demonstrate our framework we aggregated recent tweets from various locations in the US, extracted disaster-related tweets using our classifier, and used named-entity recognition to discover entities related to ongoing disasters. For example, "\tweet{Hurricane Harvey}" appeared as a top named-entity among recent tweets sent from Houston, TX, which we identified as \textit{disaster-related}.
 
-\todo{When we ran...}
-
-
-\todo{this is a framework that could work on other problems (political tweets)...}
+The code of our project is available at \url{https://github.com/glrn/nlp-disaster-analysis}.
 
 \subsection{Twitter vs. Traditional Corpora}
 
