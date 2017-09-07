@@ -5,13 +5,13 @@ import classifier
 import common
 import numpy
 import os
-import pandas
 
 from classifier                 import BagOfWords, svm_uni_fitter, svm_bi_fitter, svm_uni_pos_fitter, svm_bi_pos_fitter
 from dataset_parser             import Dataset, MAIN_DATASET_PATH, OBJ_SUB_PATH, OBJ_SUB_POS_TAGGING_PATH, MAIN_POS_TAGGING_PATH
 from sentiment_analysis         import sentiment_analysis_classifier
 from sklearn.feature_selection  import SelectKBest
 from sklearn.ensemble           import RandomForestClassifier
+from feature                    import named_features
 
 TEST_SLICE = 0.1
 GRAPHS_DIR = 'graphs'
@@ -110,12 +110,15 @@ def test_sentiment_analysis(train, test, n_estimators, C):
 
     random_forest_accuracies    = []
     svm_accuracies              = []
+    selected_features           = []
+
     for i in range(1, trained.shape[1] + 1):
         print('#features: {}'.format(i))
         selector = SelectKBest(k=i)
         cur_trained = selector.fit_transform(trained, train_labels)
         selected = selector.get_support()
         cur_tested = tested[:, selected]
+        selected_features.append(selected)
 
         print('Random forest:')
         print('Fitting...')
@@ -139,7 +142,7 @@ def test_sentiment_analysis(train, test, n_estimators, C):
         print('acc: {}, ppv: {}, npv: {}'.format(accuracy.acc, accuracy.ppv, accuracy.npv))
         svm_accuracies.append(accuracy)
 
-    return random_forest_accuracies, svm_accuracies
+    return random_forest_accuracies, svm_accuracies, selected_features
 
 def test_disaster_classification(n_estimators, Cs):
     train, test = setup()
@@ -204,7 +207,7 @@ def test_disaster_classification(n_estimators, Cs):
             'bigram npv',
         ],
         title       = 'Random Forest',
-        save        = os.path.join(GRAPHS_DIR, 'random_forest_unigram_vs_bigram_features.png')
+        save        = os.path.join(GRAPHS_DIR, 'DisasterClassification', 'random_forest_unigram_vs_bigram_features.png')
     )
 
     print('===============================')
@@ -277,7 +280,7 @@ def test_disaster_classification(n_estimators, Cs):
             'uni_pos_npv',
         ],
         title='SVM',
-        save=os.path.join(GRAPHS_DIR, 'svm_uni_features.png')
+        save=os.path.join(GRAPHS_DIR, 'DisasterClassification', 'svm_uni_features.png')
     )
     common.plot(
         xs=[log_Cs for _ in range(6)],
@@ -308,7 +311,7 @@ def test_disaster_classification(n_estimators, Cs):
             'bi_pos_npv',
         ],
         title='SVM',
-        save=os.path.join(GRAPHS_DIR, 'svm_bi_features.png')
+        save=os.path.join(GRAPHS_DIR, 'DisasterClassification', 'svm_bi_features.png')
     )
 
     best_results = [
@@ -362,20 +365,122 @@ def test_disaster_classification(n_estimators, Cs):
             'ppv',
             'npv',
         ],
-        save            = os.path.join(GRAPHS_DIR, 'best_result_table.png'),
+        save            = os.path.join(GRAPHS_DIR, 'DisasterClassification', 'best_result_table.png'),
     )
 
-def test_sentiment_analysis_classification():
+def test_sentiment_analysis_classification(n_estimators, C):
     train, test = setup(dataset_path=OBJ_SUB_PATH, pos_tag_path=OBJ_SUB_POS_TAGGING_PATH)
     print('===============================')
     print('Test sentiment analysis:')
-    random_forest_accs, svm_accs = test_sentiment_analysis(train, test, n_estimators=10, C=1000)
+    random_forest_accs, svm_accs, selected_features = test_sentiment_analysis(train, test, n_estimators=n_estimators, C=C)
 
+    random_forest_max_acc_idx, random_forest_max_ppv_idx, random_forest_max_npv_idx = common.max_accuracy(random_forest_accs)
+    print('Random Forest: Max acc: {}: {}, Max ppv: {}: {}, Max npv: {}: {}'.format(
+        random_forest_max_acc_idx,
+        random_forest_accs[random_forest_max_acc_idx].acc,
+        random_forest_max_ppv_idx,
+        random_forest_accs[random_forest_max_ppv_idx].ppv,
+        random_forest_max_npv_idx,
+        random_forest_accs[random_forest_max_npv_idx].npv,
+    ))
+
+    print('Random Forest Best {} features: {}'.format(random_forest_max_acc_idx + 1, ', '.join(common.best_feature_names(named_features, 'sentiment_analysis', selected_features[random_forest_max_acc_idx]))))
+
+    svm_max_acc_idx, svm_max_ppv_idx, svm_max_npv_idx = common.max_accuracy(svm_accs)
+    print('SVM: Max acc: {}: {}, Max ppv: {}: {}, Max npv: {}: {}'.format(
+        svm_max_acc_idx,
+        svm_accs[svm_max_acc_idx].acc,
+        svm_max_ppv_idx,
+        svm_accs[svm_max_ppv_idx].ppv,
+        svm_max_npv_idx,
+        svm_accs[svm_max_npv_idx].npv,
+    ))
+
+    print('SVM Best {} features: {}'.format(svm_max_acc_idx + 1, ', '.join(common.best_feature_names(named_features, 'sentiment_analysis', selected_features[svm_max_acc_idx]))))
+
+    common.plot(
+        xs=[[i + 1 for i in range(len(random_forest_accs))] for _ in range(3)],
+        ys=[
+            [acc.acc for acc in random_forest_accs],
+            [acc.ppv for acc in random_forest_accs],
+            [acc.npv for acc in random_forest_accs],
+        ],
+        colors=[
+            'bs-',
+            'gs-',
+            'rs-',
+        ],
+        x_label='#features',
+        y_label='accuracy',
+        func_labels=[
+            'accuracy',
+            'ppv',
+            'npv',
+        ],
+        title='Random Forest (#estimators={})'.format(n_estimators),
+        save=os.path.join(GRAPHS_DIR, 'SentimentAnalysis', 'random_forest.png')
+    )
+
+    common.plot(
+        xs=[[i + 1 for i in range(len(svm_accs))] for _ in range(3)],
+        ys=[
+            [acc.acc for acc in svm_accs],
+            [acc.ppv for acc in svm_accs],
+            [acc.npv for acc in svm_accs],
+        ],
+        colors=[
+            'bs-',
+            'gs-',
+            'rs-',
+        ],
+        x_label='#features',
+        y_label='accuracy',
+        func_labels=[
+            'accuracy',
+            'ppv',
+            'npv',
+        ],
+        title='SVM (C={})'.format(C),
+        save=os.path.join(GRAPHS_DIR, 'SentimentAnalysis', 'SVM.png')
+    )
+
+    num_of_features_rf  = sorted(list(set([random_forest_max_acc_idx, random_forest_max_ppv_idx, random_forest_max_npv_idx])))
+    num_of_features_svm = list(set([svm_max_acc_idx, svm_max_ppv_idx, svm_max_npv_idx]))
+
+    best_acc_results = []
+    for x in num_of_features_rf:
+        best_acc_results.append(round(random_forest_accs[x].acc, 3))
+    for x in num_of_features_svm:
+        best_acc_results.append(round(svm_accs[x].acc, 3))
+    best_ppv_results = []
+    for x in num_of_features_rf:
+        best_ppv_results.append(round(random_forest_accs[x].ppv, 3))
+    for x in num_of_features_svm:
+        best_ppv_results.append(round(svm_accs[x].ppv, 3))
+    best_npv_results = []
+    for x in num_of_features_rf:
+        best_npv_results.append(round(random_forest_accs[x].npv, 3))
+    for x in num_of_features_svm:
+        best_npv_results.append(round(svm_accs[x].npv, 3))
+
+    best_results = [best_acc_results, best_ppv_results, best_npv_results]
+
+    common.plot_table(
+        title='Best Results',
+        cells=best_results,
+        column_names=['RF ({})'.format(x + 1) for x in num_of_features_rf] + ['SVM ({})'.format(x + 1) for x in num_of_features_svm],
+        row_names=[
+            'accuracy',
+            'ppv',
+            'npv',
+        ],
+        save=os.path.join(GRAPHS_DIR, 'SentimentAnalysis', 'best_result_table.png'),
+    )
 def main():
     n_estimators = [2**i for i in range(11)]
     Cs           = [10**i for i in range(1, 8)]
     test_disaster_classification(n_estimators, Cs)
-    #test_sentiment_analysis_classification()
+    test_sentiment_analysis_classification(n_estimators=128, C=10**4)
 
 if __name__ == '__main__':
     main()
