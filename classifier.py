@@ -1,59 +1,66 @@
 import common
 import numpy
-from ttp import ttp
-from dataset_parser import pos_tags
 
+from ttp                                import ttp
 from sklearn.ensemble                   import RandomForestClassifier
 from sklearn.feature_extraction.text    import CountVectorizer
+from sklearn.feature_selection          import SelectKBest
 from sklearn.naive_bayes                import BernoulliNB
 from feature                            import feature, fitter
-
-from twokenizer import tokenizeRawTweetText
+from twokenizer                         import tokenizeRawTweetText
 
 class BagOfWords(object):
 
-    def __init__(self, corpus, labels, **kwds):
+    def __init__(self, corpus, labels, feature_selection=0.8, **kwds):
         self.vectorizer     = CountVectorizer(analyzer='word', tokenizer=tokenizeRawTweetText, **kwds)
         self.bag_of_words   = self.vectorizer.fit_transform(corpus)
+        selector            = SelectKBest(k=int(self.bag_of_words.shape[1] * feature_selection))
+        selector.fit(self.bag_of_words, labels)
+        self.selected       = selector.get_support()
         self.labels         = labels
         self.vocabulary     = self.vectorizer.get_feature_names()
         self.kwds           = kwds
 
     @common.timeit
     def fit_forest(self, n_estimators=10):
-        self.forest = RandomForestClassifier(n_estimators=n_estimators)
-        self.forest.fit(self.bag_of_words, self.labels)
+        self.forest = RandomForestClassifier(n_estimators=n_estimators, random_state=0)
+        self.forest.fit(self.bag_of_words[:, self.selected], self.labels)
 
     def predict_forest(self, test):
         vectorize   = CountVectorizer(vocabulary=self.vocabulary, **self.kwds)
         bag         = vectorize.fit_transform(test)
-        return self.forest.predict(bag)
+        return self.forest.predict(bag[:, self.selected])
 
     @common.timeit
     def fit_naive_bayes(self):
         self.nb = BernoulliNB()
-        self.nb.fit(self.bag_of_words, self.labels)
+        self.nb.fit(self.bag_of_words[:, self.selected], self.labels)
 
     def predict_naive_bayes(self, test):
         vectorize   = CountVectorizer(vocabulary=self.vocabulary, **self.kwds)
         bag         = vectorize.fit_transform(test)
-        return self.nb.predict(bag)
+        return self.nb.predict(bag[:, self.selected])
 
 vocabulary = None
 
-#@feature('svm') # 22277
+@feature('svm_uni_pos')
+@feature('svm_uni') # 22277
 def unigram(inputs):
     corpus = numpy.array([tweet.processed_text for tweet in inputs])
     vectorizer = CountVectorizer(vocabulary=vocabulary, analyzer='word', tokenizer=tokenizeRawTweetText)
     return vectorizer.fit_transform(corpus)
 
-@feature('svm') # 22422
+@feature('svm_bi_pos')
+@feature('svm_bi') # 22422
 def unigram_and_bigram(inputs):
     corpus = numpy.array([tweet.processed_text for tweet in inputs])
     vectorizer = CountVectorizer(vocabulary=vocabulary, analyzer='word', tokenizer=tokenizeRawTweetText, ngram_range=(1, 2))
     return vectorizer.fit_transform(corpus)
 
-#@feature('svm')
+@feature('svm_uni')
+@feature('svm_uni_pos')
+@feature('svm_bi')
+@feature('svm_bi_pos')
 def tweet_meta_features(inputs):
     corpus = numpy.array([tweet.processed_text for tweet in inputs])
 
@@ -103,23 +110,20 @@ def count_pos(inputs, poses):
         return numpy.array([tweet.count(pos) for pos in poses])
     return numpy.array([counter(tweet, poses) for tweet in inputs])
 
-@feature('svm')
+@feature('svm_uni_pos')
+@feature('svm_bi_pos')
 def all_pos_count(inputs):
     POS_tags_corpus = numpy.array([tweet.POS for tweet in inputs])
     return count_pos(POS_tags_corpus, INTERESTING_POS_TAGS)
 
-#@feature('svm')
-def trigram_of_POS_tags(inputs):
-    POS_tags_corpus = numpy.array([tweet.POS for tweet in inputs])
-    vectorizer = CountVectorizer(vocabulary=pos_tags.ALL_POS_TAGS, ngram_range=(1, 3))
-    return vectorizer.fit_transform(POS_tags_corpus)
+def svm_uni_fitter(inputs):
+    return fitter('svm_uni', inputs)
 
-'''
-    let's say you want to add another feature extraction for svm, do as following:
-    @feature('svm')
-    def foo(corpus):
-        return {build_matrix some how} # this matrix should be of (len(corpus) X #num_of_features) dimension.
-'''
+def svm_bi_fitter(inputs):
+    return fitter('svm_bi', inputs)
 
-def svm_fitter(inputs):
-    return fitter('svm', inputs)
+def svm_uni_pos_fitter(inputs):
+    return fitter('svm_uni_pos', inputs)
+
+def svm_bi_pos_fitter(inputs):
+    return fitter('svm_bi_pos', inputs)
