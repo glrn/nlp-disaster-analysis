@@ -136,9 +136,20 @@ Regarding URLs, all links posted in tweets are shortened using Twitter's link se
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Classification of Disaster-Related Tweets}
 
-In the first part of our work we developed a classifier that identifies \textit{disaster-related} tweets from \textit{not disaster-related} tweets, trained on a dataset of 10,877 labeled tweets (\todo{note: maybe better to say that the dataset was ~2400 tweets, since we looked only at tweets with confident $>0.9$}). We experimented with a Naive Bayes classifier as well as a support vector machine (SVM) classifier, which led to better results on the dataset.
+In the first part of our work we developed a classifier that identifies \textit{disaster-related} tweets from \textit{not disaster-related} tweets, trained on a dataset of 10,877 labeled tweets (\todo{note: maybe better to say that the dataset was ~2400 tweets, since we looked only at tweets with confident $>0.9$}). We experimented with a Naive Bayes (NB), random forest (RF) and support vector machine (SVM) classifiers.
 
-We eventually used the SVM classifier, with several features extracted for each tweet:
+\paragraph{Naive Bayes}
+\todo{(Daniel) short explanation}
+
+\paragraph{Support Vector Machine (SVM)}
+\todo{(Daniel) short explanation}
+
+\paragraph{Random Forest}
+\todo{(Daniel) short explanation}
+
+\subsection{Feature Extraction}
+
+To train the classifiers we extracted several features for each tweet:
 
 \begin{itemize}[noitemsep]
 	\item \textbf{Unigrams and bigrams} of tokens in tweet; we used a python version of \texttt{Twokenizer}, Twitter tokenizer (Gimpel et al., 2011 \cite{POS-Tagging}, Myle Ott, 2013 \cite{ark-twokenize-py}).
