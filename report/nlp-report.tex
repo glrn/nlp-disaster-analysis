@@ -23,6 +23,8 @@
 \usepackage{custom}
 \usepackage{usenix,epsfig,endnotes,hyperref}
 \usepackage{color, enumitem}
+\usepackage{cleveref, float, graphicx, longtable, subcaption}
+
 \begin{document}
 
 %don't want date printed
@@ -176,6 +178,65 @@ Accuracy was calculated by 3 measures:
 \paragraph{Negative Predictive Value} number of right negative classifications out of total negative classifications ($ \frac{TN}{TN + FN} $).
 \\\\
 For both \textit{Random Forest} and \textit{SVM} classifiers we have tuned parameters using \textit{grid search}. For \textit{Random Forest} we have tuned the number of estimators and for \textit{SVM} we have tuned the penalty constant. \\
+\paragraph{Random Forest} For the \textit{Random Forest} results \ref{fig:disaster_classification_rf}, we can observe easily that the \textit{Unigram} features have better accuracy and better \textit{NPV}, while \textit{Bigram} features have better \textit{PPV} for any number of estimators. In addition, best result for total accuracy, \textit{PPV}, \textit{NPV} are achieved with 128, 64 and 128 estimators respectively.
+
+\paragraph{SVM} For the \textit{SVM} results \ref{fig:disaster_classification_svm_uni} \ref{fig:disaster_classification_svm_bi}, we see that for \textit{Unigram} features with or without \textit{POS}, all measurements are becoming constant for $ C \ge 10^4 $ (penalty is too big to be used). In addition, best result for total accuracy, \textit{PPV}, \textit{NPV} are achieved penalty constant of value $ 10^4 $, $ 10^3 $  and $ 10^4 $ respectively. For \textit{Bigram} features results are very familiar except for a minor gap (around 1.5\%) between using \textit{POS} and not. Best result for total accuracy, \textit{PPV}, \textit{NPV} are exactly the same as in the \textit{Unigram} features. Notice that all classifiers used \textit{tweets metadata} features as well.
+
+The following tables \ref{tab:disaster_classifiaction_best_results_nb_and_rf}  \ref{tab:disaster_classifiaction_best_results_svm} presents the best measurement result for each classifier, best total accuracy results (94.5\%) are achieved with \textit{SVM} classifier using \textit{Bigram}, \textit{tweets metada} and \textit{POS-tagging} features. \\
+As it can be seen, we have succeeded in classifying disaster related or not tweets with several very accurate techniques. \\
+It is important to mention that although the accuracies are very high using simple methods, before preprocessing the tweets, partial measurements were taken and all accuracies were around 82\%, therefore preprocessing the tweets was a major improvement for the classification (over 10\%).
+
+\begin{table}[H]
+	\caption{Disaster Classification Best Results: Naive Bayes and Random Forest}
+	\label{tab:disaster_classifiaction_best_results_nb_and_rf}
+	\begin{center}
+		\scalebox{0.8}{
+			\begin{tabular}{c | c | c | c | c}
+				  & $ \textbf{Uni NB} $ & $ \textbf{Bi NB} $ & $ \textbf{Uni RF} $ & $ \textbf{Bi RF} $ \\ \hline
+				accuracy & 0.921 & 0.864 & 0.911 & 0.890  \\
+				ppv & 0.977 & 1.000 & 0.945 & 0.969 \\
+				npv & 0.891 & 0.813 & 0.892 & 0.856 \\
+			\end{tabular}
+		}	
+	\end{center}
+\end{table}
+
+\begin{table}[H]
+	\caption{Disaster Classification Best Results: SVM}
+	\label{tab:disaster_classifiaction_best_results_svm}
+	\begin{center}
+		\scalebox{0.8}{
+			\begin{tabular}{c | c | c | c | c }
+				 & $ \textbf{Uni SVM} $ & $ \textbf{Uni POS SVM} $ & $ \textbf{Bi SVM} $ & $ \textbf{Bi POS SVM} $ \\ \hline
+				accuracy & 0.935 & 0.937 & 0.933 & 0.945 \\
+				ppv & 0.961 & 0.946 & 0.952 & 0.955 \\
+				npv & 0.935 & 0.938 & 0.926 & 0.939 \\
+			\end{tabular}
+		}	
+	\end{center}
+\end{table}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\columnwidth]{../graphs/DisasterClassification/random_forest_unigram_vs_bigram_features.png}			
+	\caption{Disaster Classification Random Forest (Unigram vs. Bigram)}
+	\label{fig:disaster_classification_rf}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\columnwidth]{../graphs/DisasterClassification/svm_uni_features.png}
+	\caption{Disaster Classification SVM (Unigram vs. Unigram and POS)}
+	\label{fig:disaster_classification_svm_uni}
+\end{figure}
+	
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\columnwidth]{../graphs/DisasterClassification/svm_bi_features.png}
+	\caption{Disaster Classification SVM (Bigram vs. Bigram and POS)}
+	\label{fig:disaster_classification_svm_bi}
+\end{figure}		
+	
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Sentiment Analysis of Tweets}
 
