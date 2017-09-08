@@ -136,17 +136,17 @@ Regarding URLs, all links posted in tweets are shortened using Twitter's link se
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Classification of Disaster-Related Tweets}
 
-In the first part of our work we developed a classifier that identifies \textit{disaster-related} tweets from \textit{not disaster-related} tweets, trained on a dataset of 10,877 labeled tweets (\todo{note: maybe better to say that the dataset was ~2400 tweets, since we looked only at tweets with confident $>0.9$}). We experimented with a Naive Bayes (NB), random forest (RF) and support vector machine (SVM) classifiers.
+In the first part of our work we developed a classifier that identifies \textit{disaster-related} tweets from \textit{not disaster-related} tweets, trained on a dataset of 10,877 labeled tweets (\todo{note: maybe better to say that the dataset was ~2400 tweets, since we looked only at tweets with confident $>0.9$}) [\todo{Gal: Notice that using 0.9+ confidence filtered around 5000 tweets I think, 2400 were positive...}]. We experimented with a Naive Bayes (NB), random forest (RF) and support vector machine (SVM) classifiers.
 
 \paragraph{Naive Bayes}
-\todo{(Daniel) short explanation}
-
-\paragraph{Support Vector Machine (SVM)}
-\todo{(Daniel) short explanation}
+A supervised probabilistic learning method that classify according to \textit{maximum a posteriori}. In this method we used \textit{unigram} and \textit{bigram} features.
 
 \paragraph{Random Forest}
-\todo{(Daniel) short explanation}
+An ensemble learning method that uses some estimators (trees) to classify. In this method we used \textit{unigram} and \textit{bigram} features.
 
+\paragraph{Support Vector Machine (SVM)}
+A discriminative learning method that attempts to find the hyperplane that gives maximum margin between positive and negative classification on the training data, using penalty method for mistakes. In this method we used \textit{unigram}, \textit{bigram}, \textit{tweets metadata} and \textit{POS tagging} features.
+ 
 \subsection{Feature Extraction}
 
 To train the classifiers we extracted several features for each tweet:
@@ -169,7 +169,7 @@ Splitting a tweet to tokens (separated ordered words) is hard due to irregular p
 \todo{Gal \cite{POS-Tagging}}
 
 \subsection{Results}
-\todo{Daniel?}
+Results were
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Sentiment Analysis of Tweets}
