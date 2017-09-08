@@ -116,33 +116,6 @@ def all_pos_count(inputs):
     POS_tags_corpus = numpy.array([tweet.POS for tweet in inputs])
     return count_pos(POS_tags_corpus, INTERESTING_POS_TAGS)
 
-
-@feature('svm_uni')
-@feature('svm_uni_pos')
-@feature('svm_bi')
-@feature('svm_bi_pos')
-def named_entities(inputs):
-    named_entities = numpy.array([' '.join(tweet.named_entities) for tweet in inputs])
-    vectorizer = CountVectorizer(vocabulary=vocabulary, ngram_range=(1, 3))
-    return vectorizer.fit_transform(named_entities)
-
-
-@feature('svm_uni')
-@feature('svm_uni_pos')
-@feature('svm_bi')
-@feature('svm_bi_pos')
-def hash_tags(inputs):
-    hash_tags = numpy.array([' '.join(tweet.hashtags) for tweet in inputs])
-    vectorizer = CountVectorizer(vocabulary=vocabulary, ngram_range=(1, 3))
-    return vectorizer.fit_transform(hash_tags)
-
-
-'''
-    let's say you want to add another feature extraction for svm, do as following:
-    @feature('svm')
-    def foo(corpus):
-        return {build_matrix some how} # this matrix should be of (len(corpus) X #num_of_features) dimension.
-'''
 def svm_uni_fitter(inputs):
     return fitter('svm_uni', inputs)
 
