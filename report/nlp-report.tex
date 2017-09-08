@@ -209,7 +209,7 @@ For both \textit{Random Forest} and \textit{SVM} classifiers we have tuned param
 
 \paragraph{SVM} For the \textit{SVM} results \ref{fig:disaster_classification_svm_uni} \ref{fig:disaster_classification_svm_bi}, we see that for \textit{Unigram} features with or without \textit{POS}, all measurements are becoming constant for $ C \ge 10^4 $ (penalty is too big to be used). In addition, best result for total accuracy, \textit{PPV}, \textit{NPV} are achieved penalty constant of value $ 10^4 $, $ 10^3 $  and $ 10^4 $ respectively. For \textit{Bigram} features results are very familiar except for a minor gap (around 1.5\%) between using \textit{POS} and not. Best result for total accuracy, \textit{PPV}, \textit{NPV} are exactly the same as in the \textit{Unigram} features. Notice that all classifiers used \textit{tweets metadata} features as well.
 
-The following tables \ref{tab:disaster_classifiaction_best_results_nb_and_rf}  \ref{tab:disaster_classifiaction_best_results_svm} presents the best measurement result for each classifier, best total accuracy results (94.5\%) are achieved with \textit{SVM} classifier using \textit{Bigram}, \textit{tweets metada} and \textit{POS-tagging} features. \\
+The following tables \ref{tab:disaster_classifiaction_best_results_nb_and_rf}  \ref{tab:disaster_classifiaction_best_results_svm} presents the best measurement result for each classifier, best total accuracy result (94.5\%) is achieved with \textit{SVM} classifier using \textit{Bigram}, \textit{tweets metada} and \textit{POS-tagging} features. \\
 As it can be seen, we have succeeded in classifying disaster related or not tweets with several very accurate techniques. \\
 It is important to mention that although the accuracies are very high using simple methods, before preprocessing the tweets, partial measurements were taken and all accuracies were around 82\%, therefore preprocessing the tweets was a major improvement for the classification (over 10\%).
 
@@ -280,7 +280,7 @@ Since supervised classification is requested, we needed a dataset containing lab
 	\item \textbf{Objective} is an undeniable truth. It is universally agreed upon. No logical person can deny that.
 	\item \textbf{Subjective} is an opinion. The beauty is in the eye of the beholder.
 \end{itemize}
-We labeled 2,100 \textit{'disaster related'} tweets as \textit{objective/subjective} manually. Each tweet was labeled by two persons, on agreement, the label was kept, on disagreement, a third person broke the tie. 
+We labeled 2,100 \textit{'disaster related'} tweets as \textit{objective/subjective} manually. Each tweet was labeled by two persons, on agreement, the label was kept, on disagreement, a third person broke the tie. Around 80\% of the tweets are objective while only 20\% are subjective. 
 
 \subsection{Feature Extraction}
 
@@ -311,7 +311,15 @@ To train the classifiers we extracted the following features for each tweet:
 
 \subsection{Results}
 We trained \textit{SVM} and \textit{Random Forest} classifiers for this job. Using $ C=10^4 $ as a penalty constant for \textit{SVM} and 128 estimators for \textit{Random Forest}.\\
-Once again dataset was divide into train (90\%) and test (10\%) sets. Each classification method was tested with the previous mentioned features, using feature selection with \textit{ANOVA F-test} model. We repeated the test each time with more top $ K $ features selected by the feature selection model and measured accuracies again. The goal was to find which features are the most important for our task.
+Once again dataset was divide into train (90\%) and test (10\%) sets. Each classification method was tested with the previous mentioned features, using feature selection with \textit{ANOVA F-test} model. We repeated the test each time with more top $ K $ features selected by the feature selection model (out of 18 features total) and measured accuracies again. The goal was to find which features are the most important for our task. Measurements are total accuracy, \textit{PPV} and \textit{NPV}.\\
+
+\paragraph{Random Forest} For the \textit{Random Forest} results \ref{fig:obj_sub_classification_rf}, we can see that best total accuracy is achieved with 13 features, so for \textit{NPV}, but best \textit{PPV} is achieved with only 1 feature (might be because of the biased dataset). The most influence features which were used are:
+number of exclamation marks, presence of exclamation mark , presence of question mark, presence of URL, presence of emoticon, number of digits, number of capital letters, number of punctuation marks and symbols, tweeter's length. 
+
+\paragraph{SVM} For the \textit{Random Forest} results \ref{fig:obj_sub_classification_svm}, we can see that best total accuracy is achieved with 4 features only, so for \textit{NPV}, but best \textit{PPV} is achieved with only 1 feature as well (again, might be because of the biased dataset). The most influence features which were used are:
+number of exclamation marks, presence of URL, presence of emoticon, number of punctuation marks and symbols.
+
+The following tables \ref{tab:obj_sub_classifiaction_best_results} presents the best measurement result for each classifier (number of features used can be seen in column title), best total accuracy result (87.1\%) is achieved with \textit{Random Forest} classifier using 13 features. \\
 
 \begin{table}[H]
 	\caption{Objective/Subjective Classification Best Results}
