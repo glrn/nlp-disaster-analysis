@@ -165,7 +165,34 @@ Splitting a tweet to tokens (separated ordered words) is hard due to irregular p
 \texttt{Twokenizer} is a tokenizer designed for Twitter text in English that addresses these issues. It was originally developed in Python by O'Connor et al., 2010 \cite{TweetMotif}, then improved and ported to Java by Gimpel et al., 2011 \cite{POS-Tagging} and later ported back to Python \cite{ark-twokenize-py}. We use the last version by Myle Ott.
 
 \paragraph{Metadata Extraction}
-\todo{Gal}
+The hashtags, at-mentions, URLs and emoticons in a tweet carry information that may help better understand the subject and context. Therefore, for each tweet we created a vector of the following metadata features, which we found to be the most expressive:
+
+\begin{itemize}[noitemsep, nolistsep]
+	\item Does the tweet contain a link?
+	\item How many link are in tweet?
+	\item Is '\texttt{https://twitter.com}' one of the links?
+	\item Does the tweet contain a user at-mention?
+	\item Does the tweet contain a hashtag?
+	\item How many hashtags are in tweet?
+	\item Does the tweet contain a happy emoticon?
+\end{itemize}
+
+In addition to these features, we extracted information from hashtags and URLs. We attempted to split hashtgs to separate words 
+looking for a CamelCase pattern (for example, \tweet{\#JeSuisCharlie} $\rightarrow$ 'Je Suis Charlie') or words separated by underline. We note that this method is not exhaustive since Twitter users tend to create hashtags composed of joined words, all lower-case.
+
+We also found that the domain name of the URLs in a tweet may give an indication to whether the tweet is disaster-related or not (for example, a link to \texttt{https://9gag.com} is a negative hint). However, Twitter applies URL shortening on links, so for each shortened link in the dataset we attempted to reach the original Internet address. We also collected the HTML page title, which often contains the title of an article (for example, in news sites). We managed to expand 4,823 URLs out of 6,157 in the dataset.
+
+For each tweet in the dataset we created an 'extended' version with extracted hashtag, expanded URL, and where every user at-mention is replaced by the token \_\_USERREF\_\_. For example, the following is a tweet,
+
+\begin{center}
+	\parbox{190pt}{\todo{\tweet{Gal}}}
+\end{center}
+
+and its extended version is,
+
+\begin{center}
+	\parbox{190pt}{\todo{\tweet{Gal}}}
+\end{center}
 
 \paragraph{Twitter POS Tagging}
 \todo{Gal \cite{POS-Tagging}}
