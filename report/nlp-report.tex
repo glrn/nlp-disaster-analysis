@@ -41,7 +41,7 @@
 \texttt{galr1@mail.tau.ac.il‬}
 \and
 {\rm Omri Ben-Horin}\\
-\texttt{\red{EMAIL@mail.tau.ac.il}}
+\texttt{\red{omribenhorin@mail.tau.ac.il}}
 }
 
 \maketitle
@@ -104,7 +104,7 @@ Tweets are limited to 140 characters and are widely used by non-professional wri
 
 First, the grammar of tweets is quite different from edited news text. It is common that tweets are written as colloquial sentences in first person where the subject ('I') is omitted, as in: '\tweet{see the flames from my window OMG}'.
 
-Tweets are also characterized by extensive use of abbreviations and slang specific to social-media (e.g. \tweet{ily} for 'I love you', \tweet{iono} for 'I don't know). Such abbreviations may squash several parts-of-speech into one token, which poses a challenge to POS tagging. 
+Tweets are also characterized by extensive use of abbreviations and slang specific to social-media (e.g. \tweet{ily} for 'I love you', \tweet{iono} for 'I don't know). Such abbreviations may squash several parts-of-speech into one token, which poses a challenge to POS tagging.
 
 In addition, due to the colloquial nature of user-created content, it is common that proper words are replaced by phonetically or morphologically similar ones (e.g. 'wtchng' instead of 'watching', 'gr8' instead of 'great'). Users may also use capitalization irregularities, deliberate spelling errors, punctuation irregularities and interjections as a means to express their sentiment, as in the following tweet:
 
@@ -119,7 +119,7 @@ Lastly, tweets may contain a variety of tokens seen mainly in Twitter and other 
 \end{center}
 
 Regarding URLs, all links posted in tweets are shortened using Twitter's link service, \url{http://t.co}, and are converted to a seemingly random 23 characters URL that redirects to the original web address.
-	
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Analysis Wokrflow}
@@ -148,7 +148,7 @@ An ensemble learning method that uses some estimators (trees) to classify. In th
 
 \paragraph{Support Vector Machine (SVM)}
 A discriminative learning method that attempts to find the hyperplane that gives maximum margin between positive and negative classification on the training data, using penalty method for mistakes. In this method we used \textit{unigram}, \textit{bigram}, \textit{tweets metadata} and \textit{POS tagging} features.
- 
+
 \subsection{Feature Extraction}
 
 To train the classifiers we extracted several features for each tweet:
@@ -177,7 +177,7 @@ The hashtags, at-mentions, URLs and emoticons in a tweet carry information that 
 	\item Does the tweet contain a happy emoticon?
 \end{itemize}
 
-In addition to these features, we extracted information from hashtags and URLs. We attempted to split hashtgs to separate words 
+In addition to these features, we extracted information from hashtags and URLs. We attempted to split hashtgs to separate words
 looking for a CamelCase pattern (for example, \tweet{\#JeSuisCharlie} $\rightarrow$ 'Je Suis Charlie') or words separated by underline. We note that this method is not exhaustive since Twitter users tend to create hashtags composed of joined words, all lower-case.
 
 We also found that the domain name of the URLs in a tweet may give an indication to whether the tweet is disaster-related or not (for example, a link to \texttt{https://9gag.com} is a negative hint). However, Twitter applies URL shortening on links, so for each shortened link in the dataset we attempted to reach the original Internet address. We also collected the HTML page title, which often contains the title of an article (for example, in news sites). We managed to expand 4,823 URLs out of 6,157 in the dataset.
@@ -224,7 +224,7 @@ It is important to mention that although the accuracies are very high using simp
 				ppv & 0.977 & 1.000 & 0.945 & 0.969 \\
 				npv & 0.891 & 0.813 & 0.892 & 0.856 \\
 			\end{tabular}
-		}	
+		}
 	\end{center}
 \end{table}
 
@@ -239,13 +239,13 @@ It is important to mention that although the accuracies are very high using simp
 				ppv & 0.961 & 0.946 & 0.952 & 0.955 \\
 				npv & 0.935 & 0.938 & 0.926 & 0.939 \\
 			\end{tabular}
-		}	
+		}
 	\end{center}
 \end{table}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\columnwidth]{../graphs/DisasterClassification/random_forest_unigram_vs_bigram_features.png}			
+	\includegraphics[width=\columnwidth]{../graphs/DisasterClassification/random_forest_unigram_vs_bigram_features.png}
 	\caption{Disaster Classification Random Forest (Unigram vs. Bigram)}
 	\label{fig:disaster_classification_rf}
 \end{figure}
@@ -256,14 +256,14 @@ It is important to mention that although the accuracies are very high using simp
 	\caption{Disaster Classification SVM (Unigram vs. Unigram and POS)}
 	\label{fig:disaster_classification_svm_uni}
 \end{figure}
-	
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\columnwidth]{../graphs/DisasterClassification/svm_bi_features.png}
 	\caption{Disaster Classification SVM (Bigram vs. Bigram and POS)}
 	\label{fig:disaster_classification_svm_bi}
-\end{figure}		
-	
+\end{figure}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Sentiment Analysis of Tweets}
 
@@ -272,7 +272,27 @@ It is important to mention that although the accuracies are very high using simp
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Named-Entity Recognition in Tweets}
 
+In order to extract relevant information from disaster tweets, we have decided to use named entity recognition methods. NER allows us to classify people, organizations, locations and time expressions, which we can combine with our previous results for exposing relevant information on disasters.
+
+\paragraph{GMB} In order to use NER, we used the Groningen Meaning Bank - a large corpus, composed of thousands of texts in raw and tokenised format, tags for part of speech, named entities and lexical categories, and discourse representation structures compatible with first-order logic. The top level categories of the corpus are:
+\begin{itemize}[noitemsep, nolistsep]
+	\item geo - Geographical Entity
+	\item org - Organization
+	\item per - Person
+	\item gpe - Geopolitical Entity
+	\item tim - Time indicator
+	\item art - Artifact
+	\item eve - Event
+	\item nat - Natural Phenomenon
+\end{itemize}
+We use only the top categories, since they are sufficient for extracting relevant information on the disasters from the tweets. The tags of the GMB corpus are translated to a NLTK compatible format, for using it combined with our previous results.
+
+\paragraph{Results}
+
 \todo{}
+
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Experimenting with Recent Tweets}
