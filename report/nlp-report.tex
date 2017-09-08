@@ -169,8 +169,13 @@ Splitting a tweet to tokens (separated ordered words) is hard due to irregular p
 \todo{Gal \cite{POS-Tagging}}
 
 \subsection{Results}
-Results were
-
+Dataset was divided into train (90\%) and test (10\%) sets. Each classification method was tested with \textit{unigram} features and \textit{bigram} features separately, for the \textit{SVM} classifier, \textit{tweets metadata} and \textit{POS tagging} features were tested as well. \\
+Accuracy was calculated by 3 measures:
+\paragraph{Total Accuracy} number of right classifications out of the total queries ($ \frac{TP + TN}{TP + FP + TN + FN } $).
+\paragraph{Positive Predictive Value} number of right positive classifications out of total positive classifications ($ \frac{TP}{TP + FP} $).
+\paragraph{Negative Predictive Value} number of right negative classifications out of total negative classifications ($ \frac{TN}{TN + FN} $).
+\\\\
+For both \textit{Random Forest} and \textit{SVM} classifiers we have tuned parameters using \textit{grid search}. For \textit{Random Forest} we have tuned the number of estimators and for \textit{SVM} we have tuned the penalty constant. \\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Sentiment Analysis of Tweets}
 
