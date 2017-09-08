@@ -284,7 +284,7 @@ We labeled 2,100 \textit{'disaster related'} tweets as \textit{objective/subject
 
 \subsection{Feature Extraction}
 
-We assumed that this task can achieve high accuracy without even using the words themselves (n-grams and meanings), but using the tweet structure, frame data and \textit{POS}-tagging. \\
+We assumed that this task can achieve high accuracy without even using the words themselves (n-grams and meanings), but using the tweet structure, peripheral data and \textit{POS}-tagging. \\
 To train the classifiers we extracted the following features for each tweet:
 \begin{itemize}
 	\item Number of exclamation marks.
@@ -310,6 +310,38 @@ To train the classifiers we extracted the following features for each tweet:
 \end{itemize}
 
 \subsection{Results}
+We trained \textit{SVM} and \textit{Random Forest} classifiers for this job. Using $ C=10^4 $ as a penalty constant for \textit{SVM} and 128 estimators for \textit{Random Forest}.\\
+Once again dataset was divide into train (90\%) and test (10\%) sets. Each classification method was tested with the previous mentioned features, using feature selection with \textit{ANOVA F-test} model. We repeated the test each time with more top $ K $ features selected by the feature selection model and measured accuracies again. The goal was to find which features are the most important for our task.
+
+\begin{table}[H]
+	\caption{Objective/Subjective Classification Best Results}
+	\label{tab:obj_sub_classifiaction_best_results}
+	\begin{center}
+		\scalebox{0.8}{
+			\begin{tabular}{c | c | c | c | c }
+				& \textbf{RF (1)} & \textbf{RF (13)} & \textbf{SVM (1)} & \textbf{SVM (4)} \\ \hline
+				accuracy & 0.805 & 0.871 & 0.805 & 0.848 \\
+				ppv & 0.905 & 0.890 & 0.905 & 0.874 \\
+				npv & 0.500 & 0.750 & 0.500 & 0.667 \\
+			\end{tabular}
+		}	
+	\end{center}
+\end{table}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\columnwidth]{../graphs/SentimentAnalysis/random_forest.png}			
+	\caption{Objective/Subjective Classification Random Forest}
+	\label{fig:obj_sub_classification_rf}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\columnwidth]{../graphs/SentimentAnalysis/SVM.png}
+	\caption{Objective/Subjective SVM}
+	\label{fig:obj_sub_classification_svm}
+\end{figure}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Named-Entity Recognition in Tweets}
 
