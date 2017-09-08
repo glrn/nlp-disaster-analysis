@@ -1,4 +1,5 @@
 import collections
+import functools
 import numpy as np
 import scipy.sparse
 
@@ -9,6 +10,7 @@ def feature(name):
         decorator for specific classifier, the wrapped function should accept as an input a corpus and return a matrix of vector features.
     '''
     def feature_wrapper(func):
+        @functools.wraps(func)
         def wrapper(*args, **kwds):
             return func(*args, **kwds)
         named_features[name].append(wrapper)
@@ -22,12 +24,12 @@ def fitter(name, inputs):
     '''
     matrices = []
     for f in named_features[name]:
-        #matrices.append(f(inputs))
         matrices.append(f(inputs))
     a = matrices[0]
     for b in matrices[1:]:
-        #a = np.concatenate((a, b), axis=1)
-        a = scipy.sparse.hstack([a,b])
-
+        try:
+            a = np.concatenate((a, b), axis=1)
+        except:
+            a = scipy.sparse.hstack([a,b])
     return a
 

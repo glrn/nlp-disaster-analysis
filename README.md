@@ -141,3 +141,6 @@ It's probably not a good idea to plug in your hairdryer when it's wet you will b
 		 Urls in tweet:['http://t.co/5U5GAkX2ch']
 		 Following url: http://t.co/5U5GAkX2ch -> https://twitter.com/__hailstorm/status/629117562047959041/photo/1
 ```
+
+### Prequisits
+* [Python Twitter Tools](https://pypi.python.org/pypi/twitter) library (```pip install twitter```)

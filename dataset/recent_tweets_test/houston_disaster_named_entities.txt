@@ -1,0 +1,21 @@
+=== 20 most frequent disaster-related named-entities found ===
+Houston : 50
+Twitter : 34
+Harvey : 20
+Hurricane Harvey : 18
+Beaumont : 8
+Houston Water : 8
+Katy : 7
+Google Maps : 7
+Texas : 6
+Air Alliance Houston : 6
+houston : 5
+West Houston : 5
+Houston Chronicle : 4
+I-10 : 4
+Trump : 4
+America : 4
+Clinton : 4
+Conserve Water : 4
+W Houston : 4
+TX Patch : 4
