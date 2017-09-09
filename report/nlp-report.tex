@@ -104,7 +104,7 @@ Tweets are limited to 140 characters and are widely used by non-professional wri
 
 First, the grammar of tweets is quite different from edited news text. It is common that tweets are written as colloquial sentences in first person where the subject ('I') is omitted, as in: '\tweet{see the flames from my window OMG}'.
 
-Tweets are also characterized by extensive use of abbreviations and slang specific to social-media (e.g. \tweet{ily} for 'I love you', \tweet{iono} for 'I don't know). Such abbreviations may squash several parts-of-speech into one token, which poses a challenge to POS tagging.
+Tweets are also characterized by extensive use of abbreviations and slang specific to social-media (e.g. \tweet{ily} for 'I love you', \tweet{iono} for 'I don't know). Such abbreviations may squash several parts-of-speech into one token, which poses a challenge to popular POS taggers.
 
 In addition, due to the colloquial nature of user-created content, it is common that proper words are replaced by phonetically or morphologically similar ones (e.g. 'wtchng' instead of 'watching', 'gr8' instead of 'great'). Users may also use capitalization irregularities, deliberate spelling errors, punctuation irregularities and interjections as a means to express their sentiment, as in the following tweet:
 
@@ -138,16 +138,16 @@ Regarding URLs, all links posted in tweets are shortened using Twitter's link se
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Classification of Disaster-Related Tweets} \label{mission1}
 
-In the first part of our work we developed a classifier that identifies \textit{disaster-related} tweets from \textit{not disaster-related} tweets,  trained on a dataset of 10,877 labeled tweets. We used only tweets with label confidence $\geq 0.9$, which is about half of the original dataset. We experimented with a Naive Bayes (NB), random forest (RF) and support vector machine (SVM) classifiers.
+In the first part of our work we developed a classifier that identifies \textit{disaster-related} tweets,  trained on a dataset of 10,877 labeled tweets. We used only tweets with label confidence $\geq 0.9$, which is about half of the original dataset. We experimented with Naive Bayes (NB), random forest (RF) and support vector machine (SVM) classifiers.
 
-\paragraph{Naive Bayes}
-A supervised probabilistic learning method that classify according to \textit{maximum a posteriori}. In this method we used \textit{unigram} and \textit{bigram} features.
+\paragraph{Naive Bayes (NB).}
+A supervised probabilistic learning method that classifies according to \textit{maximum a posteriori}. In this method we used \textit{unigram} and \textit{bigram} features.
 
-\paragraph{Random Forest}
-An ensemble learning method that uses some estimators (trees) to classify. In this method we used \textit{unigram} and \textit{bigram} features.
+\paragraph{Random Forest (RF).}
+An ensemble learning method that uses some estimators (trees) for classification. In this method we used \textit{unigram} and \textit{bigram} features.
 
-\paragraph{Support Vector Machine (SVM)}
-A discriminative learning method that attempts to find the hyperplane that gives maximum margin between positive and negative classification on the training data, using penalty method for mistakes. In this method we used \textit{unigram}, \textit{bigram}, \textit{tweets metadata} and \textit{POS tagging} features.
+\paragraph{Support Vector Machine (SVM).}
+A discriminative learning method that attempts to find the hyperplane that craetes a maximal margin between positive and negative classifications on the training data, using penalty method for mistakes. In this method we used \textit{unigram}, \textit{bigram}, \textit{tweets metadata} and \textit{POS tagging} features.
 
 \subsection{Feature Extraction}
 
