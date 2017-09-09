@@ -155,7 +155,7 @@ To train the classifiers we extracted several features for each tweet:
 
 \begin{itemize}[noitemsep]
 	\item \textbf{Unigrams and bigrams} of tokens in tweet; we used a Python version of \texttt{Twokenizer}, tokenizer for Twitter data (Gimpel et al. \cite{POS-Tagging}, Myle Ott, 2013 \cite{ark-twokenize-py}).
-	\item \textbf{Tweet metadata}; hashtags, at-mentions and URLs; we parsed the tweet, crawled URLs and used the referred webpage title as supplementary information.
+	\item \textbf{Tweet metadata}; hashtags, at-mentions and URLs; we parsed the tweet, crawled URLs and used the referred webpage title as supplementary information for our classifier.
 	\item \textbf{Part-of-speech (POS) tags} (bigram and unigram); we used a twitter-specific tagset and tagger developed by Gimpel et al. \cite{POS-Tagging}.
 \end{itemize}
 
@@ -180,7 +180,7 @@ looking for a CamelCase pattern (for example, \tweet{\#JeSuisCharlie} $\rightarr
 
 We also found that the domain name of the URLs in a tweet may give an indication to whether the tweet is disaster-related or not (for example, a link to \texttt{https://9gag.com} is a negative hint). However, Twitter applies URL shortening on links, so for each shortened link in the dataset we attempted to reach the original Internet address. We also collected the HTML page title, which often contains the title of an article (for example, in news sites). We managed to expand 4,823 URLs out of 6,157 in the dataset.
 
-For each tweet in the dataset we created an \textit{'extended' version} where (1) hashtags are extracted, (2) URLs are expanded to original URL followed by the page title and (3) every user at-mention is replaced by the token \_\_USERREF\_\_.
+For each tweet in the dataset we created an \textit{'extended' version} where (1) hashtags are extracted, (2) URLs are expanded to original URL followed by the page title and (3) every user at-mention is replaced by the token \tweet{\_\_USERREF\_\_}.
 For example, the following is a tweet,
 
 \begin{center}
@@ -199,7 +199,7 @@ and its \textit{extended version} is,
 \paragraph{Twitter POS Tagging}
 We used a Twitter-oriented POS tagger written in Java (Gimepl et al., 2011 \cite{POS-Tagging}). This tagger features a tagset that captures Twitter-specific properties. The tagset contains a set of 20 coarse-grained tags based on several treebanks, with some additional categories specific to Twitter, such as URLs and hashtags (the complete tagset is available in \cite{POS-Tagging}). The tagger is a conditional random field (CRF), and its training involved manual annotation of tweets.
 
-Unlike common English taggers, the Twitter tagger does not split contractions or possessives, hence the following tags are being used:
+Unlike common English taggers, the Twitter tagger does not split contractions or possessives (which are much more common in social media than in newspaper corpora), hence the following tags are being used:
 
 \begin{itemize}[noitemsep, nolistsep]
 	\item \textbf{\tweet{S}} - nominal + possesive (e.g. books')
@@ -219,24 +219,27 @@ The tagger exploits some phonetic and linguistic features that are useful when d
 
 
 \subsection{Results}
-Dataset was divided into train (90\%) and test (10\%) sets. Each classification method was tested with \textit{unigram} features and \textit{bigram} features separately, for the \textit{SVM} classifier, \textit{tweets metadata} and \textit{POS tagging} features were tested as well. \\
-Accuracy was calculated by 3 measures:
-\paragraph{Total Accuracy} number of right classifications out of the total queries ($ \frac{TP + TN}{TP + FP + TN + FN } $).
-\paragraph{Positive Predictive Value} number of right positive classifications out of total positive classifications ($ \frac{TP}{TP + FP} $).
-\paragraph{Negative Predictive Value} number of right negative classifications out of total negative classifications ($ \frac{TN}{TN + FN} $).
-\\\\
-For both \textit{Random Forest} and \textit{SVM} classifiers we have tuned parameters using \textit{grid search}. For \textit{Random Forest} we have tuned the number of estimators and for \textit{SVM} we have tuned the penalty constant. \\
-\paragraph{Random Forest} For the \textit{Random Forest} results \ref{fig:disaster_classification_rf}, we can observe easily that the \textit{Unigram} features have better accuracy and better \textit{NPV}, while \textit{Bigram} features have better \textit{PPV} for any number of estimators. In addition, best result for total accuracy, \textit{PPV}, \textit{NPV} are achieved with 128, 64 and 128 estimators respectively.
+We divided the dataset into train (90\%) and test (10\%) sets. Each classification method was tested with \textit{unigram} features and \textit{bigram} features separately, and for the \textit{SVM} classifier \textit{tweets metadata} and \textit{POS tagging} features were tested as well.
 
-\paragraph{SVM} For the \textit{SVM} results \ref{fig:disaster_classification_svm_uni} \ref{fig:disaster_classification_svm_bi}, we see that for \textit{Unigram} features with or without \textit{POS}, all measurements are becoming constant for $ C \ge 10^4 $ (penalty is too big to be used). In addition, best result for total accuracy, \textit{PPV}, \textit{NPV} are achieved penalty constant of value $ 10^4 $, $ 10^3 $  and $ 10^4 $ respectively. For \textit{Bigram} features results are very familiar except for a minor gap (around 1.5\%) between using \textit{POS} and not. Best result for total accuracy, \textit{PPV}, \textit{NPV} are exactly the same as in the \textit{Unigram} features. Notice that all classifiers used \textit{tweets metadata} features as well.
+Accuracy is presented using 3 measures:
 
-The following tables \ref{tab:disaster_classifiaction_best_results_nb_and_rf}  \ref{tab:disaster_classifiaction_best_results_svm} presents the best measurement result for each classifier, best total accuracy result (94.5\%) is achieved with \textit{SVM} classifier using \textit{Bigram}, \textit{tweets metada} and \textit{POS-tagging} features. \\
-As it can be seen, we have succeeded in classifying disaster related or not tweets with several very accurate techniques. \\
-It is important to mention that although the accuracies are very high using simple methods, before preprocessing the tweets, partial measurements were taken and all accuracies were around 82\%, therefore preprocessing the tweets was a major improvement for the classification (over 10\%).
+\begin{itemize}[noitemsep, nolistsep]
+	\item \textbf{Total Accuracy} is the number of right classifications out of the total queries ($ \frac{TP + TN}{TP + FP + TN + FN } $).
+	\item \textbf{Positive Predictive Value (PPV)} is the number of right positive classifications out of total positive classifications ($ \frac{TP}{TP + FP} $).
+	\item \textbf{Negative Predictive Value (NPV)} is the number of right negative classifications out of total negative classifications ($ \frac{TN}{TN + FN} $).
+\end{itemize}
+
+For both \textit{Random Forest} and \textit{SVM} classifiers we tuned the parameters using \textit{grid search}. For \textit{Random Forest} we tuned the number of estimators and for \textit{SVM} we tuned the penalty constant.
+
+\paragraph{Random Forest Results.} Looking at the \textit{Random Forest} results (fig. \ref{fig:disaster_classification_rf}), we can easily see that the \textit{Unigram} features have better accuracy and better \textit{NPV}, while \textit{Bigram} features have better \textit{PPV} for any number of estimators. In addition, best results for total accuracy, \textit{PPV} and \textit{NPV} are achieved with 128, 64 and 128 estimators respectively.
+
+\paragraph{SVM Results.} Looking at the \textit{SVM} results (fig. \ref{fig:disaster_classification_svm_uni}, fig. \ref{fig:disaster_classification_svm_bi}) we see that for \textit{Unigram} features with or without \textit{POS}, all measurements are becoming constant for $ C \ge 10^4 $ (penalty is too big to be used). In addition, best results for total accuracy, \textit{PPV} and \textit{NPV} are achieved with penalty constant with value $ 10^4 $, $ 10^3 $  and $ 10^4 $ respectively. For \textit{Bigram} features results are quite similar, except for a minor gap (around 1.5\%) between using \textit{POS} and not. Best results for total accuracy, \textit{PPV} and \textit{NPV} are exactly the same as in the \textit{Unigram} features. We note that all classifiers used \textit{tweets metadata} features as well.
+
+Tables  \ref{tab:disaster_classifiaction_best_results_nb_and_rf} and \ref{tab:disaster_classifiaction_best_results_svm} present the best measurement result for each classifier; best total accuracy result (94.5\%) is achieved with \textit{SVM} classifier using \textit{Bigram}, \textit{tweets metada} and \textit{POS-tagging} features.\\
+
+We accurately identified disaster-related tweets using various classifiers. It is worth mentioning that the extraction of \textit{tweet metadata} (i.e. expansion of hashtags and URL crawling) and the use of \textit{extended tweets} significantly improved the results; measurements on tweets before \textit{extension} showed a classification accuracy around 82\% - over 10\% worse than after applying the pre-processing technique.
 
 \begin{table}[H]
-	\caption{Disaster Classification Best Results: Naive Bayes and Random Forest}
-	\label{tab:disaster_classifiaction_best_results_nb_and_rf}
 	\begin{center}
 		\scalebox{0.8}{
 			\begin{tabular}{c | c | c | c | c}
@@ -247,41 +250,43 @@ It is important to mention that although the accuracies are very high using simp
 			\end{tabular}
 		}
 	\end{center}
+	\caption{Disaster Classification Best Results: \textit{Naive Bayes} and \textit{Random Forest}}
+\label{tab:disaster_classifiaction_best_results_nb_and_rf}
 \end{table}
 
 \begin{table}[H]
-	\caption{Disaster Classification Best Results: SVM}
-	\label{tab:disaster_classifiaction_best_results_svm}
 	\begin{center}
 		\scalebox{0.8}{
 			\begin{tabular}{c | c | c | c | c }
-				 & $ \textbf{Uni SVM} $ & $ \textbf{Uni POS SVM} $ & $ \textbf{Bi SVM} $ & $ \textbf{Bi POS SVM} $ \\ \hline
+				 & $ \textbf{Uni SVM} $ & $ \textbf{Uni+POS SVM} $ & $ \textbf{Bi SVM} $ & $ \textbf{Bi+POS SVM} $ \\ \hline
 				accuracy & 0.935 & 0.937 & 0.933 & 0.945 \\
 				ppv & 0.961 & 0.946 & 0.952 & 0.955 \\
 				npv & 0.935 & 0.938 & 0.926 & 0.939 \\
 			\end{tabular}
 		}
 	\end{center}
+	\caption{Disaster Classification Best Results: \textit{SVM}}
+\label{tab:disaster_classifiaction_best_results_svm}
 \end{table}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\columnwidth]{../graphs/DisasterClassification/random_forest_unigram_vs_bigram_features.png}
-	\caption{Disaster Classification Random Forest (Unigram vs. Bigram)}
+	\includegraphics[trim={0 0 0 1cm},clip,width=\columnwidth]{../graphs/DisasterClassification/random_forest_unigram_vs_bigram_features.png}
+	\caption{Disaster Classification - \textit{Random Forest} (Unigram vs. Bigram)}
 	\label{fig:disaster_classification_rf}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\columnwidth]{../graphs/DisasterClassification/svm_uni_features.png}
-	\caption{Disaster Classification SVM (Unigram vs. Unigram and POS)}
+	\includegraphics[trim={0 0 0 1cm},clip,width=\columnwidth]{../graphs/DisasterClassification/svm_uni_features.png}
+	\caption{Disaster Classification - \textit{SVM} (Unigram vs. Unigram and POS)}
 	\label{fig:disaster_classification_svm_uni}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\columnwidth]{../graphs/DisasterClassification/svm_bi_features.png}
-	\caption{Disaster Classification SVM (Bigram vs. Bigram and POS)}
+	\includegraphics[trim={0 0 0 1cm},clip,width=\columnwidth]{../graphs/DisasterClassification/svm_bi_features.png}
+	\caption{Disaster Classification - \textit{SVM} (Bigram vs. Bigram and POS)}
 	\label{fig:disaster_classification_svm_bi}
 \end{figure}
 
@@ -412,7 +417,7 @@ From those results, we can learn the location, nationality of involvement, assoc
 \section{Experimenting with Recent Tweets} \label{recent-tweets-results}
 
 \todo{(Gal) Complete this section}
-\paragraph{keywords}Twitter's Search API
+\paragraph{keywords}Twitter's Search API, no re-tweets
 
 % Omri's named entities on Chicago. Gal - you can compare them.
 
