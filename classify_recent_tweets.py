@@ -6,9 +6,14 @@ import collections
 import common
 import dataset_parser.tweet_parser
 import numpy
-from classifier import BagOfWords, svm_fitter
+
+from ner.ner_chunker import print_named_entity_parse_results
+from classifier import BagOfWords, svm_bi_pos_fitter as svm_fitter
 from dataset_parser import Dataset
 from shutil import copyfile
+
+from ner.corpus import get_gmb_reader
+from ner.ner_chunker import NamedEntityChunker
 
 TEST_SLICE = 0.1
 
@@ -43,28 +48,17 @@ def main():
     tested = svm_fitter(unlabeled_dataset.entries)
     labels = svm_classifier.predict(tested)
 
-    lines = csv.DictReader(open(TWEET_CSV_PATH))
+    lines = list(csv.DictReader(open(TWEET_CSV_PATH)))
 
     fieldnames = ['timestamp','location','text','choose_one','choose_one:confidence']
     writer = csv.DictWriter(open(OUT_CSV_PATH, 'wb'), fieldnames)
     writer.writeheader()
 
-    disaster_named_entities = []
-    i = 0
-    for line in lines:
-        if labels[i] == 0:
-            line["choose_one"] = "Not Relevant"
-        else:
-            line["choose_one"] = "Relevant"
-            disaster_named_entities.extend(unlabeled_dataset.entries[i].named_entities)
-        writer.writerow(line)
-        print '[%s] %s' % (line["choose_one"], line["text"])
-        i += 1
-
-    print '=== 20 most frequent disaster-related named-entities found ==='
-    counter = collections.Counter(disaster_named_entities)
-    for ne in sorted(counter, key=counter.get, reverse=True)[:20]:
-        print '%s : %d' % (ne,counter[ne])
+    training_samples = get_gmb_reader('ner\gmb-2.2.0')
+    chunker = NamedEntityChunker(training_samples[:10000])
+    tweets = [unlabeled_dataset.entries[i] for i in xrange(len(lines)) if labels[i] == 1]
+    ner_disaster_tweets = chunker.parse_tweets(tweets)
+    print_named_entity_parse_results(ner_disaster_tweets)
 
 
 if __name__ == '__main__':

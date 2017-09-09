@@ -1,3 +1,6 @@
+from collections import Counter
+
+from nltk import pos_tag, word_tokenize
 from sklearn import svm
 from sklearn.cross_validation import train_test_split
 
@@ -5,9 +8,13 @@ import classifier
 import common
 import numpy
 import os
+import re
 
 from classifier                 import BagOfWords, svm_uni_fitter, svm_bi_fitter, svm_uni_pos_fitter, svm_bi_pos_fitter
-from dataset_parser             import Dataset, MAIN_DATASET_PATH, OBJ_SUB_PATH, OBJ_SUB_POS_TAGGING_PATH, MAIN_POS_TAGGING_PATH
+from dataset_parser import Dataset, MAIN_DATASET_PATH, OBJ_SUB_PATH, OBJ_SUB_POS_TAGGING_PATH, MAIN_POS_TAGGING_PATH, \
+    Relevancy
+from ner.corpus import get_gmb_reader
+from ner.ner_chunker import NamedEntityChunker, print_named_entity_parse_results
 from sentiment_analysis         import sentiment_analysis_classifier
 from sklearn.feature_selection  import SelectKBest
 from sklearn.ensemble           import RandomForestClassifier
@@ -476,11 +483,26 @@ def test_sentiment_analysis_classification(n_estimators, C):
         ],
         save=os.path.join(GRAPHS_DIR, 'SentimentAnalysis', 'best_result_table.png'),
     )
+
+
+@common.timeit
+def test_named_entity_recognition():
+    dataset = Dataset(dataset_path=OBJ_SUB_PATH, pos_tag_path=OBJ_SUB_POS_TAGGING_PATH).entries
+    training_samples = get_gmb_reader('ner\gmb-2.2.0')
+    print len(training_samples)
+    chunker = NamedEntityChunker(training_samples[:10000])
+    print 'Trained!'
+    ner_disaster_tweets = chunker.parse_tweets([tweet for tweet in dataset if tweet.label == Relevancy.DISASTER])
+    print 'Parsed!'
+    print_named_entity_parse_results(ner_disaster_tweets)
+
+
 def main():
     n_estimators = [2**i for i in range(11)]
     Cs           = [10**i for i in range(1, 8)]
-    test_disaster_classification(n_estimators, Cs)
-    test_sentiment_analysis_classification(n_estimators=128, C=10**4)
+    # test_disaster_classification(n_estimators, Cs)
+    # test_sentiment_analysis_classification(n_estimators=128, C=10**4)
+    test_named_entity_recognition()
 
 if __name__ == '__main__':
     main()
