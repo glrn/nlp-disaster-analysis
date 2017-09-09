@@ -293,20 +293,37 @@ We accurately identified disaster-related tweets using various classifiers. It i
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Sentiment Analysis of Tweets}  \label{mission2}
 
-Sentiment analysis is considered to be a very interesting task in \textit{NLP}. It aims to determine the writer's attitude. Sentiment analysis tasks are usually target for multi-class classification such as feelings extraction (\textit{"sadness"}, \textit{"happiness"}, \textit{"anger"}, etc.). Another target may be classifying the \textit{polarity} of a given text (for example \textit{"positive"} or \textit{"negative"}). \\
-We concentrated on the polarity task of classifying \textit{'disaster-related'} tweets as \textit{"objective"} or \textit{"subjective"}. In general vision, the ability of classifying \textit{'disaster-related'} tweets into these two categories may be used to extract facts and raise the confidence level of the disaster. \\
-Although sentiment analysis is considered as a interesting task, it is surely a difficult one, combining it with tweets as dataset results an even more complicated task, since for the attributes we have spoken about in section 1.1. For example the following tweet is \textit{'disaster-related'}, but it is hard to tell whether it is objective or not:
+Sentiment analysis tasks aim to determine the writer's attitude, opinion or emotion, and are usually designed as a multi-class classification task (for example, among the labels \textit{"sad"}, \textit{"happy"}, \textit{"angry"}, etc.). Another target may be classifying the \textit{polarity} of a given text (for example, \textit{"positive"} or \textit{"negative"}).
+
+We focused on the task of classifying disaster-related tweets to \textit{"objective"} and \textit{"subjective"} tweets. In large, we say that \textbf{\textit{"objective"}} tweets contain mere facts, undeniable truths that are universally agreed upon, and that \textbf{\textit{"subjective"}} tweets contain an opinion, sentiment or emotion towards some happening (e.g. sadness, worry, fear, sarcasm, etc.). For example, the following is an \textit{"objective"} tweet:
+
+\begin{center}
+	\parbox{190pt}{\tweet{FedEx no longer to transport bioterror germs in wake of anthrax lab mishaps http://t.co/P96rgBbaYL \#news \#phone \#apple \#mobile}}
+\end{center}
+
+and the two following tweets are \textit{"subjective"}:
+
+\begin{center}
+	\parbox{190pt}{\tweet{@denisleary Not sure how these folks rush into burning buildings but I'm grateful they do. \#TrueHeroes}}
+\end{center}
+
+\begin{center}
+	\parbox{190pt}{\tweet{@canagal Good to hear it's back.. that storm's been given you guys trouble though :(}}
+\end{center}
+
+The ability to differentiate between \textit{objective} and \textit{subjective} tweets may help in identifying individuals who witness some disastrous event or who are in need of help.
+
+\subsection{The Dataset}
+
+Our dataset of 10,877 tweets did not contain a label of \textit{objective / subjective}, and we did not find any other satisfactory pre-labeled dataset of such disaster-related tweets. Hence, we went on a mission to manually label all 2,100 disaster-related tweets from the dataset (that were labeled '\textit{disaster-related}' with confidence $ \ge 0.9 $).
+
+Each tweet was independently labeled by two participant; upon disagreement the third participant broke the tie. Around 80\% of the tweets were objective while only 20\% were subjective.
+
+It is worth to mention that in some cases, subtleties in writing made it hard to decide whether a tweet is \textit{"objective"} or \textit{"subjective"}. For example,
+
 \begin{center}
 	\parbox{190pt}{\tweet{Thunder lightening torrential rain and a power cut!}}
 \end{center}
-
-\subsection{The Dataset}
-Since supervised classification is requested, we needed a dataset containing labels of this polarity. However, we could not find any dataset \textit{'disaster related'} or not tweets with a \textit{objective/subjective} label. Therefore we extracted only \textit{'disaster related'} tweets from our original dataset (with confidence level $ \ge 0.9 $) and labeled them manually according to the following rule:
-\begin{itemize}
-	\item \textbf{Objective} is an undeniable truth. It is universally agreed upon. No logical person can deny that.
-	\item \textbf{Subjective} is an opinion. The beauty is in the eye of the beholder.
-\end{itemize}
-We labeled 2,100 \textit{'disaster related'} tweets as \textit{objective/subjective} manually. Each tweet was labeled by two persons, on agreement, the label was kept, on disagreement, a third person broke the tie. Around 80\% of the tweets are objective while only 20\% are subjective.
 
 \subsection{Feature Extraction}
 
@@ -349,8 +366,7 @@ number of exclamation marks, presence of URL, presence of emoticon, number of pu
 The following tables \ref{tab:obj_sub_classifiaction_best_results} presents the best measurement result for each classifier (number of features used can be seen in column title), best total accuracy result (87.1\%) is achieved with \textit{Random Forest} classifier using 13 features. \\
 
 \begin{table}[H]
-	\caption{Objective/Subjective Classification Best Results}
-	\label{tab:obj_sub_classifiaction_best_results}
+
 	\begin{center}
 		\scalebox{0.8}{
 			\begin{tabular}{c | c | c | c | c }
@@ -361,6 +377,8 @@ The following tables \ref{tab:obj_sub_classifiaction_best_results} presents the 
 			\end{tabular}
 		}
 	\end{center}
+	\caption{Objective/Subjective Classification Best Results}
+\label{tab:obj_sub_classifiaction_best_results}
 \end{table}
 
 \begin{figure}[H]
