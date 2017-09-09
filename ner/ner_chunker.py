@@ -1,3 +1,4 @@
+from __future__ import print_function
 from collections import Iterable, Counter
 
 from nltk import word_tokenize, pos_tag, re
@@ -43,14 +44,14 @@ def print_named_entity_parse_results(named_entities_tree):
     art_entities = extract_named_entity(named_entities_tree, 'art')
     nat_entities = extract_named_entity(named_entities_tree, 'nat')
     eve_entities = extract_named_entity(named_entities_tree, 'eve')
-    print 'Geographical Entity - ', sorted(Counter(geo_entities).items(), key=lambda x: x[1], reverse=True)
-    print 'Organization - ', sorted(Counter(org_entities).items(), key=lambda x: x[1], reverse=True)
-    print 'Person - ', sorted(Counter(per_entities).items(), key=lambda x: x[1], reverse=True)
-    print 'Geopolitical Entity - ', sorted(Counter(gpe_entities).items(), key=lambda x: x[1], reverse=True)
-    print 'Time Indicator -', sorted(Counter(tim_entities).items(), key=lambda x: x[1], reverse=True)
-    print 'Artifact -', sorted(Counter(art_entities).items(), key=lambda x: x[1], reverse=True)
-    print 'Event -', sorted(Counter(eve_entities).items(), key=lambda x: x[1], reverse=True)
-    print 'Natural Phenomenon - ', sorted(Counter(nat_entities).items(), key=lambda x: x[1], reverse=True)
+    print('Geographical Entity - ', sorted(Counter(geo_entities).items(), key=lambda x: x[1], reverse=True))
+    print('Organization - ', sorted(Counter(org_entities).items(), key=lambda x: x[1], reverse=True))
+    print('Person - ', sorted(Counter(per_entities).items(), key=lambda x: x[1], reverse=True))
+    print('Geopolitical Entity - ', sorted(Counter(gpe_entities).items(), key=lambda x: x[1], reverse=True))
+    print('Time Indicator -', sorted(Counter(tim_entities).items(), key=lambda x: x[1], reverse=True))
+    print('Artifact -', sorted(Counter(art_entities).items(), key=lambda x: x[1], reverse=True))
+    print('Event -', sorted(Counter(eve_entities).items(), key=lambda x: x[1], reverse=True))
+    print('Natural Phenomenon - ', sorted(Counter(nat_entities).items(), key=lambda x: x[1], reverse=True))
 
 
 def extract_named_entity(named_entities_tree, entity_type):
