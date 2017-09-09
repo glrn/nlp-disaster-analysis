@@ -81,20 +81,20 @@ while the following tweet is \textit{'not disaster-related'} with confidence 0.5
 	\parbox{190pt}{\tweet{It's been raining since you left me // Now I'm drowning in the flood // You see I've always been a fighter // But without you I give up}}
 \end{center}
 
-Even for one who is not familiar with the Bon Jovi lyrics in the latter tweet, it is clear that the tweet does not refer to a real natural disaster. However, this observation is hard to make examining only the vocabulary used; the latter tweet contains a variety of 'disastrous' words  (e.g. \tweet{raining, drowning, flood, fighter}). This example hints that in order to reach meaningful results we may have to examine additional linguistic features of colloquial writing,  as well as Twitter-specific features such as hashtags (\tweet{\textbf{\#}}), user at-mentions (\tweet{\textbf{@}}), internet links and emoticons.
+Even for one who is not familiar with the Bon Jovi lyrics in the latter tweet, it is clear that the tweet does not refer to a real natural disaster. However, this observation is hard to make examining only the vocabulary used; the tweet contains a variety of 'disastrous' words  (\tweet{raining, drowning, flood, fighter}). This example hints that in order to reach meaningful results we may have to examine additional linguistic features of colloquial writing,  as well as Twitter-specific features such as hashtags (\tweet{\textbf{\#}}), user at-mentions (\tweet{\textbf{@}}), internet links and emoticons.
 
 
 \paragraph{Our Contribution}
 
 In this paper we present our work tackling three missions involving disaster-related tweets.
 
-The first mission is \textit{identification} of disaster-related tweets among a variety of tweets. We implemented several classifiers, the best of which achieved around 94\% accuracy on the dataset. We note that this method could have easily been adjusted to identify tweets related to themes other than disasters (e.g. politics-related, sports-related, etc.), given the appropriate dataset.
+The first mission is \textit{identification} of disaster-related tweets among a variety of tweets. We implemented several classifiers, the best of which achieved around 94\% accuracy on the dataset. We note that this method could have easily been adjusted to identify tweets related to themes other than disasters (e.g. politics-related, sports-related, etc.), given the appropriate dataset. This part of our work is described in section \ref{mission1}.
 
-The second mission is binary classification of disaster-related tweets to one of two categories, \textit{subjective tweets} (i.e. tweets that express an emotion) vs. \textit{objective tweets} (such as news reports on disasters). To achieve this we manually tagged 2,410 disaster-related tweets. The motivation behind this task is that objective tweets like informative news reports are likely to be published after the event had already become clear to emergency services, while subjective tweets may contain invaluable first-person testimonies of ongoing events.
+The second mission is binary classification of disaster-related tweets to one of two categories, \textit{subjective tweets} (i.e. tweets that express an emotion) vs. \textit{objective tweets} (such as news reports on disasters). To achieve this we manually tagged 2,410 disaster-related tweets. The motivation behind this task is that objective tweets, such as informative news reports, are likely to be published after the event had already become clear to emergency services, while subjective tweets may contain invaluable first-person testimonies of ongoing events. This part of our work is described in section \ref{mission2}
 
-Finally, we extracted named entities to enrich our knowledge on the disaster (mostly location)... \todo{Omri - short description of method and achievements}.
+Finally, we extracted named entities to enrich our knowledge on the disaster (mostly location)... \todo{Omri - short description of method and achievements}. This part of our work is described in section \ref{mission3}.
 
-To demonstrate our framework we aggregated recent tweets from various locations in the US, extracted disaster-related tweets using our classifier, and then used named-entity recognition to discover entities related to ongoing disasters. For example, "\tweet{Hurricane Harvey}" appeared as a top named-entity among recent tweets sent from Houston, TX, which we identified as \textit{disaster-related}.
+To demonstrate our framework we aggregated recent tweets from various locations in the US, extracted disaster-related tweets using our classifier, and then used named-entity recognition to discover entities related to ongoing disasters. For example, "\tweet{Hurricane Harvey}" appeared as a top named-entity among recent tweets sent from Houston, TX, which we identified as \textit{disaster-related}. Further examples of results on recent data are presented in section \ref{recent-tweets-results}.
 
 The code of our project is available at \url{https://github.com/glrn/nlp-disaster-analysis}.
 
@@ -136,9 +136,9 @@ Regarding URLs, all links posted in tweets are shortened using Twitter's link se
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Classification of Disaster-Related Tweets}
+\section{Classification of Disaster-Related Tweets} \label{mission1}
 
-In the first part of our work we developed a classifier that identifies \textit{disaster-related} tweets from \textit{not disaster-related} tweets,  trained on a dataset of 10,877 labeled tweets. We used only tweets with label confidence $>0.9$, which is about half of the original dataset. We experimented with a Naive Bayes (NB), random forest (RF) and support vector machine (SVM) classifiers.
+In the first part of our work we developed a classifier that identifies \textit{disaster-related} tweets from \textit{not disaster-related} tweets,  trained on a dataset of 10,877 labeled tweets. We used only tweets with label confidence $\geq 0.9$, which is about half of the original dataset. We experimented with a Naive Bayes (NB), random forest (RF) and support vector machine (SVM) classifiers.
 
 \paragraph{Naive Bayes}
 A supervised probabilistic learning method that classify according to \textit{maximum a posteriori}. In this method we used \textit{unigram} and \textit{bigram} features.
@@ -286,7 +286,7 @@ It is important to mention that although the accuracies are very high using simp
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Sentiment Analysis of Tweets}
+\section{Sentiment Analysis of Tweets}  \label{mission2}
 
 Sentiment analysis is considered to be a very interesting task in \textit{NLP}. It aims to determine the writer's attitude. Sentiment analysis tasks are usually target for multi-class classification such as feelings extraction (\textit{"sadness"}, \textit{"happiness"}, \textit{"anger"}, etc.). Another target may be classifying the \textit{polarity} of a given text (for example \textit{"positive"} or \textit{"negative"}). \\
 We concentrated on the polarity task of classifying \textit{'disaster-related'} tweets as \textit{"objective"} or \textit{"subjective"}. In general vision, the ability of classifying \textit{'disaster-related'} tweets into these two categories may be used to extract facts and raise the confidence level of the disaster. \\
@@ -373,7 +373,7 @@ The following tables \ref{tab:obj_sub_classifiaction_best_results} presents the 
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Named-Entity Recognition in Tweets}
+\section{Named-Entity Recognition in Tweets}  \label{mission3}
 
 In order to extract relevant information from disaster tweets, we have decided to use named entity recognition methods. NER allows us to classify people, organizations, locations and time expressions, which we can combine with our previous results for exposing relevant information on disasters.
 
@@ -409,7 +409,7 @@ By using the GMB corpus as the training data, we performed named entity recognit
 From those results, we can learn the location, nationality of involvement, associated organizations, and  the type of the disaster.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Experimenting with Recent Tweets}
+\section{Experimenting with Recent Tweets} \label{recent-tweets-results}
 
 \todo{(Gal) Complete this section}
 \paragraph{keywords}Twitter's Search API
