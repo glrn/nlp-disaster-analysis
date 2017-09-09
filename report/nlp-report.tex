@@ -138,7 +138,7 @@ Regarding URLs, all links posted in tweets are shortened using Twitter's link se
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Classification of Disaster-Related Tweets}
 
-In the first part of our work we developed a classifier that identifies \textit{disaster-related} tweets from \textit{not disaster-related} tweets, trained on a dataset of 10,877 labeled tweets (\todo{note: maybe better to say that the dataset was ~2400 tweets, since we looked only at tweets with confident $>0.9$}) [\todo{Gal: Notice that using 0.9+ confidence filtered around 5000 tweets I think, 2400 were positive...}]. We experimented with a Naive Bayes (NB), random forest (RF) and support vector machine (SVM) classifiers.
+In the first part of our work we developed a classifier that identifies \textit{disaster-related} tweets from \textit{not disaster-related} tweets,  trained on a dataset of 10,877 labeled tweets. We used only tweets with label confidence $>0.9$, which is about half of the original dataset. We experimented with a Naive Bayes (NB), random forest (RF) and support vector machine (SVM) classifiers.
 
 \paragraph{Naive Bayes}
 A supervised probabilistic learning method that classify according to \textit{maximum a posteriori}. In this method we used \textit{unigram} and \textit{bigram} features.
@@ -168,13 +168,11 @@ Splitting a tweet to tokens (separated ordered words) is hard due to irregular p
 The hashtags, at-mentions, URLs and emoticons in a tweet carry information that may help better understand the subject and context. Therefore, for each tweet we created a vector of the following metadata features, which we found to be the most expressive:
 
 \begin{itemize}[noitemsep, nolistsep]
-	\item Does the tweet contain a link?
-	\item How many link are in tweet?
-	\item Is '\texttt{https://twitter.com}' one of the links?
-	\item Does the tweet contain a user at-mention?
-	\item Does the tweet contain a hashtag?
-	\item How many hashtags are in tweet?
-	\item Does the tweet contain a happy emoticon?
+	\item Does the tweet contain any links, and if so how many?
+	\item Is '\texttt{https://twitter.com}' one of the links (i.e. a link that refers to another tweet)?
+	\item Does the tweet contain a user at-mention (\tweet{@})?
+	\item Does the tweet contain any hashtags (\tweet{\#}), and if so how many?
+	\item Does the tweet contain a happy emoticon (e.g. \tweet{:D})?
 \end{itemize}
 
 In addition to these features, we extracted information from hashtags and URLs. We attempted to split hashtgs to separate words
@@ -182,16 +180,20 @@ looking for a CamelCase pattern (for example, \tweet{\#JeSuisCharlie} $\rightarr
 
 We also found that the domain name of the URLs in a tweet may give an indication to whether the tweet is disaster-related or not (for example, a link to \texttt{https://9gag.com} is a negative hint). However, Twitter applies URL shortening on links, so for each shortened link in the dataset we attempted to reach the original Internet address. We also collected the HTML page title, which often contains the title of an article (for example, in news sites). We managed to expand 4,823 URLs out of 6,157 in the dataset.
 
-For each tweet in the dataset we created an 'extended' version with extracted hashtag, expanded URL, and where every user at-mention is replaced by the token \_\_USERREF\_\_. For example, the following is a tweet,
+For each tweet in the dataset we created an \textit{'extended' version} where (1) hashtags are extracted, (2) URLs are expanded to original URL followed by the page title and (3) every user at-mention is replaced by the token \_\_USERREF\_\_.
+For example, the following is a tweet,
 
 \begin{center}
-	\parbox{190pt}{\todo{\tweet{Gal}}}
+	\parbox{190pt}{\tweet{http://t.co/c1H7JECFrV @RoyalCarribean do your passengers know about the mass murder that takes place in the \#FaroeIslands every year?}}
 \end{center}
 
-and its extended version is,
+and its \textit{extended version} is,
 
 \begin{center}
-	\parbox{190pt}{\todo{\tweet{Gal}}}
+	\parbox{190pt}{\tweet{https://www.royalcaribbean.co.uk/ 
+				Holiday Destinations - Cruise Destinations | Royal Caribbean UK.
+				\_\_USERREF\_\_  do your passengers know about the mass murder that takes place in the Faroe Islands every year?
+	}}
 \end{center}
 
 \paragraph{Twitter POS Tagging}
@@ -286,7 +288,8 @@ We labeled 2,100 \textit{'disaster related'} tweets as \textit{objective/subject
 
 We assumed that this task can achieve high accuracy without even using the words themselves (n-grams and meanings), but using the tweet structure, peripheral data and \textit{POS}-tagging. \\
 To train the classifiers we extracted the following features for each tweet:
-\begin{itemize}
+
+\begin{itemize}[noitemsep, nolistsep]
 	\item Number of exclamation marks.
 	\item Presence of exclamation mark.
 	\item Number of question marks.
@@ -299,7 +302,7 @@ To train the classifiers we extracted the following features for each tweet:
 	\item Number of punctuation marks and symbols (!"\#\$\%\&'()*+,-./:;<=>?@[\textbackslash]\^\_`\{\}\textasciitilde).
 	\item Tweet's length.
 	\item \textit{POS}-tagging:
-		\begin{itemize}
+		\begin{itemize}[noitemsep, nolistsep]
 			\item Number of adjectives.
 			\item Number of verbs.
 			\item Number of adverbs.
