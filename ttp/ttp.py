@@ -325,7 +325,7 @@ def process_tweet(tweet_record):
     for i in xrange(min(3,len(ttp_parser.urls))):
         # we replace the tiny-URL with the real URI + page title
         tinyURL = ttp_parser.urls[i]
-        if tweet_record['link_uri%d' % (i+1)] != '':
+        if 'link_uri%d' % (i+1) in tweet_record and tweet_record['link_uri%d' % (i+1)] != '':
             URI = tweet_record['link_uri%d' % (i+1)].decode('utf-8').encode('ascii', 'replace')
             title = tweet_record['link_title%d' % (i+1)].decode('utf-8').encode('ascii', 'replace')
             tweet = tweet.replace(tinyURL, URI + ' ' + title)

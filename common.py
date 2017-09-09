@@ -33,8 +33,8 @@ def compute_accuracy(prediction, real, corpus=None, debug=False):
     num_of_real_neg = len([x for x in real if x == 0])
 
     for i in xrange(len(prediction)):
-        p = prediction[i]
-        r = real[i]
+        p = int(prediction[i])
+        r = int(real[i])
         if p == r:
             correct += 1
             if p == 0:

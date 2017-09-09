@@ -5,6 +5,18 @@ class Relevancy(object):
     DISASTER        = 1
 
 
+class Annotations(object):
+    none            = 0
+    Information     = 1
+    Sentiment       = 2
+    Reporting       = 3
+    Miscellaneous   = 4
+    Actions         = 5
+    Preparation     = 6
+    Other           = 7
+    Movement        = 8
+
+
 class Tweet(object):
     """
     This object contains a tweet and the corresponding metadata (e.g. tweet
@@ -12,7 +24,7 @@ class Tweet(object):
     (e.g. tweet's text,
     """
 
-    def __init__(self, rec, POS_tagging, named_entities=[]):
+    def __init__(self, rec, POS_tagging, named_entities=list(), relevance=0, relevance_metadata=''):
         """
 
         :param rec:         record from csv
@@ -51,7 +63,7 @@ class Tweet(object):
                          else Relevancy.NOT_DISASTER
         self.confidence = float(rec['choose_one:confidence'])
         if '_unit_id' in rec.keys():
-            self.id = int(rec['_unit_id'])
+            self.id = int(float(rec['_unit_id']))
 
         # Extract information from tweet with ttp
         p = ttp.Parser()
@@ -62,6 +74,10 @@ class Tweet(object):
 
         # Handle POS tagging
         self.POS = POS_tagging
+
+        # Handle relevance
+        self.relevance = relevance
+        self.relevance_metadata = relevance_metadata
 
         # Handle NEs
         self.named_entities = named_entities

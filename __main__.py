@@ -1,3 +1,6 @@
+from collections import Counter
+
+from nltk import pos_tag, word_tokenize
 from __future__ import print_function
 
 from sklearn import svm
@@ -8,9 +11,13 @@ import classifier
 import common
 import numpy
 import os
+import re
 
 from classifier                 import BagOfWords, svm_uni_fitter, svm_bi_fitter, svm_uni_pos_fitter, svm_bi_pos_fitter
-from dataset_parser             import Dataset, MAIN_DATASET_PATH, OBJ_SUB_PATH, OBJ_SUB_POS_TAGGING_PATH, MAIN_POS_TAGGING_PATH
+from dataset_parser import Dataset, MAIN_DATASET_PATH, OBJ_SUB_PATH, OBJ_SUB_POS_TAGGING_PATH, MAIN_POS_TAGGING_PATH, \
+    Relevancy
+from ner.corpus import get_gmb_reader, GMB_PATH
+from ner.ner_chunker import NamedEntityChunker, print_named_entity_parse_results
 from sentiment_analysis         import sentiment_analysis_classifier
 from sklearn.feature_selection  import SelectKBest
 from sklearn.ensemble           import RandomForestClassifier
@@ -485,6 +492,20 @@ def test_sentiment_analysis_classification(n_estimators, C):
         ],
         save=os.path.join(GRAPHS_DIR, 'SentimentAnalysis', 'best_result_table.png'),
     )
+
+
+@common.timeit
+def test_named_entity_recognition(gmb_dataset_size):
+    dataset = Dataset(dataset_path=OBJ_SUB_PATH, pos_tag_path=OBJ_SUB_POS_TAGGING_PATH).entries
+    training_samples = get_gmb_reader(GMB_PATH)
+    print('===============================')
+    print('Test named entity recognition:')
+    chunker = NamedEntityChunker(training_samples[:gmb_dataset_size])
+    ner_disaster_tweets = chunker.parse_tweets([tweet for tweet in dataset if tweet.label == Relevancy.DISASTER])
+    print_named_entity_parse_results(ner_disaster_tweets)
+
+
+def main():
 def main(disaster_classification, sentiment_analysis, named_entity_recognition, output_dir, debug):
     global DEBUG, GRAPHS_DIR
     n_estimators = [2**i for i in range(11)]
@@ -500,6 +521,10 @@ def main(disaster_classification, sentiment_analysis, named_entity_recognition, 
     if named_entity_recognition:
         # TODO: Omri call function.
         pass
+    gmb_dataset_size = 20000
+    test_disaster_classification(n_estimators, Cs)
+    test_sentiment_analysis_classification(n_estimators=128, C=10**4)
+    test_named_entity_recognition(gmb_dataset_size)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
