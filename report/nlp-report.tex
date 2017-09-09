@@ -138,7 +138,7 @@ Regarding URLs, all links posted in tweets are shortened using Twitter's link se
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Classification of Disaster-Related Tweets}
 
-In the first part of our work we developed a classifier that identifies \textit{disaster-related} tweets from \textit{not disaster-related} tweets, trained on a dataset of 10,877 labeled tweets (\todo{note: maybe better to say that the dataset was ~2400 tweets, since we looked only at tweets with confident $>0.9$}) [\todo{Gal: Notice that using 0.9+ confidence filtered around 5000 tweets I think, 2400 were positive...}]. We experimented with a Naive Bayes (NB), random forest (RF) and support vector machine (SVM) classifiers.
+In the first part of our work we developed a classifier that identifies \textit{disaster-related} tweets from \textit{not disaster-related} tweets,  trained on a dataset of 10,877 labeled tweets. We used only tweets with label confidence $>0.9$, which is about half of the original dataset. We experimented with a Naive Bayes (NB), random forest (RF) and support vector machine (SVM) classifiers.
 
 \paragraph{Naive Bayes}
 A supervised probabilistic learning method that classify according to \textit{maximum a posteriori}. In this method we used \textit{unigram} and \textit{bigram} features.
