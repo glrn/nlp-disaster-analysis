@@ -1,7 +1,7 @@
 # Analysis of Panic and Alert on Social Media
 ### Final Project // Advanced Methods in Natural Language Processing @TAU // Spring 2017
 
-### 1. Example Usage
+### 1. Usage
 
 The project may be used for completing one of the three following tasks:
 - Classifying tweets as `disaster` or not related.
@@ -150,5 +150,16 @@ Tweet is: Hiroshima: 70 years since the worst mass murder in human history. Neve
 ```
 The `--output` flag may be used in order to change plots directory, if not given the default directory is *graphs* inside the project package.
 
-### Prerequisites
+### 2. Project Structure
+
+### 3. Prerequisites
 * [Python Twitter Tools](https://pypi.python.org/pypi/twitter) library (```pip install twitter```)
+
+### 4. References
+For convenience purposes, we hard copied into the project most of the packages we used. The following list details each and every package we used:
+- [ark-tweet-nlp-0.3.2](https://github.com/ianozsvald/ark-tweet-nlp-python) library (*POS tagging*)
+- [emoticon](https://github.com/aritter/twitter_nlp/blob/master/python/emoticons.py) script (*Emoticons extraction*)
+- [twitter-text-python](https://pypi.python.org/pypi/twitter-text-python/) library (*Tweets parsing*)
+- [Twitter-API](https://dev.twitter.com/rest/public/search) API (*API for tweets extraction*)
+- [twokenizer](https://github.com/ataipale/geotagged_tweet_exploration/blob/master/twokenizer.py) script (*Separating tweets into tokens*)
+- NER referneces TODO: Omri fill.
