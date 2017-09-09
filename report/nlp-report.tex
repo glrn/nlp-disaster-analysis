@@ -293,39 +293,66 @@ We accurately identified disaster-related tweets using various classifiers. It i
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Sentiment Analysis of Tweets}  \label{mission2}
 
-Sentiment analysis is considered to be a very interesting task in \textit{NLP}. It aims to determine the writer's attitude. Sentiment analysis tasks are usually target for multi-class classification such as feelings extraction (\textit{"sadness"}, \textit{"happiness"}, \textit{"anger"}, etc.). Another target may be classifying the \textit{polarity} of a given text (for example \textit{"positive"} or \textit{"negative"}). \\
-We concentrated on the polarity task of classifying \textit{'disaster-related'} tweets as \textit{"objective"} or \textit{"subjective"}. In general vision, the ability of classifying \textit{'disaster-related'} tweets into these two categories may be used to extract facts and raise the confidence level of the disaster. \\
-Although sentiment analysis is considered as a interesting task, it is surely a difficult one, combining it with tweets as dataset results an even more complicated task, since for the attributes we have spoken about in section 1.1. For example the following tweet is \textit{'disaster-related'}, but it is hard to tell whether it is objective or not:
+Sentiment analysis tasks aim to determine the writer's attitude, opinion or emotion, and are usually designed as a multi-class classification task (for example, among the labels \textit{"sad"}, \textit{"happy"}, \textit{"angry"}, etc.). Another target may be classifying the \textit{polarity} of a given text (for example, \textit{"positive"} or \textit{"negative"}).
+
+We focused on the task of classifying disaster-related tweets to \textit{"objective"} and \textit{"subjective"} tweets. In large, we say that \textbf{\textit{"objective"}} tweets contain mere facts, undeniable truths that are universally agreed upon, and that \textbf{\textit{"subjective"}} tweets contain an opinion, sentiment or emotion towards some happening (e.g. sadness, worry, fear, sarcasm, etc.). For example, the following is an \textit{"objective"} tweet:
+
+\begin{center}
+	\parbox{190pt}{\tweet{FedEx no longer to transport bioterror germs in wake of anthrax lab mishaps http://t.co/P96rgBbaYL \#news \#phone \#apple \#mobile}}
+\end{center}
+
+and the two following tweets are \textit{"subjective"}:
+
+\begin{center}
+	\parbox{190pt}{\tweet{@denisleary Not sure how these folks rush into burning buildings but I'm grateful they do. \#TrueHeroes}}
+\end{center}
+
+\begin{center}
+	\parbox{190pt}{\tweet{@canagal Good to hear it's back.. that storm's been given you guys trouble though :(}}
+\end{center}
+
+The ability to differentiate between \textit{objective} and \textit{subjective} tweets may help in identifying individuals who witness some disastrous event or who are in need of help.
+
+\subsection{The Dataset}
+
+Our dataset of 10,877 tweets did not contain a label of \textit{objective / subjective}, and we did not find any other satisfactory pre-labeled dataset of disaster-related tweets. Hence, we went on a mission to manually label all 2,100 disaster-related tweets from the dataset (that were labeled '\textit{disaster-related}' with confidence $ \ge 0.9 $).
+
+Each tweet was independently labeled by two participants; upon disagreement the third participant broke the tie. Around 80\% of the tweets were labeled \textit{objective} while only 20\% were labeled \textit{subjective}. This results from the large amount of tweets by news agencies in the dataset.
+
+It is worth to mention that in some cases, subtleties in writing made it hard to decide whether a tweet is \textit{"objective"} or \textit{"subjective"}. For example, the following tweet is clearly \textit{"objective"},
+
+\begin{center}
+	\parbox{190pt}{\tweet{Thunder lightening torrential rain and a power cut.}}
+\end{center}
+
+while this tweet is debatable,
+
 \begin{center}
 	\parbox{190pt}{\tweet{Thunder lightening torrential rain and a power cut!}}
 \end{center}
 
-\subsection{The Dataset}
-Since supervised classification is requested, we needed a dataset containing labels of this polarity. However, we could not find any dataset \textit{'disaster related'} or not tweets with a \textit{objective/subjective} label. Therefore we extracted only \textit{'disaster related'} tweets from our original dataset (with confidence level $ \ge 0.9 $) and labeled them manually according to the following rule:
-\begin{itemize}
-	\item \textbf{Objective} is an undeniable truth. It is universally agreed upon. No logical person can deny that.
-	\item \textbf{Subjective} is an opinion. The beauty is in the eye of the beholder.
-\end{itemize}
-We labeled 2,100 \textit{'disaster related'} tweets as \textit{objective/subjective} manually. Each tweet was labeled by two persons, on agreement, the label was kept, on disagreement, a third person broke the tie. Around 80\% of the tweets are objective while only 20\% are subjective.
+and the following is clearly \textit{"subjective"},
+
+\begin{center}
+	\parbox{190pt}{\tweet{Thunder lightening torrential rain and a power cut! :(}}
+\end{center}
 
 \subsection{Feature Extraction}
 
-We assumed that this task can achieve high accuracy without even using the words themselves (n-grams and meanings), but using the tweet structure, peripheral data and \textit{POS}-tagging. \\
-To train the classifiers we extracted the following features for each tweet:
+We confirmed our hypothesis that the task of differentiating between \textit{"objective"} and \textit{"subjetive"} disaster-related tweets can be achieved without examining the vocabulary of tweets, but merely by using POS tags and the following metadata features, which we extracted for each tweet:
+
 
 \begin{itemize}[noitemsep, nolistsep]
-	\item Number of exclamation marks.
-	\item Presence of exclamation mark.
-	\item Number of question marks.
-	\item Presence of question mark.
-	\item Presence of \textit{URL}.
-	\item Presence of emoticon (using \textit{emoticon.py} extractor from \textit{Twitter NLP} framework \cite{twitter_nlp}).
+	\item Presence and number of exclamation marks.
+	\item Presence and number of question marks.
+	\item Presence of URLs.
+	\item Presence of emoticons (extracted using \texttt{emoticon.py}, Twitter NLP framework \cite{twitter_nlp}).
 	\item Number of digits.
 	\item Number of capital words.
 	\item Number of capital letters.
 	\item Number of punctuation marks and symbols (!"\#\$\%\&'()*+,-./:;<=>?@[\textbackslash]\^\_`\{\}\textasciitilde).
 	\item Tweet's length.
-	\item \textit{POS}-tagging:
+	\item POS tag statistics:
 		\begin{itemize}[noitemsep, nolistsep]
 			\item Number of adjectives.
 			\item Number of verbs.
@@ -337,20 +364,20 @@ To train the classifiers we extracted the following features for each tweet:
 \end{itemize}
 
 \subsection{Results}
-We trained \textit{SVM} and \textit{Random Forest} classifiers for this job. Using $ C=10^4 $ as a penalty constant for \textit{SVM} and 128 estimators for \textit{Random Forest}.\\
-Once again dataset was divide into train (90\%) and test (10\%) sets. Each classification method was tested with the previous mentioned features, using feature selection with \textit{ANOVA F-test} model. We repeated the test each time with more top $ K $ features selected by the feature selection model (out of 18 features total) and measured accuracies again. The goal was to find which features are the most important for our task. Measurements are total accuracy, \textit{PPV} and \textit{NPV}.\\
+We trained \textit{SVM} and \textit{Random Forest} classifiers for this task, using $ C=10^4 $ as a penalty constant for \textit{SVM} and 128 estimators for \textit{Random Forest}.
 
-\paragraph{Random Forest} For the \textit{Random Forest} results \ref{fig:obj_sub_classification_rf}, we can see that best total accuracy is achieved with 13 features, so for \textit{NPV}, but best \textit{PPV} is achieved with only 1 feature (might be because of the biased dataset). The most influence features which were used are:
-number of exclamation marks, presence of exclamation mark , presence of question mark, presence of URL, presence of emoticon, number of digits, number of capital letters, number of punctuation marks and symbols, tweeter's length.
+Once again the dataset was divided into train (90\%) and test (10\%) sets. Each classification method was tested with the previously mentioned features, using feature selection with \textit{ANOVA F-test} model. We repeated the test several times, each time increasing the number of $K$ best features selected by the feature selection model (out of 18 features total), and measuring accuracies (as mentioned in the previous \textit{Identification} task). Our goal was to find which features are the most expressive for the task. We used the measures of total accuracy, \textit{PPV} and \textit{NPV}.
 
-\paragraph{SVM} For the \textit{Random Forest} results \ref{fig:obj_sub_classification_svm}, we can see that best total accuracy is achieved with 4 features only, so for \textit{NPV}, but best \textit{PPV} is achieved with only 1 feature as well (again, might be because of the biased dataset). The most influence features which were used are:
+\paragraph{Random Forest.} Looking at the \textit{Random Forest} results (fig.  \ref{fig:obj_sub_classification_rf}), we can see that best total accuracy is achieved with 13 features, so for \textit{NPV}, but best \textit{PPV} is achieved with only 1 feature (might be due to the biased dataset). The most expressive features used are:
+number of exclamation marks, presence of exclamation mark, presence of question mark, presence of URL, presence of emoticon, number of digits, number of capital letters, number of punctuation marks and symbols, tweet's length.
+
+\paragraph{SVM.} Looking at the \textit{Random Forest} results (fig.  \ref{fig:obj_sub_classification_svm}), we can see that best total accuracy is achieved with 4 features only, so for \textit{NPV}, but best \textit{PPV} is achieved with only 1 feature as well (again, might be due to the biased dataset). The most expressive features used are:
 number of exclamation marks, presence of URL, presence of emoticon, number of punctuation marks and symbols.
 
-The following tables \ref{tab:obj_sub_classifiaction_best_results} presents the best measurement result for each classifier (number of features used can be seen in column title), best total accuracy result (87.1\%) is achieved with \textit{Random Forest} classifier using 13 features. \\
+The following table  ()\ref{tab:obj_sub_classifiaction_best_results)} presents the best measurement result for each classifier. Best total accuracy result (87.1\%) is achieved with \textit{Random Forest} classifier using 13 features. \\
 
 \begin{table}[H]
-	\caption{Objective/Subjective Classification Best Results}
-	\label{tab:obj_sub_classifiaction_best_results}
+
 	\begin{center}
 		\scalebox{0.8}{
 			\begin{tabular}{c | c | c | c | c }
@@ -361,19 +388,21 @@ The following tables \ref{tab:obj_sub_classifiaction_best_results} presents the 
 			\end{tabular}
 		}
 	\end{center}
+	\caption{Objective/Subjective Classification Best Results (in parentheses - number of features used)}
+\label{tab:obj_sub_classifiaction_best_results}
 \end{table}
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\columnwidth]{../graphs/SentimentAnalysis/random_forest.png}
-	\caption{Objective/Subjective Classification Random Forest}
+	\caption{Objective/Subjective Classification - \textit{Random Forest}}
 	\label{fig:obj_sub_classification_rf}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\columnwidth]{../graphs/SentimentAnalysis/SVM.png}
-	\caption{Objective/Subjective SVM}
+	\caption{Objective/Subjective - \textit{SVM}}
 	\label{fig:obj_sub_classification_svm}
 \end{figure}
 
