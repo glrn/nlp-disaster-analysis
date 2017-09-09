@@ -73,9 +73,10 @@ def plot(xs, ys, colors, x_label, y_label, title, func_labels=None, x_scale=None
         ax.legend([plot for plot, in plots], [plot.get_label() for plot, in plots], loc=legend_location)
     f.suptitle(title, fontsize=14, fontweight='bold')
     if save is not None:
+        print('Saving graph into: {}'.format(save))
         try:
             os.makedirs(os.path.dirname(save))
-        except (IOError, WindowsError):
+        except:
             pass
         matplotlib.pyplot.savefig(save)
     else:
@@ -106,9 +107,10 @@ def plot_table(title, cells, column_names, row_names, save=None):
     print(df)
 
     if save is not None:
+        print('Saving table into: {}'.format(save))
         try:
             os.makedirs(os.path.dirname(save))
-        except (IOError, WindowsError):
+        except:
             pass
         matplotlib.pyplot.savefig(save)
     else:
