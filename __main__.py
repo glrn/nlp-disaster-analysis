@@ -10,7 +10,10 @@ import numpy
 import os
 
 from classifier                 import BagOfWords, svm_uni_fitter, svm_bi_fitter, svm_uni_pos_fitter, svm_bi_pos_fitter
-from dataset_parser             import Dataset, MAIN_DATASET_PATH, OBJ_SUB_PATH, OBJ_SUB_POS_TAGGING_PATH, MAIN_POS_TAGGING_PATH
+from dataset_parser import Dataset, MAIN_DATASET_PATH, OBJ_SUB_PATH, OBJ_SUB_POS_TAGGING_PATH, MAIN_POS_TAGGING_PATH, \
+    Relevancy
+from ner.corpus import get_gmb_reader, GMB_PATH
+from ner.ner_chunker import NamedEntityChunker, print_named_entity_parse_results
 from sentiment_analysis         import sentiment_analysis_classifier
 from sklearn.feature_selection  import SelectKBest
 from sklearn.ensemble           import RandomForestClassifier
@@ -485,10 +488,24 @@ def test_sentiment_analysis_classification(n_estimators, C):
         ],
         save=os.path.join(GRAPHS_DIR, 'SentimentAnalysis', 'best_result_table.png'),
     )
+
+
+@common.timeit
+def test_named_entity_recognition(gmb_dataset_size):
+    dataset = Dataset(dataset_path=OBJ_SUB_PATH, pos_tag_path=OBJ_SUB_POS_TAGGING_PATH).entries
+    training_samples = get_gmb_reader(GMB_PATH)
+    print('===============================')
+    print('Test named entity recognition:')
+    chunker = NamedEntityChunker(training_samples[:gmb_dataset_size])
+    ner_disaster_tweets = chunker.parse_tweets([tweet for tweet in dataset if tweet.label == Relevancy.DISASTER])
+    print_named_entity_parse_results(ner_disaster_tweets)
+
+
 def main(disaster_classification, sentiment_analysis, named_entity_recognition, output_dir, debug):
     global DEBUG, GRAPHS_DIR
-    n_estimators = [2**i for i in range(11)]
-    Cs           = [10**i for i in range(1, 8)]
+    n_estimators        = [2**i for i in range(11)]
+    Cs                  = [10**i for i in range(1, 8)]
+    gmb_dataset_size    = 20000
     if output_dir:
         GRAPHS_DIR = output_dir
     if debug:
@@ -498,16 +515,14 @@ def main(disaster_classification, sentiment_analysis, named_entity_recognition, 
     if sentiment_analysis:
         test_sentiment_analysis_classification(n_estimators=128, C=10**4)
     if named_entity_recognition:
-        # TODO: Omri call function.
-        pass
+        test_named_entity_recognition(gmb_dataset_size)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-v', '--verbose', help='increase output verbosity', action='store_true')
     parser.add_argument('-d', '--disaster-classification', help='will train and classify tweets dataset as disaster or not', action='store_true')
     parser.add_argument('-s', '--sentiment-analysis', help='will train and classify disaster related tweets dataset as objective or subjective', action='store_true')
-    # TODO: Omri fill help.
-    parser.add_argument('-n', '--named-entity-recognition', help='????', action='store_true')
+    parser.add_argument('-n', '--named-entity-recognition', help='will classify named entities in disaster related tweets dataset', action='store_true')
     parser.add_argument('-o', '--output', help='output directory for graphs')
     parser.add_argument('-a', '--all', help='equivalent to -d -s -n', action='store_true')
     args = parser.parse_args()
