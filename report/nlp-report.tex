@@ -168,13 +168,11 @@ Splitting a tweet to tokens (separated ordered words) is hard due to irregular p
 The hashtags, at-mentions, URLs and emoticons in a tweet carry information that may help better understand the subject and context. Therefore, for each tweet we created a vector of the following metadata features, which we found to be the most expressive:
 
 \begin{itemize}[noitemsep, nolistsep]
-	\item Does the tweet contain a link?
-	\item How many link are in tweet?
-	\item Is '\texttt{https://twitter.com}' one of the links?
-	\item Does the tweet contain a user at-mention?
-	\item Does the tweet contain a hashtag?
-	\item How many hashtags are in tweet?
-	\item Does the tweet contain a happy emoticon?
+	\item Does the tweet contain any links, and if so how many?
+	\item Is '\texttt{https://twitter.com}' one of the links (i.e. a link that refers to another tweet)?
+	\item Does the tweet contain a user at-mention (\tweet{@})?
+	\item Does the tweet contain any hashtags (\tweet{\#}), and if so how many?
+	\item Does the tweet contain a happy emoticon (e.g. \tweet{:D})?
 \end{itemize}
 
 In addition to these features, we extracted information from hashtags and URLs. We attempted to split hashtgs to separate words
@@ -182,16 +180,20 @@ looking for a CamelCase pattern (for example, \tweet{\#JeSuisCharlie} $\rightarr
 
 We also found that the domain name of the URLs in a tweet may give an indication to whether the tweet is disaster-related or not (for example, a link to \texttt{https://9gag.com} is a negative hint). However, Twitter applies URL shortening on links, so for each shortened link in the dataset we attempted to reach the original Internet address. We also collected the HTML page title, which often contains the title of an article (for example, in news sites). We managed to expand 4,823 URLs out of 6,157 in the dataset.
 
-For each tweet in the dataset we created an 'extended' version with extracted hashtag, expanded URL, and where every user at-mention is replaced by the token \_\_USERREF\_\_. For example, the following is a tweet,
+For each tweet in the dataset we created an \textit{'extended' version} where (1) hashtags are extracted, (2) URLs are expanded to original URL followed by the page title and (3) every user at-mention is replaced by the token \_\_USERREF\_\_.
+For example, the following is a tweet,
 
 \begin{center}
-	\parbox{190pt}{\todo{\tweet{Gal}}}
+	\parbox{190pt}{\tweet{http://t.co/c1H7JECFrV @RoyalCarribean do your passengers know about the mass murder that takes place in the \#FaroeIslands every year?}}
 \end{center}
 
-and its extended version is,
+and its \textit{extended version} is,
 
 \begin{center}
-	\parbox{190pt}{\todo{\tweet{Gal}}}
+	\parbox{190pt}{\tweet{https://www.royalcaribbean.co.uk/ 
+				Holiday Destinations - Cruise Destinations | Royal Caribbean UK.
+				\_\_USERREF\_\_  do your passengers know about the mass murder that takes place in the Faroe Islands every year?
+	}}
 \end{center}
 
 \paragraph{Twitter POS Tagging}
