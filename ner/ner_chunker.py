@@ -45,18 +45,23 @@ def print_named_entity_parse_results(named_entities_tree):
     art_entities = extract_named_entity(named_entities_tree, 'art')
     nat_entities = extract_named_entity(named_entities_tree, 'nat')
     eve_entities = extract_named_entity(named_entities_tree, 'eve')
-    print('Geographical Entity - ', sorted(Counter(geo_entities).items(), key=lambda x: x[1], reverse=True))
-    print('Organization - ', sorted(Counter(org_entities).items(), key=lambda x: x[1], reverse=True))
-    print('Person - ', sorted(Counter(per_entities).items(), key=lambda x: x[1], reverse=True))
-    print('Geopolitical Entity - ', sorted(Counter(gpe_entities).items(), key=lambda x: x[1], reverse=True))
-    print('Time Indicator -', sorted(Counter(tim_entities).items(), key=lambda x: x[1], reverse=True))
-    print('Artifact -', sorted(Counter(art_entities).items(), key=lambda x: x[1], reverse=True))
-    print('Event -', sorted(Counter(eve_entities).items(), key=lambda x: x[1], reverse=True))
-    print('Natural Phenomenon - ', sorted(Counter(nat_entities).items(), key=lambda x: x[1], reverse=True))
+    print('Geographical Entities -', prettify_entities(geo_entities))
+    print('Organization Entities -', prettify_entities(org_entities))
+    print('Person Entities -', prettify_entities(per_entities))
+    print('Geopolitical Entities -', prettify_entities(gpe_entities))
+    print('Time Indicator Entities -', prettify_entities(tim_entities))
+    print('Artifact Entities -', prettify_entities(art_entities))
+    print('Event Entities -', prettify_entities(eve_entities))
+    print('Natural Phenomenon Entities -', prettify_entities(nat_entities))
     entities = geo_entities + org_entities + per_entities + gpe_entities + tim_entities + art_entities + nat_entities + eve_entities
-    print('Top 10 Entities - ', filter(lambda z: 'userref' not in z and z not in ('in', 'on', 'at', 'the'), map(lambda y: y[0], sorted(Counter(entities).items(), key=lambda x: x[1], reverse=True)))[:10])
+    print('Top 10 Entities -', ', '.join(filter(lambda z: 'userref' not in z and z not in ('in', 'on', 'at', 'the'), map(lambda y: y[0], sorted(Counter(entities).items(), key=lambda x: x[1], reverse=True)))[:10]))
 
 
 def extract_named_entity(named_entities_tree, entity_type):
     return map(lambda result: ' '.join(map(lambda inner_result: inner_result.split('/')[0], result[5:][:-1].split())),
                re.findall('\({}.*\)'.format(entity_type), named_entities_tree))
+
+
+def prettify_entities(entities):
+    sorted_entities = sorted(Counter(entities).items(), key=lambda x: x[1], reverse=True)
+    return ', '.join(map(lambda x: '{}-{}'.format(x[0], x[1]), sorted_entities))
