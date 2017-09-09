@@ -13,9 +13,9 @@ def features(tokens, index, history):
     stemmer = SnowballStemmer('english')
 
     # Pad the sequence with placeholders
-    tokens = [('[START2]', '[START2]'), ('[START1]', '[START1]')] + list(tokens) + [('[END1]', '[END1]'),
-                                                                                    ('[END2]', '[END2]')]
-    history = ['[START2]', '[START1]'] + list(history)
+    tokens = [('[start2]', '[start2]'), ('[start1]', '[start1]')] + list(tokens) + [('[end1]', '[end1]'),
+                                                                                    ('[end2]', '[end2]')]
+    history = ['[start2]', '[start1]'] + list(history)
 
     # shift the index with 2, to accommodate the padding
     index += 2
@@ -29,15 +29,6 @@ def features(tokens, index, history):
     contains_dash = '-' in word
     contains_dot = '.' in word
     allascii = all([True for c in word if c in string.ascii_lowercase])
-
-    allcaps = word == word.capitalize()
-    capitalized = word[0] in string.ascii_uppercase
-
-    prevallcaps = prevword == prevword.capitalize()
-    prevcapitalized = prevword[0] in string.ascii_uppercase
-
-    nextallcaps = prevword == prevword.capitalize()
-    nextcapitalized = prevword[0] in string.ascii_uppercase
 
     return {
         'word': word,
@@ -63,13 +54,8 @@ def features(tokens, index, history):
 
         'contains-dash': contains_dash,
         'contains-dot': contains_dot,
-
-        'all-caps': allcaps,
-        'capitalized': capitalized,
-
-        'prev-all-caps': prevallcaps,
-        'prev-capitalized': prevcapitalized,
-
-        'next-all-caps': nextallcaps,
-        'next-capitalized': nextcapitalized,
     }
+
+
+def is_capitalized(word):
+    return word[0] in string.ascii_uppercase

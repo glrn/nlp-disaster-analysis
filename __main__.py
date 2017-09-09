@@ -13,7 +13,7 @@ import re
 from classifier                 import BagOfWords, svm_uni_fitter, svm_bi_fitter, svm_uni_pos_fitter, svm_bi_pos_fitter
 from dataset_parser import Dataset, MAIN_DATASET_PATH, OBJ_SUB_PATH, OBJ_SUB_POS_TAGGING_PATH, MAIN_POS_TAGGING_PATH, \
     Relevancy
-from ner.corpus import get_gmb_reader
+from ner.corpus import get_gmb_reader, GMB_PATH
 from ner.ner_chunker import NamedEntityChunker, print_named_entity_parse_results
 from sentiment_analysis         import sentiment_analysis_classifier
 from sklearn.feature_selection  import SelectKBest
@@ -486,23 +486,23 @@ def test_sentiment_analysis_classification(n_estimators, C):
 
 
 @common.timeit
-def test_named_entity_recognition():
+def test_named_entity_recognition(gmb_dataset_size):
     dataset = Dataset(dataset_path=OBJ_SUB_PATH, pos_tag_path=OBJ_SUB_POS_TAGGING_PATH).entries
-    training_samples = get_gmb_reader('ner\gmb-2.2.0')
-    print len(training_samples)
-    chunker = NamedEntityChunker(training_samples[:10000])
-    print 'Trained!'
+    training_samples = get_gmb_reader(GMB_PATH)
+    print('===============================')
+    print('Test named entity recognition:')
+    chunker = NamedEntityChunker(training_samples[:gmb_dataset_size])
     ner_disaster_tweets = chunker.parse_tweets([tweet for tweet in dataset if tweet.label == Relevancy.DISASTER])
-    print 'Parsed!'
     print_named_entity_parse_results(ner_disaster_tweets)
 
 
 def main():
     n_estimators = [2**i for i in range(11)]
     Cs           = [10**i for i in range(1, 8)]
-    # test_disaster_classification(n_estimators, Cs)
-    # test_sentiment_analysis_classification(n_estimators=128, C=10**4)
-    test_named_entity_recognition()
+    gmb_dataset_size = 20000
+    test_disaster_classification(n_estimators, Cs)
+    test_sentiment_analysis_classification(n_estimators=128, C=10**4)
+    test_named_entity_recognition(gmb_dataset_size)
 
 if __name__ == '__main__':
     main()

@@ -43,14 +43,14 @@ def print_named_entity_parse_results(named_entities_tree):
     art_entities = extract_named_entity(named_entities_tree, 'art')
     nat_entities = extract_named_entity(named_entities_tree, 'nat')
     eve_entities = extract_named_entity(named_entities_tree, 'eve')
-    print 'geo', Counter(geo_entities)
-    print 'org', Counter(org_entities)
-    print 'per', Counter(per_entities)
-    print 'gpe', Counter(gpe_entities)
-    print 'tim', Counter(tim_entities)
-    print 'art', Counter(art_entities)
-    print 'nat', Counter(nat_entities)
-    print 'eve', Counter(eve_entities)
+    print 'Geographical Entity - ', sorted(Counter(geo_entities).items())
+    print 'Organization - ', sorted(Counter(org_entities).items())
+    print 'Person - ', sorted(Counter(per_entities).items())
+    print 'Geopolitical Entity - ', sorted(Counter(gpe_entities).items())
+    print 'Time Indicator -', sorted(Counter(tim_entities).items())
+    print 'Artifact -', sorted(Counter(art_entities).items())
+    print 'Event -', sorted(Counter(eve_entities).items())
+    print 'Natural Phenomenon - ', sorted(Counter(nat_entities).items())
 
 
 def extract_named_entity(named_entities_tree, entity_type):

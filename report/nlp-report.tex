@@ -370,11 +370,11 @@ We used only the top categories, since they are sufficient for extracting releva
 
 For tagging the named entities, a classifier based tagger can be used. We chose, for this part, the standard NLTK classifier. The best features of the tagger are unigrams, part of speech tagging, stemmer lemma of the current word, same attributes of the previous and next words, the previous tagging, and whether the current word is capitalized or contains special characters.
 
-Tweets are often disorganized and does not contain structured sentences. In order to reduce errors, each tweet is treated as non-capitalized, and is stripped of URLs and special characters.
+\paragraph{Capitalization} A key feature for recognizing named tweets is capitalization. In case of tweets, which tend to be disorganized, capitalization is much less reliable, and differs in style between twitter users. Capitalization might be formal, in case of an informative report, on informal, as a tool of exposing sentiment.
 
-\paragraph{Results}
+For overcoming this obstacle, we tried approaches similar to Ritter et al., 2011 \cite{Ritter11}. Using capitalized words as features caused a great shift in the results - entities of different types where often grouped together, and non-entities where often identified as such. Manipulations on the capitalization feature extractor - such as announcing a word as capitalized, only if its surroundings are not all capitalized, performed poorly as well. By neutralizing this feature, and converting all the tweets to lower case letters, the classifier performance increased significantly.
 
-Three main categories of the GMB corpus remained relevant in the Tweeter world - location, organization, and geopolitical entity. A fourth category, time, was somewhat ambiguous - as it described both time entities and irrelevant ones. Other categories did not manage to reach any level of internal agreement on any entity.
+\paragraph{Results} Three main categories of the GMB corpus remained relevant in the Tweeter world - location, organization, and geopolitical entity. A fourth category, time, was somewhat ambiguous - as it described both time entities and irrelevant ones. Other categories did not manage to reach any level of internal agreement on any entity.
 
 By using the GMB corpus as the training data, we performed named entity recognition on the previously used dataset, of 10,877 labeled tweets. From those tweets, we singled out only those who were labeled as disasters. The main results were:
 
@@ -384,7 +384,23 @@ By using the GMB corpus as the training data, we performed named entity recognit
 	\item Geopolitical Entity - Composed mostly of user references, and nationalities - Israeli, Turkish and much more.
 	\item Time Indicator - ranged from a description of the current time - wildfire or typhoon, to description of the 70th anniversary of Hiroshima atom bombing.
 \end{itemize}
-From those results, we can learn the location, nationality of involvement, associated organizations, and  the type of the disaster.
+From those results, we can learn the location, nationality of involvement, associated organizations, and  the type of the disaster. We classified the results, in order to learn the false-alarm rate of the implementation, as presented in table  \ref{tab:named_entity_recognition_success_rate}.
+
+\begin{table}[H]
+	\caption{Named Entity Recognition Success Rate}
+	\label{tab:named_entity_recognition_success_rate}
+	\begin{center}
+		\scalebox{0.8}{
+			\begin{tabular}{c | c | c | c | c | c}
+				  & $ \textbf{Geographical} $ & $
+				  \textbf{Organization} $ & $ \textbf{Person} $ & $ \textbf{Geopolitical} $ & $ \textbf{Time} $ \\ \hline
+				Total & 337 & 306 & 41 & 865 & 787  \\
+				Success Rate & 80\% & 57\% & 76\% & 49\% & 27\% \\
+			\end{tabular}
+		}
+	\end{center}
+\end{table}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Experimenting with Recent Tweets}

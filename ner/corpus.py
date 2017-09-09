@@ -2,6 +2,8 @@ import os
 
 import cPickle
 
+GMB_PATH = 'ner\gmb-2.2.0'
+
 
 def to_conll_iob(annotated_sentence):
     """
@@ -25,14 +27,10 @@ def to_conll_iob(annotated_sentence):
 
 
 def read_gmb(corpus_root):
-    i = 0
     for root, dirs, files in os.walk(corpus_root):
         for filename in files:
             if filename.endswith(".tags"):
                 path = os.path.join(root, filename)
-                i += 1
-                if i % 1000 == 0:
-                    print path
                 with open(path, 'rb') as file_handle:
                     file_content = file_handle.read().decode('utf-8').strip()
                     annotated_sentences = file_content.split('\n\n')
