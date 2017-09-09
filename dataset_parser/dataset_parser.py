@@ -1,16 +1,18 @@
 import csv
 from tweet_parser import Tweet
-
+import os
 """
 This module parses CrowdFlower's dataset.
 [URL: https://www.crowdflower.com/data-for-everyone (under 'Disasters on social media')]
 """
 
-MAIN_DATASET_PATH 	        = 'dataset/socialmedia-disaster-tweets-DFE-extended.csv'
-OBJ_SUB_PATH        	    = 'dataset/socialmedia-disaster-tweets-DFE-extended-obj-sub.csv'
-MAIN_POS_TAGGING_PATH 	    = 'dataset/socialmedia-disaster-tweets-DFE-POS-Tagging.txt'
-MAIN_NER_TAGGING_PATH 	    = 'dataset/socialmedia-disaster-tweets-DFE-NER-tags.txt'
-OBJ_SUB_POS_TAGGING_PATH    = 'dataset/socialmedia-disaster-tweets-DFE-obj-sub-POS-Tagging.txt'
+dataset_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'dataset')
+
+MAIN_DATASET_PATH 	        = os.path.join(dataset_dir, 'socialmedia-disaster-tweets-DFE-extended.csv')
+OBJ_SUB_PATH        	    = os.path.join(dataset_dir, 'socialmedia-disaster-tweets-DFE-extended-obj-sub.csv')
+MAIN_POS_TAGGING_PATH 	    = os.path.join(dataset_dir, 'socialmedia-disaster-tweets-DFE-POS-Tagging.txt')
+MAIN_NER_TAGGING_PATH 	    = os.path.join(dataset_dir, 'socialmedia-disaster-tweets-DFE-NER-tags.txt')
+OBJ_SUB_POS_TAGGING_PATH    = os.path.join(dataset_dir, 'socialmedia-disaster-tweets-DFE-obj-sub-POS-Tagging.txt')
 
 
 class Dataset(object):
