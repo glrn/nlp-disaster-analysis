@@ -454,10 +454,42 @@ From those results, we can learn the location, nationality of involvement, assoc
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Experimenting with Recent Tweets} \label{recent-tweets-results}
 
-\todo{(Gal) Complete this section}
-\paragraph{keywords}Twitter's Search API, no re-tweets
+In the last part of our work we tested our classifier that identifies \textit{disaster-related} tweets and the NER classifier on real data that was recently posted on Twitter. We used Twitter's Search API that allows developers to browse tweets that were posted during the previous 7 days, and filter them according to various categories such as language, location (by coordinates), keywords and more.
 
-In order to compare our overall performance to the method presented by Ritter et al. \cite{Ritter11}, we ran both implementations on recent event tweets, and compared the most common entities. For tweets around the time of the Irma Hurricane, our top 10 entities were: Florida, Irma, Miami, Twitter, Hurricane, Hurricane Irma, Leaving, Floridians arent, Cuba and Hurricaneirma, where the top 10 entities using Ritter's method were: Florida, Irma, Miami, Twitter, Hurricane Irma, Cuba, Florida Keys, tampa, Key West, Paramount Pictures Settles. For Hurricane Harvey tweets, our results where Houston, Mandatory, Twitter, Harvey, Water, Beaumont, Air Alliance, Info, Houston Water, Hurricane Harvey, where Ritter's were Houston, Twitter, Harvey, Hurricane Harvey, Google Maps, Beaumont, Houston Water, Katy, Air Alliance Houston, Texas. The comparison, in both cases, starts to fail when comparing the uncommon named entities, which Ritter's method is far superior than the presented one, although our method is sufficient for understanding the basic details of a disaster - where the disaster happens, and what is the disaster.
+\paragraph{The Data.} We created the following three tweet dataset:
+
+\begin{itemize}[noitemsep, nolistsep]
+	\item\textbf{Houston} - 1,501 tweets posted in the \textit{Houston, TX} area during 29 Aug. - 3 Sept., containing at least one of the words [\tweet{water, drown}] and 500 random tweets
+	\item\textbf{Miami} - 1,001 tweets posted in the \textit{Miami, FL} area during 9 Sept., containing at least one of the words [\tweet{evacuate, stay, safe, car}] and additional 150 random tweets
+	\item\textbf{Chicago} - 2,092 tweets posted in the \textit{Chicago, IL} area during 28 Aug. - 3 Sept., containing at least one of the words [\tweet{car, plane, fire, dead}]
+\end{itemize}
+
+For all datasets we avoided from "re-tweeted" tweets (\tweet{RT}), to prevent repetitions of popular tweets.\\
+
+From each of the datasets we used our used our classifier (see section \ref{mission1}) to take only \textit{disaster-related} tweets. We checked the performance of out NER classifier by running it on the disaster-related tweets in each dataset, and presenting the most popular named-entities found. We ran both our NER classifier (trained on the GMB dataset), and the Twitter-oriented NER by Ritter et al. \cite{Ritter11}.
+
+The 5 most popular entities among the \textbf{Houston} tweets are:
+
+\begin{itemize}[noitemsep]
+	\item\textbf{Ritter et al.} - Houston, Twitter, Harvey, Hurricane Harvey, Beaumont
+	\item\textbf{Our NER} - Houston, Mandatory, Twitter, Harvey, Water
+\end{itemize}
+
+The 5 most popular entities among the \textbf{Miami} tweets are:
+
+\begin{itemize}[noitemsep]
+	\item\textbf{Ritter et al.} - Florida, Irma, Miami, Twitter, Hurricane Irma
+	\item\textbf{Our NER} - Florida, Irma, Miami, Twitter, Hurricane
+\end{itemize}
+
+The 5 most popular entities among the \textbf{Chicago} tweets are:
+
+\begin{itemize}[noitemsep]
+	\item\textbf{Ritter et al.} - Twitter, Chicago Fire, Tuna Fire, Chicago Fire MLS Soccer, Buzcast
+	\item\textbf{Our NER} - \todo{Omri}
+\end{itemize}
+
+The comparison, in both cases, starts to fail when comparing the uncommon named entities, which Ritter's method is far superior than the presented one, although our method is sufficient for understanding the basic details of a disaster - where the disaster happens, and what is the disaster.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
