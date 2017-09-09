@@ -144,6 +144,7 @@ def test_sentiment_analysis(train, test, n_estimators, C):
 
     return random_forest_accuracies, svm_accuracies, selected_features
 
+@common.timeit()
 def test_disaster_classification(n_estimators, Cs):
     train, test = setup()
     train_corpus = numpy.array([tweet.text for tweet in train])
