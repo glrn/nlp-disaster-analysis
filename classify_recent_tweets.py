@@ -18,16 +18,21 @@ from ner.ner_chunker import NamedEntityChunker
 TEST_SLICE = 0.1
 
 def main():
-    TWEET_CSV_PATH = "dataset/recent_tweets_test/chicago_tweets.csv"
-    EXTENDED_CSV_PATH = "dataset/recent_tweets_test/chicago_tweets-extended.csv"
-    POS_TAG_PATH = "dataset/recent_tweets_test/chicago_tweets-POS-Tagging.txt"
-    NER_TAG_PATH = "dataset/recent_tweets_test/chicago_tweets-NER-tags.txt"
-    OUT_CSV_PATH = "dataset/recent_tweets_test/chicago_tweets-labeled.csv"
+    # TWEET_CSV_PATH = "dataset/recent_tweets_test/chicago_tweets.csv"
+    # EXTENDED_CSV_PATH = "dataset/recent_tweets_test/chicago_tweets-extended.csv"
+    # POS_TAG_PATH = "dataset/recent_tweets_test/chicago_tweets-POS-Tagging.txt"
+    # NER_TAG_PATH = "dataset/recent_tweets_test/chicago_tweets-NER-tags.txt"
+    # OUT_CSV_PATH = "dataset/recent_tweets_test/chicago_tweets-labeled.csv"
     # TWEET_CSV_PATH = "dataset/recent_tweets_test/houston_tweets.csv"
     # EXTENDED_CSV_PATH = "dataset/recent_tweets_test/houston_tweets-extended.csv"
     # POS_TAG_PATH = "dataset/recent_tweets_test/houston_tweets-POS-Tagging.txt"
     # NER_TAG_PATH = "dataset/recent_tweets_test/houston_tweets-NER-tags.txt"
     # OUT_CSV_PATH = "dataset/recent_tweets_test/houston_tweets-labeled.csv"
+    TWEET_CSV_PATH = "dataset/recent_tweets_test/miami_tweets.csv"
+    EXTENDED_CSV_PATH = "dataset/recent_tweets_test/miami_tweets-extended.csv"
+    POS_TAG_PATH = "dataset/recent_tweets_test/miami_tweets-POS-Tagging.txt"
+    NER_TAG_PATH = "dataset/recent_tweets_test/miami_tweets-NER-tags.txt"
+    OUT_CSV_PATH = "dataset/recent_tweets_test/miami_tweets-labeled.csv"
 
     labeled_dataset = Dataset()
     unlabeled_dataset = Dataset(dataset_path = EXTENDED_CSV_PATH,

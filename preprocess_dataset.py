@@ -28,9 +28,10 @@ logger = logging.getLogger(__name__)
 # PROCESSED_DATASET_PATH = 'dataset/socialmedia-disaster-tweets-DFE-extended.csv'
 # ORIGINAL_DATASET_PATH =  'dataset/recent_tweets_test/chicago_tweets.csv'
 # PROCESSED_DATASET_PATH = 'dataset/recent_tweets_test/chicago_tweets-extended.csv'
-ORIGINAL_DATASET_PATH =  'dataset/recent_tweets_test/houston_tweets.csv'
-PROCESSED_DATASET_PATH = 'dataset/recent_tweets_test/houston_tweets-extended.csv'
-
+# ORIGINAL_DATASET_PATH =  'dataset/recent_tweets_test/houston_tweets.csv'
+# PROCESSED_DATASET_PATH = 'dataset/recent_tweets_test/houston_tweets-extended.csv'
+ORIGINAL_DATASET_PATH =  'dataset/recent_tweets_test/miami_tweets.csv'
+PROCESSED_DATASET_PATH = 'dataset/recent_tweets_test/miami_tweets-extended.csv'
 
 # Read original dataset
 logger.info('Reading from %s' % ORIGINAL_DATASET_PATH)
