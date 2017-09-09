@@ -409,7 +409,7 @@ The following table  ()\ref{tab:obj_sub_classifiaction_best_results)} presents t
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Named-Entity Recognition in Tweets}  \label{mission3}
 
-In order to extract relevant information from disaster tweets, we have decided to use named entity recognition methods. NER allows us to classify people, organizations, locations and time expressions, which we can combine with our previous results for exposing relevant information on disasters.
+In order to extract relevant information from disaster tweets, we have decided to use named entity recognition methods. NER allows us to classify people, organizations, locations and time expressions, which we can combine with our previous results for exposing relevant information on disasters. Ritter et al., 2011 \cite{Ritter11} provides information and methods on how to extract named entities out of tweets, by using special POS tagging for Twitter. In this section, we present our attempt to use regular database, which was trained on news and articles, and extract named entities out of tweets.
 
 \paragraph{GMB}\endnote{\textbf{"Groningen Meaning Bank" Dataset by University of Groningen}: comprises thousands of texts in raw and tokenised format, tags for part of speech, named entities and lexical categories, and discourse representation structures compatible with first-order logic. \url{http://gmb.let.rug.nl/}} In order to use NER, we used the Groningen Meaning Bank - a large corpus, composed of thousands of texts in raw and tokenized format, tags for part of speech, named entities and lexical categories, and discourse representation structures compatible with first-order logic. The top level categories of the corpus are:
 \begin{itemize}[noitemsep, nolistsep]
@@ -440,7 +440,7 @@ By using the GMB corpus as the training data, we performed named entity recognit
 	\item Geopolitical Entity - Composed mostly of user references, and nationalities - Israeli, Turkish and much more.
 	\item Time Indicator - ranged from a description of the current time - wildfire or typhoon, to description of the 70th anniversary of Hiroshima atom bombing.
 \end{itemize}
-From those results, we can learn the location, nationality of involvement, associated organizations, and  the type of the disaster. We classified the results, in order to learn the false-alarm rate of the implementation, as presented in table  \ref{tab:named_entity_recognition_success_rate}.
+From those results, we can learn the location, nationality of involvement, associated organizations, and  the type of the disaster. We classified the results, in order to learn the false-alarm rate of the implementation, as presented in table  \ref{tab:named_entity_recognition_success_rate}. The most common entities are California, Hiroshima, ABC, Turkey, Northern, severe, refugio, Japan, Obama and ABC-News.
 
 \begin{table}[H]
 	\caption{Named Entity Recognition Success Rate}
@@ -456,6 +456,8 @@ From those results, we can learn the location, nationality of involvement, assoc
 		}
 	\end{center}
 \end{table}
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
