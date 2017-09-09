@@ -35,13 +35,13 @@
 
 \author{
 {\rm Daniel Solomon}\\
-\texttt{solomond@mail.tau.ac.il}
+\normalsize{\texttt{solomond@mail.tau.ac.il}}
 \and
 {\rm Gal Ron}\\
-\texttt{galr1@mail.tau.ac.il‬}
+\normalsize{\texttt{galr1@mail.tau.ac.il‬}}
 \and
 {\rm Omri Ben-Horin}\\
-\texttt{omribenhorin@mail.tau.ac.il}
+\normalsize{\texttt{omribenhorin@mail.tau.ac.il}}
 }
 
 \maketitle
@@ -88,7 +88,7 @@ Even for one who is not familiar with the Bon Jovi lyrics in the latter tweet, i
 
 In this paper we present our work tackling three missions involving disaster-related tweets.
 
-The first mission is \textit{identification} of disaster-related tweets among a variety of tweets. We implemented several classifiers, the best of which achieved \todo{\%} accuracy on the dataset. We note that this method could have easily been adjusted to identify tweets related to themes other than disasters (e.g. politics-related, sports-related, etc.), given the appropriate dataset.
+The first mission is \textit{identification} of disaster-related tweets among a variety of tweets. We implemented several classifiers, the best of which achieved around 94\% accuracy on the dataset. We note that this method could have easily been adjusted to identify tweets related to themes other than disasters (e.g. politics-related, sports-related, etc.), given the appropriate dataset.
 
 The second mission is binary classification of disaster-related tweets to one of two categories, \textit{subjective tweets} (i.e. tweets that express an emotion) vs. \textit{objective tweets} (such as news reports on disasters). To achieve this we manually tagged 2,410 disaster-related tweets. The motivation behind this task is that objective tweets like informative news reports are likely to be published after the event had already become clear to emergency services, while subjective tweets may contain invaluable first-person testimonies of ongoing events.
 
@@ -156,7 +156,7 @@ To train the classifiers we extracted several features for each tweet:
 \begin{itemize}[noitemsep]
 	\item \textbf{Unigrams and bigrams} of tokens in tweet; we used a Python version of \texttt{Twokenizer}, tokenizer for Twitter data (Gimpel et al. \cite{POS-Tagging}, Myle Ott, 2013 \cite{ark-twokenize-py}).
 	\item \textbf{Tweet metadata}; hashtags, at-mentions and URLs; we parsed the tweet, crawled URLs and used the referred webpage title as supplementary information.
-	\item \textbf{Part-of-speech (POS) tags} (bigram and unigram); we used a twitter-specific tagset and tagger presented by Gimpel et al. \cite{POS-Tagging}.
+	\item \textbf{Part-of-speech (POS) tags} (bigram and unigram); we used a twitter-specific tagset and tagger developed by Gimpel et al. \cite{POS-Tagging}.
 \end{itemize}
 
 \paragraph{Tokenization}
@@ -197,7 +197,26 @@ and its \textit{extended version} is,
 \end{center}
 
 \paragraph{Twitter POS Tagging}
-\todo{Gal \cite{POS-Tagging}}
+We used a Twitter-oriented POS tagger written in Java (Gimepl et al., 2011 \cite{POS-Tagging}). This tagger features a tagset that captures Twitter-specific properties. The tagset contains a set of 20 coarse-grained tags based on several treebanks, with some additional categories specific to Twitter, such as URLs and hashtags (the complete tagset is available in \cite{POS-Tagging}). The tagger is a conditional random field (CRF), and its training involved manual annotation of tweets.
+
+Unlike common English taggers, the Twitter tagger does not split contractions or possessives, hence the following tags are being used:
+
+\begin{itemize}[noitemsep, nolistsep]
+	\item \textbf{\tweet{S}} - nominal + possesive (e.g. books')
+	\item \textbf{\tweet{Z}} - proper noun + possesive (e.g. America's)
+	\item \textbf{\tweet{L}} - nominal + verbal (e.g. iono (= \textit{I don't know}))
+	\item \textbf{\tweet{M}} - proper noun + verbal (e.g. Mark'll)
+\end{itemize}
+
+In addition, the tag \textbf{\tweet{G}} is being used for social-media abbreviations, foreign words and Twitter 'garbage'.
+
+The tagger exploits some phonetic and linguistic features that are useful when dealing with colloquial writing, such as:
+
+\begin{itemize}[noitemsep, nolistsep]
+	\item \textbf{Phonetic normalization} - Twitter includes many alternate spelling of words. The Metaphone algorithm was used to create a coarse phonetic normalization of words to simpler key.
+	\item \textbf{Frequently-capitalized tokens} - Twitter users are inconsistent in their use of capitalization. Therefore, a lexicon of frequently capitalized tokens was created to cluster different tokens that refer to the same word or entity.
+\end{itemize}
+
 
 \subsection{Results}
 Dataset was divided into train (90\%) and test (10\%) sets. Each classification method was tested with \textit{unigram} features and \textit{bigram} features separately, for the \textit{SVM} classifier, \textit{tweets metadata} and \textit{POS tagging} features were tested as well. \\
