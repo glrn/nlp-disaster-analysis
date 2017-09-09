@@ -1,10 +1,10 @@
-# Analysis of Panic and Alert on Social Media
+# Detection and Analysis of Disaster-Related Tweets
 ### Final Project // Advanced Methods in Natural Language Processing @TAU // Spring 2017
 
 ### 1. Usage
 
 The project may be used for completing one of the three following tasks:
-- Classifying tweets as `disaster` or not related.
+- Classifying tweets as `disaster-related` or `not disaster-related`.
 - Classifying `disaster-related` tweets as `objective` or `subjective`.
 - Extract `named-entities` from `disaster-related` tweets.
     
@@ -152,7 +152,7 @@ The `--output` flag may be used in order to change plots directory, if not given
 
 ### 2. Project Structure
 
-The project is consists of the following entities:
+The project consists of the following files and libraries:
 - `__main__.py`: *script*.
     - The main script, the client interface for running the project.
 - `classifer.py`: *script*
@@ -190,8 +190,9 @@ The project is consists of the following entities:
 
 ### 4. References
 
-For convenience purposes, we hard copied into the project most of the packages we used. The following list details each and every package we used:
-- [ark-tweet-nlp-0.3.2](https://github.com/ianozsvald/ark-tweet-nlp-python) library (*POS tagging*)
+For convenience, we copied some code from outer sorces to this project. Here are some references to the packages we used:
+- [ark-tweet-nlp](https://github.com/brendano/ark-tweet-nlp/) library (*POS tagging*)
+    - Note: This project is written in Java and should be run from a Linux machine. For further instrutions please see 'Part-of-Speech Tagging' section at [Tweet NLP @ CMU](http://www.cs.cmu.edu/~ark/TweetNLP/)
 - [emoticon](https://github.com/aritter/twitter_nlp/blob/master/python/emoticons.py) script (*Emoticons extraction*)
 - [twitter-text-python](https://pypi.python.org/pypi/twitter-text-python/) library (*Tweets parsing*)
 - [Twitter-API](https://dev.twitter.com/rest/public/search) API (*API for tweets extraction*)
