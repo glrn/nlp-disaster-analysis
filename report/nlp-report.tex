@@ -53,9 +53,13 @@
 
 \abstract{}
 
+\paragraph{}
 \begin{center}
 	\parbox{200pt}{
-		\todo{bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla.}
+		Twitter has become an important channel of communication during times of emergency and disasters; it allows individuals to publish user-created content written in colloquial language, and update others on events from around the world.
+		In this paper we present our work on disaster-related tweets using tools from the NLP pipeline, such as part-of-speech (POS) tagging and named-entity recognition (NER). We used a publicly available labeled dataset of tweets, and integrated our own classification tools together with Twitter-specific publicly available NLP tools, to create a classifier that reaches ~94\% accuracy in identifying disaster-related tweets. We also present an additional classifier trained to distinguish between "objective" disaster-related tweets and "subjective" ones. Lastly, we used NER to extract information on disasters, and experimented with  tweets recently sent from locations where natural disasters have occurred.
+	
+		Our code is available at: \url{https://github.com/glrn/nlp-disaster-analysis}.
 	}
 \end{center}
 
@@ -95,8 +99,6 @@ The second mission is binary classification of disaster-related tweets to one of
 Finally, we extracted named entities to enrich our knowledge on the disaster (mostly location)... \todo{Omri - short description of method and achievements}. This part of our work is described in section \ref{mission3}.
 
 To demonstrate our framework we aggregated recent tweets from various locations in the US, extracted disaster-related tweets using our classifier, and then used named-entity recognition to discover entities related to ongoing disasters. For example, "\tweet{Hurricane Harvey}" appeared as a top named-entity among recent tweets sent from Houston, TX, which we identified as \textit{disaster-related}. Further examples of results on recent data are presented in section \ref{recent-tweets-results}.
-
-The code of our project is available at \url{https://github.com/glrn/nlp-disaster-analysis}.
 
 \subsection{Twitter vs. Traditional Corpora}
 
@@ -480,6 +482,9 @@ From those results, we can learn the location, nationality of involvement, assoc
 \section{Conclusions}
 
 \paragraph{Future work} TODO
+
+The code of our project is available at \url{https://github.com/glrn/nlp-disaster-analysis}.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
