@@ -123,13 +123,38 @@ Saving table into: Projects\nlp-disaster-analysis\graphs\SentimentAnalysis\best_
 
 #### 1.3 Named Entity Recognition
 
-The `--named-entity-recognition` .... TODO: Omri fill explanation.
+The `--named-entity-recognition` flag performs named entity classification and recognition on the dataset, by using the GMB database as a training input, and NLTK as the POS-tagger.
+After training on the GMB database, the recognition phase would print entities in the following categories, sorted from the most common to the least common, along with their number of appearances:
+- Geographical Entities
+- Organization Entities
+- Person Entities
+- Geopolitical Entities
+- Time Indicator Entities
+- Artifact Entities
+- Event Entities
+- Natural Phenomenon Entities
+
+After, the top 10 entities are printed.
+
 Output example:
 _______________
 ```
 $ python __main__.py --named-entity-recognition
 
-TODO: Omri fill output.
+Measure times for function: test_named_entity_recognition (2017-09-09 21:14:08)
+===============================
+
+Test named entity recognition:
+Geographical Entities - hiroshima-48, northern-36, california-29, the-26, japan-16, mediterranean-14, reunion-12, myanmar-10, india-10, fukushima-10, colorado-10, ...
+Organization Entities - abc-57, abc news-32, california-21, -abc news-21, bbc-19, pic of-16, reunion-11, washington-11, devastation wrought-11, india-10, japan-10, ...
+Person Entities - obama-25, i-6, food-5, calgary-5, userref-4, runion debris-3, rainstorm-3, news bin-2, warne-2, tornado-2, bin laden-2, insane-1, hermancranston-1, ...
+Geopolitical Entities - userref-79, california-50, turkey-48, refugio-35, legionnaires-27, wreckage-27, severe-25, disea-23, mh370-22, indian-17, giant-17, old-16, ...
+Time Indicator Entities - twitter ``-86, 15-30, edinburgh - bbc-29, minute-28, typhoon-devastated saipan obama-24, --23, mh370 malaysia pm-22, wildfire - abc-19, ...
+Artifact Entities - on-46, redirect-6, ok seek-3, reports-3, live noaa tracking looping-3, fresno-2, penny sized-2, deputy jessica-2, collapses demolishes houses-2, ...
+Event Entities - etc kenneth-4, maj muzzamil-2, severe-2, heavy-1, stubborn forest-1, fortitudevalley unit-1, green line-1, cree torch-1, nc till-1, cta green-1, ...
+Natural Phenomenon Entities - 6igm-4, dvc bjp-3, allah gv-2, woman teen-2, rt-2, dont-2, virgin-2, ebola virus-2, account-2, hiroshima-2, seattle cheyenne-2, worry-2, ...
+Top 10 Entities - california, twitter ``, hiroshima, abc, turkey, northern, severe, refugio, japan, obama
+Total running time of test_named_entity_recognition in seconds: 171
 
 ```
 
@@ -174,7 +199,7 @@ The project consists of the following files and libraries:
 - `graphs`: *directory*
     - Output graphs of `__main__.py` script.
 - `ner`: *directory*
-    - TODO: Omri fill.
+    - Contains GMB parsing tools, and a named entity classifier.
 - `sentiment_analysis`: *directory*
     - Contains features for sentiment analysis section and the `emoticon.py` script (see *References* section).
 - `ttp`: *library*
@@ -197,4 +222,4 @@ For convenience, we copied some code from outer sorces to this project. Here are
 - [twitter-text-python](https://pypi.python.org/pypi/twitter-text-python/) library (*Tweets parsing*)
 - [Twitter-API](https://dev.twitter.com/rest/public/search) API (*API for tweets extraction*)
 - [twokenizer](https://github.com/ataipale/geotagged_tweet_exploration/blob/master/twokenizer.py) script (*Separating tweets into tokens*)
-- NER referneces TODO: Omri fill.
+- [GMB](http://gmb.let.rug.nl/) dataset
