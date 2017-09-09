@@ -1,6 +1,9 @@
+from __future__ import print_function
+
 from sklearn import svm
 from sklearn.cross_validation import train_test_split
 
+import argparse
 import classifier
 import common
 import numpy
@@ -13,42 +16,47 @@ from sklearn.feature_selection  import SelectKBest
 from sklearn.ensemble           import RandomForestClassifier
 from feature                    import named_features
 
-TEST_SLICE = 0.1
-GRAPHS_DIR = 'graphs'
+TEST_SLICE  = 0.1
+GRAPHS_DIR  = os.path.join(os.path.dirname(__file__), 'graphs')
+DEBUG       = False
+
+def PRINT(*args, **kwds):
+    if DEBUG:
+        print(*args, **kwds)
 
 def setup(dataset_path=MAIN_DATASET_PATH, pos_tag_path=MAIN_POS_TAGGING_PATH):
-    print('Starting...')
-    print('Parsing dataset...')
+    PRINT('Starting...')
+    PRINT('Parsing dataset...')
     dataset = Dataset(dataset_path=dataset_path, pos_tag_path=pos_tag_path)
-    print('Done parsing, dataset length: {}'.format(len(dataset.entries)))
+    PRINT('Done parsing, dataset length: {}'.format(len(dataset.entries)))
 
-    print('Splitting into train {} and test {}'.format(1 - TEST_SLICE, TEST_SLICE))
+    PRINT('Splitting into train {} and test {}'.format(1 - TEST_SLICE, TEST_SLICE))
     train, test = train_test_split(dataset.entries, test_size=TEST_SLICE, random_state=0)
 
     return train, test
 
 def test_bag_of_words(train_corpus, test_corpus, train_labels, test_labels, n_estimators, **kwds):
-    print('Generating bag of words...')
+    PRINT('Generating bag of words...')
     bag = BagOfWords(train_corpus, train_labels, **kwds)
 
     random_forest_accuracies = []
-    print('FOREST:')
+    PRINT('FOREST:')
     for n_estimator in n_estimators:
         print('Fitting {}...'.format(n_estimator))
         bag.fit_forest(n_estimators=n_estimator)
-        print('Predicting...')
+        PRINT('Predicting...')
         result = bag.predict_forest(test_corpus)
-        accuracy = common.compute_accuracy(result, test_labels, test_corpus)
-        print('acc: {}, ppv: {}, npv: {}'.format(accuracy.acc, accuracy.ppv, accuracy.npv))
+        accuracy = common.compute_accuracy(result, test_labels, test_corpus, debug=DEBUG)
+        PRINT('acc: {}, ppv: {}, npv: {}'.format(accuracy.acc, accuracy.ppv, accuracy.npv))
         random_forest_accuracies.append(accuracy)
 
-    print('NAIVE BAYES:')
-    print('Fitting...')
+    PRINT('NAIVE BAYES:')
+    PRINT('Fitting...')
     bag.fit_naive_bayes()
-    print('Predicting...')
+    PRINT('Predicting...')
     result = bag.predict_naive_bayes(test_corpus)
-    naive_bayes_accuracy = common.compute_accuracy(result, test_labels, test_corpus)
-    print('acc: {}, ppv: {}, npv: {}'.format(naive_bayes_accuracy.acc, naive_bayes_accuracy.ppv, naive_bayes_accuracy.npv))
+    naive_bayes_accuracy = common.compute_accuracy(result, test_labels, test_corpus, debug=DEBUG)
+    PRINT('acc: {}, ppv: {}, npv: {}'.format(naive_bayes_accuracy.acc, naive_bayes_accuracy.ppv, naive_bayes_accuracy.npv))
 
     return random_forest_accuracies, naive_bayes_accuracy
 
@@ -58,12 +66,12 @@ def test_svm(train, test, Cs):
     train_labels = numpy.array([tweet.label for tweet in train])
     test_labels = numpy.array([tweet.label for tweet in test])
 
-    print('SVM:')
-    print('Generating bag of words...')
+    PRINT('SVM:')
+    PRINT('Generating bag of words...')
     bag = BagOfWords(train_corpus, train_labels, ngram_range=(1, 2))
     classifier.vocabulary = bag.vocabulary
 
-    print('Fitting...')
+    PRINT('Fitting...')
     uni_trained     = svm_uni_fitter(train)
     uni_tested      = svm_uni_fitter(test)
     bi_trained      = svm_bi_fitter(train)
@@ -82,11 +90,11 @@ def test_svm(train, test, Cs):
             svm_classifier = svm.SVC(C=C)
             svm_classifier.fit(train, train_labels)
 
-            print('Predicting...')
+            PRINT('Predicting...')
             result = svm_classifier.predict(test)
 
-            accuracy = common.compute_accuracy(result, test_labels, test_corpus)
-            print('acc: {}, ppv: {}, npv: {}'.format(accuracy.acc, accuracy.ppv, accuracy.npv))
+            accuracy = common.compute_accuracy(result, test_labels, test_corpus, debug=DEBUG)
+            PRINT('acc: {}, ppv: {}, npv: {}'.format(accuracy.acc, accuracy.ppv, accuracy.npv))
             accs.append(accuracy)
         return accs
 
@@ -104,7 +112,7 @@ def test_sentiment_analysis(train, test, n_estimators, C):
     train_labels = numpy.array([tweet.objective for tweet in train])
     test_labels = numpy.array([tweet.objective for tweet in test])
 
-    print('Fitting...')
+    PRINT('Fitting...')
     trained = sentiment_analysis_classifier(train)
     tested  = sentiment_analysis_classifier(test)
 
@@ -120,31 +128,31 @@ def test_sentiment_analysis(train, test, n_estimators, C):
         cur_tested = tested[:, selected]
         selected_features.append(selected)
 
-        print('Random forest:')
-        print('Fitting...')
+        PRINT('Random forest:')
+        PRINT('Fitting...')
         forest = RandomForestClassifier(n_estimators=n_estimators, random_state=0)
         forest.fit(cur_trained, train_labels)
 
-        print('Predicting...')
+        PRINT('Predicting...')
         result = forest.predict(cur_tested)
-        accuracy = common.compute_accuracy(result, test_labels, test_corpus)
-        print('acc: {}, ppv: {}, npv: {}'.format(accuracy.acc, accuracy.ppv, accuracy.npv))
+        accuracy = common.compute_accuracy(result, test_labels, test_corpus, debug=DEBUG)
+        PRINT('acc: {}, ppv: {}, npv: {}'.format(accuracy.acc, accuracy.ppv, accuracy.npv))
         random_forest_accuracies.append(accuracy)
 
-        print('SVM:')
-        print('Fitting...')
+        PRINT('SVM:')
+        PRINT('Fitting...')
         svm_classifier = svm.SVC(C=C, random_state=0)
         svm_classifier.fit(cur_trained, train_labels)
 
-        print('Predicting...')
+        PRINT('Predicting...')
         result = svm_classifier.predict(cur_tested)
-        accuracy = common.compute_accuracy(result, test_labels, test_corpus)
-        print('acc: {}, ppv: {}, npv: {}'.format(accuracy.acc, accuracy.ppv, accuracy.npv))
+        accuracy = common.compute_accuracy(result, test_labels, test_corpus, debug=DEBUG)
+        PRINT('acc: {}, ppv: {}, npv: {}'.format(accuracy.acc, accuracy.ppv, accuracy.npv))
         svm_accuracies.append(accuracy)
 
     return random_forest_accuracies, svm_accuracies, selected_features
 
-@common.timeit()
+@common.timeit
 def test_disaster_classification(n_estimators, Cs):
     train, test = setup()
     train_corpus = numpy.array([tweet.text for tweet in train])
@@ -477,11 +485,36 @@ def test_sentiment_analysis_classification(n_estimators, C):
         ],
         save=os.path.join(GRAPHS_DIR, 'SentimentAnalysis', 'best_result_table.png'),
     )
-def main():
+def main(disaster_classification, sentiment_analysis, named_entity_recognition, output_dir, debug):
+    global DEBUG, GRAPHS_DIR
     n_estimators = [2**i for i in range(11)]
     Cs           = [10**i for i in range(1, 8)]
-    test_disaster_classification(n_estimators, Cs)
-    test_sentiment_analysis_classification(n_estimators=128, C=10**4)
+    if output_dir:
+        GRAPHS_DIR = output_dir
+    if debug:
+        DEBUG = debug
+    if disaster_classification:
+        test_disaster_classification(n_estimators, Cs)
+    if sentiment_analysis:
+        test_sentiment_analysis_classification(n_estimators=128, C=10**4)
+    if named_entity_recognition:
+        # TODO: Omri call function.
+        pass
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-v', '--verbose', help='increase output verbosity', action='store_true')
+    parser.add_argument('-d', '--disaster-classification', help='will train and classify tweets dataset as disaster or not', action='store_true')
+    parser.add_argument('-s', '--sentiment-analysis', help='will train and classify disaster related tweets dataset as objective or subjective', action='store_true')
+    # TODO: Omri fill help.
+    parser.add_argument('-n', '--named-entity-recognition', help='????', action='store_true')
+    parser.add_argument('-o', '--output', help='output directory for graphs')
+    parser.add_argument('-a', '--all', help='equivalent to -d -s -n', action='store_true')
+    args = parser.parse_args()
+    main(
+        disaster_classification = args.disaster_classification or args.all,
+        sentiment_analysis      = args.sentiment_analysis or args.all,
+        named_entity_recognition= args.named_entity_recognition or args.all,
+        output_dir              = args.output,
+        debug                   = args.verbose,
+    )
