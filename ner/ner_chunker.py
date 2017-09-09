@@ -54,7 +54,7 @@ def print_named_entity_parse_results(named_entities_tree):
     print('Event -', sorted(Counter(eve_entities).items(), key=lambda x: x[1], reverse=True))
     print('Natural Phenomenon - ', sorted(Counter(nat_entities).items(), key=lambda x: x[1], reverse=True))
     entities = geo_entities + org_entities + per_entities + gpe_entities + tim_entities + art_entities + nat_entities + eve_entities
-    print('Top 10 Entities - ', filter(lambda z: 'userref' not in z and 'twitter' not in z and z not in ('in', 'on', 'at', 'the'), map(lambda y: y[0], sorted(Counter(entities).items(), key=lambda x: x[1], reverse=True)))[:10])
+    print('Top 10 Entities - ', filter(lambda z: 'userref' not in z and z not in ('in', 'on', 'at', 'the'), map(lambda y: y[0], sorted(Counter(entities).items(), key=lambda x: x[1], reverse=True)))[:10])
 
 
 def extract_named_entity(named_entities_tree, entity_type):
