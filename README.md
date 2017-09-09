@@ -152,10 +152,44 @@ The `--output` flag may be used in order to change plots directory, if not given
 
 ### 2. Project Structure
 
+The project is consists of the following entities:
+- `__main__.py`: *script*.
+    - The main script, the client interface for running the project.
+- `classifer.py`: *script*
+    - Wraps *Naive Bayes*, *Random Forest* and *SVM* classifiers.
+- `classify_recent_tweets`: *script*
+    - Can be used to test trained classifiers against new data.
+- `common.py`: *script*
+    - Bunch of useful utilities.
+- `feature.py`: *script*
+    - Small framework that allows easy assigns and dissociate features to specific classifiers.
+- `preprocess_dataset.py`: *script*
+    - Tweets preprocessor that follows tiny urls, expands them and extracts titles from the page itself.
+- `ark-tweet-nlp-0.3.2`: *library*
+    - See *References* section.
+- `dataset`: *directory*
+    - Contains all dataset we used.
+- `dataset_parser`: *directory*
+    - Contains bunch of scripts for parsing and preprocessing our dataset and tweets.
+- `graphs`: *directory*
+    - Output graphs of `__main__.py` script.
+- `ner`: *directory*
+    - TODO: Omri fill.
+- `sentiment_analysis`: *directory*
+    - Contains features for sentiment analysis section and the `emoticon.py` script (see *References* section).
+- `ttp`: *library*
+    - See *References* section.
+- `twitter_api`: *directory*
+    - Bunch of scripts that were used in order to test classifiers on real time data using Twitter API.
+- `twokenizer`: *library*
+    - See *References* section.
+
 ### 3. Prerequisites
-* [Python Twitter Tools](https://pypi.python.org/pypi/twitter) library (```pip install twitter```)
+
+- [Python Twitter Tools](https://pypi.python.org/pypi/twitter) library (```pip install twitter```)
 
 ### 4. References
+
 For convenience purposes, we hard copied into the project most of the packages we used. The following list details each and every package we used:
 - [ark-tweet-nlp-0.3.2](https://github.com/ianozsvald/ark-tweet-nlp-python) library (*POS tagging*)
 - [emoticon](https://github.com/aritter/twitter_nlp/blob/master/python/emoticons.py) script (*Emoticons extraction*)
