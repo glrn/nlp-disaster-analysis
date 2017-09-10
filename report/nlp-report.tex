@@ -490,7 +490,13 @@ The comparison starts to fail when comparing the uncommon named entities; this i
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusions}
 
-\todo{Any ideas of what should we write here?}
+We have developer a classifier that identifies \textit{disaster-related} tweets among other tweets. We addressed the uniqueness of tweet corpora, and integrated in our work Twitter-oriented NLP tools for tokenization, part-of-speech tagging and named-entity recognition. Our classifier achieved around 94\% accuracy. We have also developer another classifier trained to distinguish between \textit{"objective"} and \textit{"subjective"} tweets. \todo{explain why SVM worked better in the first classifier, while RF worked better in the second one}.
+
+In the last part of our work we demonstrated our classifier on recent tweets, from which we extracted named entities and found some locations and names related to recent hurricanes.
+
+As for future work, we believe that this experiment with disaster-related tweets can be improved and expanded to create a system that detects emergencies in real-time by analyzing the live stream of tweets, using Twitter's Stream API; further improvements in the NER phase may help in analyzing the temporal and spatial pattern of an event; improvements in the sentiment analysis phase may help in identifying individuals who are in need of help.
+
+It would also be interesting to use the Twitter POS tagger to compare the grammar of Twitter corpora, and the grammar in other social media where the writing is colloquial as well but sentences are not limited to 140 characters.
 
 The code of our project is available at \url{https://github.com/glrn/nlp-disaster-analysis}.
 
