@@ -94,7 +94,7 @@ In this paper we present our work tackling three missions involving disaster-rel
 
 The first mission is \textit{identification} of disaster-related tweets among a variety of tweets. We implemented several classifiers, the best of which achieved around 94\% accuracy on the dataset. We note that this method could have easily been adjusted to identify tweets related to themes other than disasters (e.g. politics-related, sports-related, etc.), given the appropriate dataset. This part of our work is described in section \ref{mission1}.
 
-The second mission is binary classification of disaster-related tweets to one of two categories, \textit{subjective tweets} (i.e. tweets that express an emotion) vs. \textit{objective tweets} (such as news reports on disasters). To achieve this we manually tagged 2,410 disaster-related tweets. The motivation behind this task is that objective tweets, such as informative news reports, are likely to be published after the event had already become clear to emergency services, while subjective tweets may contain invaluable first-person testimonies of ongoing events. This part of our work is described in section \ref{mission2}
+The second mission is binary classification of disaster-related tweets to one of two categories, \textit{subjective tweets} (i.e. tweets that express an emotion) vs. \textit{objective tweets} (such as news reports on disasters). To achieve this we manually tagged 2,100 disaster-related tweets. The motivation behind this task is that objective tweets, such as informative news reports, are likely to be published after the event had already become clear to emergency services, while subjective tweets may contain invaluable first-person testimonies of ongoing events. This part of our work is described in section \ref{mission2}
 
 Finally, we extracted named entities to enrich our knowledge on the disaster, comparing two NER methods (Twitter-oriented vs. general one). This part of our work is described in section \ref{mission3}.
 
@@ -201,7 +201,7 @@ In addition, the tag \textbf{\tweet{G}} is being used for social-media abbreviat
 The tagger exploits some phonetic and linguistic features that are useful when dealing with colloquial writing, such as:
 
 \begin{itemize}[noitemsep, nolistsep]
-	\item \textbf{Phonetic normalization} - Twitter includes many alternate spelling of words. The Metaphone algorithm was used to create a coarse phonetic normalization of words to simpler key.
+	\item \textbf{Phonetic normalization} - Twitter includes many alternate spelling of words. The Metaphone algorithm was used to create a coarse phonetic normalization of words to simpler keys.
 	\item \textbf{Frequently-capitalized tokens} - Twitter users are inconsistent in their use of capitalization. Therefore, a lexicon of frequently capitalized tokens was created to cluster different tokens that refer to the same word or entity.
 \end{itemize}
 
@@ -299,7 +299,7 @@ and the two following tweets are \textit{"subjective"}:
 	\parbox{190pt}{\tweet{@canagal Good to hear it's back.. that storm's been given you guys trouble though :(}}
 \end{center}
 
-The ability to differentiate between \textit{objective} and \textit{subjective} tweets may help in identifying individuals who witness some disastrous event or who are in need of help.
+The ability to differentiate between \textit{objective} and \textit{subjective} tweets may help in identifying individuals who witnessed some disastrous event or who are in need of help.
 
 \subsection{The Dataset}
 
@@ -336,7 +336,7 @@ We confirmed our hypothesis that the task of differentiating between \textit{"ob
 	\item Presence of URLs.
 	\item Presence of emoticons (extracted using \texttt{emoticon.py}, Twitter NLP framework \cite{twitter_nlp}).
 	\item Number of digits.
-	\item Number of capital words.
+	\item Number of capitalized words.
 	\item Number of capital letters.
 	\item Number of punctuation marks and symbols (!"\#\$\%\&'()*+,-./:;<=>?@[\textbackslash]\^\_`\{\}\textasciitilde).
 	\item Tweet's length.
@@ -397,7 +397,7 @@ Table \ref{tab:obj_sub_classifiaction_best_results} presents the best measuremen
 \section{Named-Entity Recognition in Tweets}  \label{mission3}
 
 
-We aim to extract relevant information from tweets we previously classified as disaster-related. Named-entity recognition (NER) allows us to extract names of people, organizations, locations and time expressions. Ritter et al., (\textit{Named Entity Recognition in Tweets: An Experimental Study}, 2011 \cite{Ritter11}) provide a method to extract named entities out of \textit{tweet corpora}, by using a Twitter-specific POS tagset (similarly to the tagset we used in our previous classifiers). In this section, we present our attempt to use the Groningen Meaning Bank (GMB), which was trained on news and articles (rather than Twitter corpora), and extract named entities out of tweets.
+We aim to extract relevant information from tweets we previously classified as disaster-related. Named-entity recognition (NER) allows us to extract names of people, organizations, locations and time expressions. Ritter et al., (\textit{Named Entity Recognition in Tweets: An Experimental Study}, 2011 \cite{Ritter11}) provide a method to extract named entities out of \textit{tweet corpora}, by using a Twitter-specific POS tagset (similar to the tagset we used in our previous classifiers). In this section, we present our attempt to use the Groningen Meaning Bank (GMB), which was trained on news and articles (rather than Twitter corpora), and extract named entities out of tweets.
 
 \paragraph{Groningen Meaning Bank (GMB).}
 In order to develop a named-entity recognizer we used the Groningen Meaning Bank\endnote{\textbf{"Groningen Meaning Bank" Dataset by University of Groningen}: comprises of thousands of texts in raw and tokenized formats, tags for part of speech, named entities and lexical categories, and discourse representation structures compatible with first-order logic. \url{http://gmb.let.rug.nl/}} - a large corpus containing thousands of texts in raw and tokenized formats, POS tags, named entities by lexical categories and much more. The top level categories of the corpus are:
@@ -421,7 +421,7 @@ To overcome this obstacle, we implemented an approach similar to that of Ritter 
 
 \subsection{Results}
 
-Four main categories of the GMB corpus are relevant for our purposes - \textit{location} (\textbf{geo}), \textit{organization} (\textbf{org}), \textit{persons} (\textbf{per}) and \textit{geopolitical entity} (\textbf{gpe}). A fourth category, \textit{time} (\textbf{tim}), was somewhat ambiguous - as it described both time entities and irrelevant ones. Other categories did not manage to reach any level of internal agreement on any entity.
+Four main categories of the GMB corpus are relevant for our purposes - \textit{location} (\textbf{geo}), \textit{organization} (\textbf{org}), \textit{persons} (\textbf{per}) and \textit{geopolitical entity} (\textbf{gpe}). A fifth category, \textit{time} (\textbf{tim}), was somewhat ambiguous - as it described both time entities and irrelevant ones. Other categories did not manage to reach any level of internal agreement on any entity.
 
 By using the GMB corpus as the training data, we performed named entity recognition on the previously used dataset of 10,877 labeled tweets. From those tweets, we singled out only those who were labeled as disaster-related. The main results were:
 
@@ -464,9 +464,9 @@ In the last part of our work we tested our classifier that identifies \textit{di
 	\item\textbf{Miami} - 1,001 tweets posted in the \textit{Miami, FL} area during 9 Sept., containing at least one of the words [\tweet{evacuate, stay, safe, car}] and additional 150 random tweets
 \end{itemize}
 
-For both datasets we avoided from "re-tweeted" tweets (\tweet{RT}), to prevent repetitions of popular tweets.\\
+For both datasets we avoided "re-tweeted" tweets (\tweet{RT}), to prevent repetitions of popular tweets.\\
 
-From each of the datasets we used our used our classifier (see section \ref{mission1}) to take only \textit{disaster-related} tweets. We checked the performance of out NER classifier by running it on the disaster-related tweets in each dataset, and presenting the most popular named-entities found. We ran both our NER classifier (trained on the GMB dataset), and the Twitter-oriented NER by Ritter et al. \cite{Ritter11}.
+For each of the datasets we used our classifier (see section \ref{mission1}) to take only \textit{disaster-related} tweets. We checked the performance of our NER classifier by running it on the disaster-related tweets in each dataset, and presenting the most popular named-entities found. We ran both our NER classifier (trained on the GMB dataset), and the Twitter-oriented NER by Ritter et al. \cite{Ritter11}.
 
 The most popular entities among the \textbf{Houston} tweets:
 
@@ -484,7 +484,7 @@ The most popular entities among the \textbf{Miami} tweets:
 \end{itemize}
 
 
-The results show that both NER methods manage to identify the two recent large scale hurricanes that affected Houston (Hurricane Harvey) and Miami (Hurricane Harvey).
+The results show that both NER methods manage to identify the two recent large scale hurricanes that affected Houston (Hurricane Irma) and Miami (Hurricane Harvey).
 The comparison starts to fail when comparing the uncommon named entities; this is not surprising, since we expected Ritter's method, which is adjusted to Twitter corpora, to be superior. However, our method is sufficient for understanding the trivial details of large-scale disasters - location and type of disaster.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
