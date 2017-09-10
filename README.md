@@ -136,6 +136,10 @@ After training on the GMB database, the recognition phase would print entities i
 
 After, the top 10 entities are printed.
 
+In order to use this option, one needs to extract the GMB zip, located at ner/gbm-2.2.0.zip, to the same directory.
+After, as the reader is saved in .pkl format for time saving reasons, delete the gmb_reader.pkl file from the base
+directory, if exists.
+
 Output example:
 _______________
 ```
